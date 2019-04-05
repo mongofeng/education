@@ -1,5 +1,10 @@
 
-const { override, fixBabelImports, addLessLoader } = require('customize-cra');
+// https://github.com/arackaf/customize-cra
+const { override, fixBabelImports, addLessLoader, addWebpackAlias } = require('customize-cra');
+const path = require('path');
+function resolve(dir) {
+    return path.join(__dirname, '.', dir)
+}
 module.exports = override(
   fixBabelImports('import', {
     libraryName: 'antd',
@@ -10,4 +15,7 @@ module.exports = override(
    javascriptEnabled: true,
    modifyVars: { '@primary-color': 'red' },
  }),
+ addWebpackAlias({
+  '@': resolve('src')
+ })
 );
