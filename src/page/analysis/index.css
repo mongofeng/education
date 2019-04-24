@@ -1,0 +1,16 @@
+.analysis-body {
+  margin: 20px;
+}
+
+.analysis-card {
+  box-shadow: 0 0 6px 0 rgba(0,0,0,0.06);
+  background: #fff;
+  padding: 20px;
+  border-radius: 2px;
+  margin-bottom: 20px;
+}
+
+.analysis-card-title {
+  margin-bottom: 4px;
+  font-size: 16px;
+}

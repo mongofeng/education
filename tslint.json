@@ -13,7 +13,7 @@
     "object-literal-sort-keys": false,
     "jsx-no-lambda": false,
     "no-implicit-dependencies": false,
-    "no-console": true,
+    "no-console": false,
     "member-access": false,
     "prefer-conditional-expression": false
   }

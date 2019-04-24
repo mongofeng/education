@@ -1,0 +1,21 @@
+.fields-info__item {
+    float: left;
+    min-height: 22px;
+    line-height: 22px;
+    padding-top: 9px;
+    padding-bottom: 9px;
+    display: flex;
+    font-size: 13px;
+    align-items: flex-start;
+    box-sizing: border-box;
+  }
+
+  .fields-info .value {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .fields-info .label {
+    color: #999;
+  }

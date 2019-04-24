@@ -1,32 +1,49 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
-import style from './App.module.less'
-import { Button } from 'antd';
 
-class App extends Component {
-  render() {
+import { LocaleProvider, Spin } from 'antd';
+import zh_CN from 'antd/lib/locale-provider/zh_CN';
+import 'moment/locale/zh-cn';
+import * as React from 'react';
+import './css/animation.css'
+import './css/App.css'
+import './css/base.css'
+import './css/global.css'
+const BaseLayout = React.lazy(() => import(/* webpackChunkName: 'lazyBaseLayoutComponent'*/ './layout/BaseLayout'));
+const User = React.lazy(() => import(/* webpackChunkName: 'lazyUserComponent'*/ './layout/UserLayout'));
+const moment = require('moment');
+
+
+
+
+import { HashRouter, Redirect, Route, Switch } from "react-router-dom";
+
+moment.locale('zh-cn');
+
+const PrimaryLayout = () => (
+  <LocaleProvider locale={zh_CN}>
+    <div className="primary-layout">
+    <React.Suspense
+      fallback={<Spin />}>
+        <Switch>
+          <Route path="/auth" component={User} />
+          <Route path="/base" component={BaseLayout} />
+          <Redirect to="/auth" />
+        </Switch>
+      </React.Suspense>
+    </div>
+  </LocaleProvider>
+)
+
+
+
+class App extends React.PureComponent {
+  public render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p className={style.red}>
-            Edit <code>src/App.tsx</code> 
-            <span>and save to reload.</span>
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button type="primary">Button</Button>
-            1111
-          </a>
-        </header>
-      </div>
+      <HashRouter>
+        <PrimaryLayout />
+      </HashRouter>
     );
   }
 }
 
-export default App;
+
+export default App

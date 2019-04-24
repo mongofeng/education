@@ -1,0 +1,27 @@
+.main-title {
+    padding: 15px 20px 12px;
+    box-sizing: border-box;
+    height: 65px;
+}
+
+
+.main-title h2 {
+    float: left;
+    margin: 0;
+    font-size: 18px;
+    line-height: 36px;
+    font-weight: 300;
+    color: #333;
+}
+
+.search_bar {
+    padding: 20px 0;
+}
+
+.content-wrap {
+    background: #fff;
+    box-shadow: 0 0 6px 0 rgba(0,0,0,0.06);
+    margin: 0 20px 20px;
+    padding: 20px;
+    border-radius: 2px;
+}

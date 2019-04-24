@@ -1,0 +1,64 @@
+.base-layout {
+    height: 100vh;
+}
+
+.base-layout-header {
+  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  background: #fff;
+  padding: 0;
+  width: 100%;
+}
+
+
+
+.base-layout .trigger {
+    font-size: 18px;
+    line-height: 64px;
+    padding: 0 24px;
+    cursor: pointer;
+    transition: color .3s;
+  }
+  
+  .base-layout .trigger:hover {
+    color: #1890ff;
+  }
+  
+  .base-layout .logo {
+    height: 32px;
+    background: rgba(255,255,255,.2);
+    margin: 16px;
+  }
+
+
+  .header-index-right {
+    float: right;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  /* .layout-dropdown-link {
+    cursor: pointer;
+    height: 100%;
+    padding-right: 15px;
+  } */
+
+
+  .menu .anticon {
+    margin-right: 8px;
+  }
+
+  .menu .ant-dropdown-menu-item {
+    min-width: 160px;
+  }
+
+  .layout-dropdown-link {
+    display: inline-block;
+    height: 100%;
+    padding: 0 25px 0 0;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .layout-dropdown-link > i{
+    vertical-align: middle;
+  }
