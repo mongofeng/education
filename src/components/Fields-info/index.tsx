@@ -14,7 +14,6 @@ export interface IField {
  * 字段列表数据接口
  */
 export type IFieldsInfoData<T = {
-  [key: string]: string
 }> = {
   [P in keyof T]: T[P]
 }

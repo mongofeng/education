@@ -12,14 +12,11 @@ type ExternalProps = {
   lbs: any[]
   onGetList: () => void
 }
-// tslint:disable-next-line:no-empty-interface
-interface InjectedProps {
-  // placeholder?: string
-}
+
 
 
 const widthLoaction = <OriginalProps extends object>(
-  Cmp: React.ComponentType<OriginalProps & InjectedProps>
+  Cmp: React.ComponentType<OriginalProps>
 ) => {
   // type InternalProps = Omit<OriginalProps, keyof InternalState> & ExternalProps
   type InternalProps = OriginalProps & ExternalProps

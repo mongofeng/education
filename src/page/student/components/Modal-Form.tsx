@@ -6,6 +6,7 @@ import * as React from "react";
 import * as enums from "../../../const/enum";
 type IFormProps = FormComponentProps & {
   visible: boolean;
+  wrappedComponentRef: React.MutableRefObject<any>
   confirmLoading: boolean;
   onCancel: () => void;
   onCreate: () => void;
@@ -98,4 +99,4 @@ class ModalForm extends React.Component<IFormProps> {
 
 
 
-export default Form.create({ name: "form_in_modal" })(ModalForm)
+export default Form.create<IFormProps>({ name: "form_in_modal" })(ModalForm)

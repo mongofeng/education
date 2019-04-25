@@ -6,6 +6,7 @@ import {
 
  type IFormProps = FormComponentProps & {
    visible: boolean;
+   wrappedComponentRef: React.MutableRefObject<any>
    confirmLoading: boolean;
    onCancel: () => void;
    onCreate: () => void;
@@ -62,4 +63,4 @@ import {
  
  
  
- export default Form.create({ name: "SiginIn-form" })(ModalForm)
+ export default Form.create<IFormProps>({ name: "SiginIn-form" })(ModalForm)

@@ -5,6 +5,7 @@ import { Component, ComponentType } from 'react'
 
 // tslint:disable-next-line:interface-over-type-literal
 type ExternalProps = {}
+// tslint:disable-next-line:interface-name
 interface InjectedProps {
   isLoading: boolean
 }
@@ -14,6 +15,7 @@ const withLoading = <OriginalProps extends object>(
 ) => {
   // type InternalProps = Omit<OriginalProps, keyof InternalState> & ExternalProps
   type InternalProps = OriginalProps & ExternalProps
+  // tslint:disable-next-line:interface-name
   interface InternalState { isLoading: boolean }
   class WithLoading extends Component<InternalProps, InternalState> {
     static displayName = `WithLoadinng(${Cmp.displayName})`

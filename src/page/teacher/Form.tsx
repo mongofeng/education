@@ -32,7 +32,7 @@ type IFormProps = FormComponentProps & RouteComponentProps<IRouteParams>
 
 const initForm = {} as ITeacher
 
-function FormCompent (props: IFormProps) {
+const FormCompent: React.FC<IFormProps> = (props)=> {
     const {
         isEdit,
         loading,

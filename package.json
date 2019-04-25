@@ -32,7 +32,8 @@
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "tslint -c tslint.json 'src/**/*.ts'"
   },
   "eslintConfig": {
     "extends": "react-app"

@@ -37,7 +37,7 @@ const initForm = {} as ICourse
 
 const initOptions: Array<ILabelVal<string>> = []
 
-function FormCompent (props: IFormProps) {
+const FormCompent: React.FC<IFormProps> = (props)=> {
     const {
         isEdit,
         loading,
