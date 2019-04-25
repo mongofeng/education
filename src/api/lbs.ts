@@ -1,5 +1,5 @@
 import axios, { AxiosPromise } from 'axios'
-const enum Level {
+enum Level {
     province = 'province',
     city = 'city',
     district = 'district'

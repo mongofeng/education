@@ -1,7 +1,7 @@
 /**
  * 性别的枚举
  */
-export const enum ESEX {
+export enum ESEX {
     man = 1,
     felman
 }
@@ -15,7 +15,7 @@ export const SEX_LABEL: LabelMapping<ESEX> = {
 /**
  * 登录用户
  */
-export const enum USER_STATUS {
+export enum USER_STATUS {
     admin = 1,
     tourist
 }
@@ -28,7 +28,7 @@ export const USER_STATUS_LABEL: LabelMapping<USER_STATUS> = {
 /**
  * 学生状态
  */
-export const enum STUDENT_STATUS {
+export enum STUDENT_STATUS {
     reading = 1,
     graduation
 }
@@ -42,7 +42,7 @@ export const STUDENT_STATUS_LABEL: LabelMapping<STUDENT_STATUS> = {
 /**
  * 老师状态
  */
-export const enum TEACHER_STATUS {
+export enum TEACHER_STATUS {
     InService = 1,
     Leave
 }
@@ -56,7 +56,7 @@ export const TEACHER_STATUS_LABEL: LabelMapping<TEACHER_STATUS> = {
 /**
  * 老师状态
  */
-export const enum COURSE_STATUS {
+export enum COURSE_STATUS {
     open = 1,
     off
 }
@@ -94,7 +94,7 @@ export const WEEK_LABEL: LabelMapping<WEEK> = {
 /**
  * 一周状态
  */
-export const enum DAY {
+export enum DAY {
     monrning = 1,
     afternoon,
     evening,
@@ -110,7 +110,7 @@ export const DAY_LABEL: LabelMapping<DAY> = {
 /**
  * 学时状态
  */
-export const enum COURSE_HOUR_STATUS {
+export enum COURSE_HOUR_STATUS {
     pass = 1,
     refuse
 }
@@ -123,7 +123,7 @@ export const COURSE_HOUR_STATUS_LABEL: LabelMapping<COURSE_HOUR_STATUS> = {
 /**
  * 学时类型添加
  */
-export const enum COURSE_HOUR_ACTION_TYPE {
+export enum COURSE_HOUR_ACTION_TYPE {
     add = 1,
     del
 }
@@ -137,7 +137,7 @@ export const COURSE_HOUR_ACTION_TYPE_LABEL: LabelMapping<COURSE_HOUR_ACTION_TYPE
 /**
  * 学时类型
  */
-export const enum COURSE_HOUR_TYPE {
+export enum COURSE_HOUR_TYPE {
     buy = 1,
     send,
     sign,
