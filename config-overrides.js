@@ -22,7 +22,7 @@ module.exports = override(
   // }),
   addLessLoader({
     javascriptEnabled: true,
-    modifyVars: { "@primary-color": "red" }
+    // modifyVars: { "@primary-color": "red" }
   }),
   addWebpackAlias({
     "@": resolve("src"),
