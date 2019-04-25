@@ -8,7 +8,7 @@ import { Link, RouteComponentProps } from "react-router-dom";
 import { compose, Dispatch } from "redux";
 import * as action from '../../store/actions/auth'
 import * as validator from '../../utils/validator'
-import './Register.css'
+import style from './Register.module.less'
 
 interface IRegisterProps extends FormComponentProps,RouteComponentProps  {
   dispatch: Dispatch
@@ -98,7 +98,7 @@ class RegistrationForm extends React.PureComponent<IRegisterProps> {
 
 
     return (
-      <Form {...formItemLayout} onSubmit={this.handleSubmit} className="register-form">
+      <Form {...formItemLayout} onSubmit={this.handleSubmit} className={style.form}>
         <Form.Item
           label="账号邮箱"
         >
