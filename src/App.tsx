@@ -7,8 +7,8 @@ import './css/animation.css'
 import './css/App.css'
 import './css/base.css'
 import './css/global.css'
-const BaseLayout = React.lazy(() => import(/* webpackChunkName: 'lazyBaseLayoutComponent'*/ './layout/BaseLayout'));
-const User = React.lazy(() => import(/* webpackChunkName: 'lazyUserComponent'*/ './layout/UserLayout'));
+const BaseLayout = React.lazy(() => import(/* webpackChunkName: 'BaseLayout'*/ './layout/BaseLayout'));
+const User = React.lazy(() => import(/* webpackChunkName: 'User'*/ './layout/UserLayout'));
 const moment = require('moment');
 
 
