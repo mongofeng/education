@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from "react-router-dom";
 import { compose, Dispatch } from "redux";
 import * as action from '../../store/actions/auth'
-import './Login.css'
+import style from './Login.module.less'
 
 interface ILoginProps extends FormComponentProps, RouteComponentProps {
   dispatch: Dispatch
@@ -33,7 +33,7 @@ class LoginPage extends React.PureComponent<ILoginProps> {
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
-      <Form onSubmit={this.handleSubmit} className="login-form">
+      <Form onSubmit={this.handleSubmit} className={style.form}>
         <Form.Item>
           {getFieldDecorator('account', {
             rules: [{ required: true, message: '请输入账号' }],
@@ -55,7 +55,7 @@ class LoginPage extends React.PureComponent<ILoginProps> {
           })(
             <Checkbox>记住密码</Checkbox>
           )}
-          <Button type="primary" htmlType="submit" className="login-form-button" size="large" loading={this.props.loading}>
+          <Button type="primary" htmlType="submit" className={style.button} size="large" loading={this.props.loading}>
             登录
           </Button>
           <Link to={`register`}>注册</Link>
