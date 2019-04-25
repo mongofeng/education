@@ -25,6 +25,7 @@ module.exports = override(
     modifyVars: { "@primary-color": "red" }
   }),
   addWebpackAlias({
-    "@": resolve("src")
+    "@": resolve("src"),
+    "src": resolve("src")
   })
 );

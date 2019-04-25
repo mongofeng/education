@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DetailFun } from 'src/types/api';
+import { DetailFun } from '../../types/api';
 const { useState, useEffect } = React;
 
 const initLoading: boolean = false

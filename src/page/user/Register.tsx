@@ -206,5 +206,5 @@ const enhance = compose(
     isSuccess: state.auth.registerModel.isSuccess
   }))
 )
-const RegisterComponent =  enhance(RegistrationForm);
+const RegisterComponent: any =  enhance(RegistrationForm);
 export default RegisterComponent

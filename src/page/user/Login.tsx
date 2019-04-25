@@ -71,5 +71,5 @@ export default compose(connect((state: any) => ({
   isSuccess: state.auth.loginModel.isSuccess
 })),
 Form.create({ name: 'normal_login' })
-)(LoginPage)
+)(LoginPage) as any
 

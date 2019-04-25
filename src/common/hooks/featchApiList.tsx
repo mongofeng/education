@@ -1,6 +1,6 @@
 import { PaginationProps } from "antd/lib/pagination";
 import * as React from "react";
-import { IApiList } from 'src/types/api';
+import { IApiList } from '../../types/api';
 const { useState, useEffect } = React;
 
 const initPagination: PaginationProps = {
