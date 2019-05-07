@@ -10,7 +10,7 @@ import http from '../utils/http'
  * @param {*} params
  */
 export function addHour(params: IHour) {
-    return http.post('class-hour/add', params)
+    return http.post('class-hour', params)
 }
 
 /**

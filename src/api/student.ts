@@ -10,7 +10,7 @@ import http from '../utils/http'
  * @param {*} params
  */
 export function addStudent(params: IStudent) {
-    return http.post('student/add', params)
+    return http.post('student', params)
 }
 
 /**
