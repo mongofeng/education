@@ -13,6 +13,7 @@ export default function <T>(initForm: T | null, fetchFun: DetailFun<T>, id?: str
     const fetchDetail = async () => {
         if (!id) { return }
         const { data: { data } } = await fetchFun(id);
+        console.log(data)
         setIsEdit(true)
         setForm(data)
     }

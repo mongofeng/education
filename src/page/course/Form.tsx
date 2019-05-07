@@ -116,7 +116,6 @@ const FormCompent: React.FC<IFormProps> = (props)=> {
 
   useEffect(() => {
     fetchTeacher()
-    console.log('fetch teacher')
   }, []);
 
     const { getFieldDecorator } = props.form;
@@ -159,7 +158,7 @@ const FormCompent: React.FC<IFormProps> = (props)=> {
         <div className="main-title">
           <Breadcrumb>
             <Breadcrumb.Item>
-            <Link to="/base/student/list">课程列表</Link>
+            <Link to="/base/course/list">课程列表</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item>{`${isEdit ? '编辑': '添加'}课程`}</Breadcrumb.Item>
           </Breadcrumb>
@@ -222,7 +221,7 @@ const FormCompent: React.FC<IFormProps> = (props)=> {
 
             <Form.Item label="一天">
               {getFieldDecorator("time", {
-                initialValue: form ? form.day : '',
+                initialValue: form ? form.time : '',
                 rules: [{ type: "number", required: true, message: "请选择上课的时间段" }]
               })(
                   <Select>
