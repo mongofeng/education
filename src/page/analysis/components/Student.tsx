@@ -17,7 +17,7 @@ for (let i = 0; i < 12; i += 1) {
   });
 }
 
-const initList: type.IStudentStatics[] = [];
+const initList: type.IStuCountByTime[] = [];
 
 const BarCharts: React.FC = props => {
   const initCondition: any = {

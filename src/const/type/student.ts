@@ -20,7 +20,7 @@ export interface IStudent {
 }
 
 
-export interface IStudentStatics {
+export interface IStuCountByTime {
   readonly _id: string
   students: Array<{
     teacherId: string;
@@ -31,7 +31,7 @@ export interface IStudentStatics {
 }
 
 
-export interface IStudentStaticsStatus {
+export interface IStuCountByStatus {
   readonly _id: string
   count: number
 }

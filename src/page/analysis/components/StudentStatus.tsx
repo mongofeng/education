@@ -15,7 +15,7 @@ const PieData = Object.keys(enums.STUDENT_STATUS_LABEL).map(key => {
   };
 });
 
-const initList: type.IStudentStaticsStatus[] = [];
+const initList: type.IStuCountByStatus[] = [];
 
 const BarCharts: React.FC = props => {
   const [data, setData] = useState(initList);

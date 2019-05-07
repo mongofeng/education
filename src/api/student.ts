@@ -1,4 +1,4 @@
-import {IStudent, IStudentStatics, IStudentStaticsStatus} from '../const/type/student'
+import {IStudent} from '../const/type/student'
 import { ApiListData, ApiResponse } from '../types/api'
 import http from '../utils/http'
 

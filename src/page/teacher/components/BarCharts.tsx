@@ -20,7 +20,7 @@ interface IProps {
   id: string
 }
 
-const initList: type.IStudentStatics[] = [];
+const initList: type.IStuCountByTime[] = [];
 
 const BarCharts: React.FC<IProps> = (props) => {
 
