@@ -1,7 +1,7 @@
 import { Pie } from "ant-design-pro/lib/Charts";
 import { Icon, Tooltip } from "antd";
 import * as React from "react";
-import * as api from "../../../api/student";
+import * as api from "../../../api/statistics";
 import * as enums from "../../../const/enum";
 import * as type from "../../../const/type/student";
 import { find } from "../../../utils/util";
@@ -29,7 +29,7 @@ const BarCharts: React.FC = props => {
       setLoading(true);
       const {
         data: { data: apiData }
-      } = await api.getStaticsStatus();
+      } = await api.stuCountByStatus();
       setData(apiData);
       setLoading(false);
     } catch (error) {

@@ -1,7 +1,7 @@
 import { Bar } from 'ant-design-pro/lib/Charts';
 import { DatePicker } from 'antd';
 import * as React from "react";
-import * as api from '../../../api/student'
+import * as apiStatics from "../../../api/statistics"
 import * as type from '../../../const/type/student'
 import { find } from '../../../utils/util'
 const { useState, useEffect } = React;
@@ -58,7 +58,7 @@ const BarCharts: React.FC<IProps> = (props) => {
         setParams(initCondition)
       }
       setLoading(true);
-      const { data: { data: apiData } } = await api.getStatics(params);
+      const { data: { data: apiData } } = await apiStatics.stuCountByTime(params);
       setData(apiData);
       setLoading(false);
     } catch (error) {

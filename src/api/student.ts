@@ -42,19 +42,3 @@ export function updateStudent(id: string, params: IStudent): ApiResponse<IStuden
 export function delStudent(id: string): ApiResponse<IStudent> {
     return http.delete(`student/${id}`)
 }
-
-
-/**
- * 获取每月学生的增长
- * @param params 
- */
-export function getStatics (params: QueryCondition<IStudentStatics>): ApiResponse<IStudentStatics[]> {
-    return http.post(`student/statistics`, params)
-}
-
-/**
- * 学生毕业和在读的统计
- */
-export function getStaticsStatus (params?: QueryCondition<IStudentStatics>): ApiResponse<IStudentStaticsStatus[]> {
-    return http.post(`student/statistics/status`, params)
-}
