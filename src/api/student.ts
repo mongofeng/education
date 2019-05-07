@@ -43,16 +43,6 @@ export function delStudent(id: string): ApiResponse<IStudent> {
     return http.delete(`student/${id}`)
 }
 
-/**
- * 
- * @param params id: 学生的id， courseIds： 课程的id
- */
-export function batchCourse (params: {
-    id: string,
-    courseIds: string[]
-}): ApiResponse<IStudent> {
-    return http.post(`student/batchCourse`, params)
-}
 
 /**
  * 获取每月学生的增长

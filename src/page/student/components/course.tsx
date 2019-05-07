@@ -3,7 +3,6 @@ import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
 import { Link } from "react-router-dom";
 import * as api from "../../../api/course";
-import * as apiStudent from '../../../api/student'
 import * as enums from "../../../const/enum";
 import { ICourse } from "../../../const/type/course";
 import formatDate from "../../../utils/format-date";
@@ -78,7 +77,7 @@ const List: React.FC<IProps> = (props) => {
       confirmLoading: true,
     })
     try {
-      await apiStudent.batchCourse({
+      await api.batchCourse({
         id: props.id,
         courseIds: (selectRows as Array<Required<ICourse>>).map(item => item._id)
       })

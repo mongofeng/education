@@ -54,3 +54,15 @@ export function delCourseByStudent (params: {
 }) {
     return http.post(`course/deleteStudent`, params)
 }
+
+
+/**
+ * 
+ * @param params id: 学生的id， courseIds： 课程的id
+ */
+export function batchCourse (params: {
+    id: string,
+    courseIds: string[]
+}) {
+    return http.post(`course/batchCourse`, params)
+}
