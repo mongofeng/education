@@ -24,7 +24,7 @@ const accessTokenName = "Authorization";
 // };
 
 const http = axios.create({
-  baseURL: `/v1/`,
+  baseURL: `http://47.107.144.222/v1/`,
   headers: {
     "Content-Type": "application/json; charset=UTF-8"
   }

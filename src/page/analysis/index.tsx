@@ -3,6 +3,8 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router-dom";
 import { Dispatch } from "redux";
+import * as api from "../../api/teacher";
+import fetchApiHook from '../../common/hooks/featchApiList'
 import * as action from "../../store/actions/student";
 import StudentBar from "./components/Student";
 import StudentStatus from "./components/StudentStatus";
@@ -16,6 +18,14 @@ interface IList extends RouteComponentProps {
 }
 
 const Analysis: React.FC<IList> = props => {
+
+  const { 
+    pagination, 
+  } = fetchApiHook([], api.getteacherList, {
+    limit: 1,
+    page: 1,
+  })
+
   useEffect(() => {
     props.onGetList({
       limit: 1,
@@ -39,6 +49,16 @@ const Analysis: React.FC<IList> = props => {
                 </Tooltip>
               </div>
               <Statistic title="学员数量" value={props.total || 0} />
+            </div>
+
+            <div className="analysis-card">
+              <div className="fr">
+                <Tooltip title="指标说明">
+                  <Icon type="info-circle-o" />
+                </Tooltip>
+              </div>
+
+              <Statistic title="教师数量" value={pagination.total || 0} />
             </div>
           </Col>
 
