@@ -1,0 +1,60 @@
+{
+  "workbench.iconTheme": "vscode-great-icons",
+  "editor.fontSize": 14,
+  "editor.tabSize": 2,
+  "emmet.syntaxProfiles": {
+    "vue-html": "html",
+    "vue": "html"
+  },
+  // 控制编辑器是否应呈现缩进参考线
+  "editor.renderIndentGuides": true,
+  // "eslint.autoFixOnSave": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    {
+      "language": "html",
+      "autoFix": true
+    },
+    {
+      "language": "vue",
+      "autoFix": true
+    }
+  ],
+  "eslint.options": {
+    "extensions": [".js", ".vue"]
+  },
+  "eslint.autoFixOnSave": true,
+  "path-intellisense.extensionOnImport": true,
+  "path-intellisense.showHiddenFiles": true,
+  "files.associations": {
+    "*.vue": "vue"
+  },
+  // "editor.formatOnSave": true,
+  "window.zoomLevel": 0,
+  "tslint.typeCheck": true,
+  "git.confirmSync": false,
+  "git.enableSmartCommit": true,
+  "beautify.language": {
+    "js": {
+      "type": ["javascript", "json"],
+      "filename": [".jshintrc", ".jsbeautifyrc"]
+      // "ext": ["js", "json"]
+      // ^^ to set extensions to be beautified using the javascript beautifier
+    },
+    "css": ["css", "scss", "wxss"],
+    "html": ["htm", "html", "wxml"]
+    // ^^ providing just an array sets the VS Code file type
+  },
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "explorer.confirmDelete": false,
+  "terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\cmd.exe",
+  "gitlens.advanced.messages": {
+    "suppressShowKeyBindingsNotice": true
+  },
+  "tslint.enable": true,
+  "tslint.autoFixOnSave": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "tslint.alwaysShowRuleFailuresAsWarnings": true,
+  "tslint.alwaysShowStatus": true
+}
