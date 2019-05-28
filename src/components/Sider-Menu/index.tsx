@@ -10,6 +10,7 @@ interface IProps {
     nav: INavs[]
     matchUrl: string
     path: string
+    history: any
 }
 const SiderMenu: React.FC<IProps> = (props) => {
 
@@ -44,7 +45,16 @@ const SiderMenu: React.FC<IProps> = (props) => {
             theme="dark"
             mode="inline"
             defaultSelectedKeys={initSelectedKeys}
-            defaultOpenKeys={initOpenKeys}>
+            defaultOpenKeys={initOpenKeys}
+            onClick={(e: any) => {
+                const url = `${matchUrl}/${e.key}/list`
+                console.log(url, pathname, props)
+                if (!pathname.includes(url)) {
+                    props.history.push(url);
+                } else {
+                    console.log('同一url下面')
+                }
+            }}>
 
             {nav.map(item => {
                 if (item.children) {
@@ -67,9 +77,10 @@ const SiderMenu: React.FC<IProps> = (props) => {
                     <Menu.Item key={item.value}>
                         <Icon type={item.icon || "pie-chart"} />
                         <span >
-                            <NavLink to={`${matchUrl}/${item.value}`} activeClassName="selected">
+                            {item.label}
+                            {/* <NavLink to={`${matchUrl}/${item.value}`} activeClassName="selected">
                                 {item.label}
-                            </NavLink>
+                            </NavLink> */}
                         </span>
                         
                     </Menu.Item>

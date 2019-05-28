@@ -15,7 +15,7 @@ const { Header, Content, Sider } = Layout;
 const Analysis = React.lazy(() => import(/* webpackChunkName: 'analysis'*/ '../page/analysis'));
 const Course = React.lazy(() => import(/* webpackChunkName: 'course'*/ '../page/course'));
 
-const Hour = React.lazy(() => import(/* webpackChunkName: 'analysis'*/ '../page/analysis'));
+const Hour = React.lazy(() => import(/* webpackChunkName: 'hour'*/ '../page/hour'));
 
 const Student = React.lazy(() => import(/* webpackChunkName: 'student'*/ '../page/student'));
 const Teacher = React.lazy(() => import(/* webpackChunkName: 'teacher'*/ '../page/teacher'));
@@ -80,7 +80,8 @@ class BaseLayout extends React.PureComponent<IProps, IState> {
           collapsible={true}
           collapsed={this.state.collapsed}>
           <div className="logo" />
-          <SiderMenu 
+          <SiderMenu
+            history={this.props.history} 
             nav={Navs} 
             matchUrl={this.props.match.url} 
             path={this.props.location.pathname} />
