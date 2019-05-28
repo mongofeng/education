@@ -20,6 +20,22 @@
   transition: opacity 300ms, transform 300ms;
 }
 
+/* 左滑进场 */
+.slide-left-enter-active{
+  transition: all 0.3s ease;
+}
+
+
+.slide-left-enter {
+  transform: translateX(100%);
+}
+
+.slide-left-enter-to {
+  transform: translateX(0);
+}
+
+
+
 
 
   /* //enter是入场前的刹那（点击按钮），appear指页面第一次加载前的一刹那（自动） */
