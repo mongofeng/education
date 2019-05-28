@@ -13,15 +13,28 @@ const MessageNotice: React.FC<IProps> = (props) => {
   }
   return (
     <div>
-      是否开启课程推送: <Switch defaultChecked={false} onChange={onChange} />
-      是否开启课时推送: <Switch defaultChecked={false} onChange={onChange} />
+      <div className="p10">
+        是否开启课程推送: <Switch defaultChecked={false} onChange={onChange} />
+      </div>
+      
+      <div className="p10">
+        是否开启课时推送: <Switch defaultChecked={false} onChange={onChange} />
+      </div>
 
-      <TextArea
-        placeholder="请输入内容"
-        autosize={{ minRows: 2, maxRows: 6 }}
-      />
+      <div className="p10">
+        <TextArea
+          placeholder="请输入内容"
+          autosize={{ minRows: 2, maxRows: 6 }}
+        />
+      </div>
 
-      <Button type="primary">Primary</Button>
+      <div className="p10">
+        <Button type="primary">Primary</Button>
+      </div>
+
+      
+
+      
     </div>
   )
 }
