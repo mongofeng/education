@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import { RouteComponentProps } from "react-router-dom";
-import { CSSTransition, TransitionGroup } from "react-transition-group";
+import { CSSTransition } from "react-transition-group";
 import Detail from './Detail'
 import Form from './Form'
 import List from "./List";
@@ -33,27 +33,33 @@ const routes: IRoutes[] = [
 
 export default function(rootProps: RouteComponentProps) {
   return (
-    <TransitionGroup>
-      <CSSTransition
-        key={rootProps.location.pathname}
-        classNames="page"
-        exit={false}
-        unmountOnExit={true}
-        timeout={300}>
-          <Switch>
-            {routes.map(route => (
-              <Route
-                path={`${rootProps.match.path}${route.path}`}
-                key={route.path}
-                render={(props: RouteComponentProps) => <route.component {...props} />}
-              />
-            ))}
+    <Switch>
+      {routes.map(route => (
+        <Route
+          path={`${rootProps.match.path}${route.path}`}
+          key={route.path}
+          render={(props: RouteComponentProps) => {
+            return (
+              <CSSTransition
+                in={true}
+                timeout={300}
+                classNames="page"
+                appear={true}
+                onEnter={() => {
+                  console.log("enter中");
+                }}
+                unmountOnExit={true}
+              >
+                {/* 把子路由的props都传过去 */}
+                <route.component {...props} />
+              </CSSTransition>
+            );
+          }}
+        />
+      ))}
 
-            {/* 不匹配的时候，默认跳转第一个路由 */}
-            <Redirect to={`${rootProps.match.path}${routes[0].path}`} />
-          </Switch>
-      </CSSTransition>
-    </TransitionGroup>
-    
+      {/* 不匹配的时候，默认跳转第一个路由 */}
+      <Redirect to={`${rootProps.match.path}${routes[0].path}`} />
+    </Switch>
   );
 }
