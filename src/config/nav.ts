@@ -38,19 +38,4 @@ export const Navs: INavs[] = [
     label: '老师',
     value: 'teacher'
   },
-  {
-    label: '项目的技巧',
-    value: 'project',
-    icon: 'project',
-    children: [{
-      label: '路由配置',
-      value: 'router-config'
-    }, {
-      label: '单组件过渡',
-      value: 'css-transition'
-    }, {
-      label: '列表过渡',
-      value: 'transition-group'
-    }]
-  }
 ]

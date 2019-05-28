@@ -2,7 +2,7 @@ import { Avatar, Dropdown, Icon, Layout, Menu, Spin } from "antd";
 import * as React from "react";
 import { connect } from 'react-redux';
 import { NavLink, Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
-import { CSSTransition, TransitionGroup } from "react-transition-group";
+// import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { Dispatch } from "redux";
 import SiderMenu from '../components/Sider-Menu'
 import { Navs} from '../config/nav'
@@ -16,7 +16,6 @@ const Analysis = React.lazy(() => import(/* webpackChunkName: 'analysis'*/ '../p
 const Course = React.lazy(() => import(/* webpackChunkName: 'course'*/ '../page/course'));
 
 const Hour = React.lazy(() => import(/* webpackChunkName: 'analysis'*/ '../page/analysis'));
-const Project = React.lazy(() => import(/* webpackChunkName: 'project'*/ '../page/project'));
 
 const Student = React.lazy(() => import(/* webpackChunkName: 'student'*/ '../page/student'));
 const Teacher = React.lazy(() => import(/* webpackChunkName: 'teacher'*/ '../page/teacher'));
@@ -116,7 +115,6 @@ class BaseLayout extends React.PureComponent<IProps, IState> {
           fallback={<Spin />}>
             <Switch>
               <Route path={`${this.props.match.path}/student`}  component={Student} />
-              <Route path={`${this.props.match.path}/project`}  component={Project} />
               <Route path={`${this.props.match.path}/teacher`}  component={Teacher} />
               <Route path={`${this.props.match.path}/course`}  component={Course} />
               <Route path={`${this.props.match.path}/hour`}  component={Hour} />
