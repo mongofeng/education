@@ -20,7 +20,7 @@ class UserLayout extends React.PureComponent<RouteComponentProps> {
               classNames="page"
               exit={false}
               unmountOnExit={true}
-              timeout={30000}>
+              timeout={300}>
               <Switch>
                 <Route
                   path={`${this.props.match.path}/login`}

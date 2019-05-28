@@ -1,21 +1,25 @@
-import { Avatar, Dropdown, Icon, Layout, Menu } from "antd";
+import { Avatar, Dropdown, Icon, Layout, Menu, Spin } from "antd";
 import * as React from "react";
 import { connect } from 'react-redux';
 import { NavLink, Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { Dispatch } from "redux";
 import SiderMenu from '../components/Sider-Menu'
 import { Navs} from '../config/nav'
 import {IUser} from '../const/type/user'
-import Analysis from '../page/analysis'
-import Course from '../page/course'
-import Hour from '../page/hour'
-import Project from '../page/project'
-import Student from '../page/student'
-import Teacher from '../page/teacher'
 import * as action from "../store/actions/user";
 import "./BaseLayout.css";
 const { Header, Content, Sider } = Layout;
 
+
+const Analysis = React.lazy(() => import(/* webpackChunkName: 'analysis'*/ '../page/analysis'));
+const Course = React.lazy(() => import(/* webpackChunkName: 'course'*/ '../page/course'));
+
+const Hour = React.lazy(() => import(/* webpackChunkName: 'analysis'*/ '../page/analysis'));
+const Project = React.lazy(() => import(/* webpackChunkName: 'project'*/ '../page/project'));
+
+const Student = React.lazy(() => import(/* webpackChunkName: 'student'*/ '../page/student'));
+const Teacher = React.lazy(() => import(/* webpackChunkName: 'teacher'*/ '../page/teacher'));
 interface IProps extends RouteComponentProps {
   dispatch: Dispatch
   user: IUser
@@ -107,6 +111,9 @@ class BaseLayout extends React.PureComponent<IProps, IState> {
               overflow: "auto"
             }}>
 
+
+        <React.Suspense
+          fallback={<Spin />}>
             <Switch>
               <Route path={`${this.props.match.path}/student`}  component={Student} />
               <Route path={`${this.props.match.path}/project`}  component={Project} />
@@ -116,6 +123,9 @@ class BaseLayout extends React.PureComponent<IProps, IState> {
               <Route path={`${this.props.match.path}/analysis`}  component={Analysis} />
               <Redirect from={this.props.match.path} to={`${this.props.match.path}/analysis`} />
             </Switch>
+        </React.Suspense>
+
+            
            
           </Content>
 
