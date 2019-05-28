@@ -20,14 +20,12 @@ const UserLayout: React.FC<RouteComponentProps> = (props) => {
       count: 88,
       zIndex: 1,
     };
-    console.log(element)
     
     // 在 element 地方使用 config 渲染效果
     const cn = new CanvasNest(element.current, config);
     
     // destroy
     return () => {
-      console.log('destroy')
       cn.destroy();
     }
   }, [])
