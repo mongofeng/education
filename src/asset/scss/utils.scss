@@ -1,0 +1,11 @@
+$i: 40;
+@while $i > 0 {
+  .mt#{$i} { margin-top: $i * 1px; }
+  .mb#{$i} { margin-bottom: $i * 1px; }
+
+  .pt#{$i} { padding-top: $i * 1px; }
+  .pb#{$i} { padding-bottom: $i * 1px; }
+
+  .p#{$i} { padding: $i * 1px; }
+  $i: $i - 5;
+}

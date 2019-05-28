@@ -3,10 +3,7 @@ import { LocaleProvider, Spin } from 'antd';
 import zh_CN from 'antd/lib/locale-provider/zh_CN';
 import 'moment/locale/zh-cn';
 import * as React from 'react';
-import './css/animation.css'
-import './css/App.css'
-import './css/base.css'
-import './css/global.css'
+import './asset/scss/main.scss';
 const BaseLayout = React.lazy(() => import(/* webpackChunkName: 'BaseLayout'*/ './layout/BaseLayout'));
 const User = React.lazy(() => import(/* webpackChunkName: 'User'*/ './layout/UserLayout'));
 const moment = require('moment');
