@@ -1,8 +1,9 @@
 import { Icon, Menu } from "antd";
 import * as React from "react";
 import { NavLink } from "react-router-dom";
-import {hasChildren} from '../../config/nav'
-import { INavs } from '../../types/common'
+import {hasChildren} from '../../config/nav';
+import { INavs } from '../../types/common';
+import style from './index.module.scss'
 const SubMenu = Menu.SubMenu;
 
 interface IProps {
@@ -39,6 +40,7 @@ const SiderMenu: React.FC<IProps> = (props) => {
 
     return (
         <Menu
+            className={style.nav}
             theme="dark"
             mode="inline"
             defaultSelectedKeys={initSelectedKeys}
@@ -63,10 +65,13 @@ const SiderMenu: React.FC<IProps> = (props) => {
 
                 return (
                     <Menu.Item key={item.value}>
-                        <NavLink to={`${matchUrl}/${item.value}`}>
-                            <Icon type={item.icon || "pie-chart"} />
-                            {item.label}
-                        </NavLink>
+                        <Icon type={item.icon || "pie-chart"} />
+                        <span >
+                            <NavLink to={`${matchUrl}/${item.value}`} activeClassName="selected">
+                                {item.label}
+                            </NavLink>
+                        </span>
+                        
                     </Menu.Item>
                 )
             })}

@@ -35,7 +35,7 @@ const notice = throttle(() => {
     message: `token失效`,
     description: "请重新登录页面"
   });
-  console.log(1)
+  console.log(1222222)
   history.push('/')
 }, 10000)
 
