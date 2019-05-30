@@ -34,7 +34,7 @@ export function getStudent(id: string): ApiResponse<IStudent> {
  * @param id 学生id
  * @param params 
  */
-export function updateStudent(id: string, params: IStudent): ApiResponse<IStudent> {
+export function updateStudent(id: string, params: Partial<IStudent>): ApiResponse<IStudent> {
     return http.put(`student/${id}`, params)
 }
 

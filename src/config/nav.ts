@@ -38,4 +38,8 @@ export const Navs: INavs[] = [
     label: '老师',
     value: 'teacher'
   },
+  {
+    label: '消息管理',
+    value: 'template'
+  },
 ]

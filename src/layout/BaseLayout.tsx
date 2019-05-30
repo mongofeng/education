@@ -19,6 +19,8 @@ const Hour = React.lazy(() => import(/* webpackChunkName: 'hour'*/ '../page/hour
 
 const Student = React.lazy(() => import(/* webpackChunkName: 'student'*/ '../page/student'));
 const Teacher = React.lazy(() => import(/* webpackChunkName: 'teacher'*/ '../page/teacher'));
+
+const Template = React.lazy(() => import(/* webpackChunkName: 'template'*/ '../page/template'));
 interface IProps extends RouteComponentProps {
   dispatch: Dispatch
   user: IUser
@@ -120,6 +122,7 @@ class BaseLayout extends React.PureComponent<IProps, IState> {
               <Route path={`${this.props.match.path}/course`}  component={Course} />
               <Route path={`${this.props.match.path}/hour`}  component={Hour} />
               <Route path={`${this.props.match.path}/analysis`}  component={Analysis} />
+              <Route path={`${this.props.match.path}/template`}  component={Template} />
               <Redirect from={this.props.match.path} to={`${this.props.match.path}/analysis`} />
             </Switch>
         </React.Suspense>

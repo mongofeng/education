@@ -15,6 +15,7 @@ export interface IStudent {
   teacherId?: string
   status: enums.STUDENT_STATUS
   desc: string
+  isSendTemplate: boolean
   createDate?: string
   updateDate?: string
 }
