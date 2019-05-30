@@ -161,9 +161,6 @@ class List extends React.PureComponent<IList> {
 
   handleTableChange = (pagination: PaginationProps, filters: ITableFilter, sorter: any) => {
     const pager = { ...this.state.pagination, ...pagination };
-    console.log(filters)
-    console.log(sorter)
-
     this.setState({
       pagination: pager,
       filters,
@@ -190,7 +187,6 @@ class List extends React.PureComponent<IList> {
 
 
   onDateChange = (date: any, dateString: string[]) => {
-    console.log(date, dateString);
     if (dateString[0] && dateString[1]) {
       this.setState({
         dateString,
