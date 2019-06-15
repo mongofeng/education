@@ -1,4 +1,4 @@
-import { Button, DatePicker, Form, Input, Modal, Radio, Switch, Table } from "antd";
+import { Button, DatePicker, Form, Input, message, Modal, Switch, Table } from "antd";
 import { FormComponentProps } from "antd/lib/form";
 import { ColumnProps, TableRowSelection } from "antd/lib/table";
 import * as React from "react";
@@ -103,11 +103,21 @@ function List(props: RouteComponentProps & FormComponentProps): JSX.Element {
   const [selectRow, setRow] = useState([])
   const [formItem, setFormItem] = useState([])
   const [openId, setOpenId] = useState('')
+  const [modalLoading, setModalLoading] = useState(false)
 
 
   useEffect(() => {
     fetchTemplateList()
   }, [])
+
+
+  /**
+   * 跳转路由
+   */
+  const handleOnClick = (id: string) => {
+    setOpenId(id)
+    setVisible(true)
+  };
 
 
   const fetchTemplateList = async () => {
@@ -124,9 +134,6 @@ function List(props: RouteComponentProps & FormComponentProps): JSX.Element {
       setRow(selectedRows)
     },
   };
-
-
-
 
   
    // 开启开关
@@ -147,12 +154,12 @@ function List(props: RouteComponentProps & FormComponentProps): JSX.Element {
 
   const onCancel = () => {
     setVisible(false)
+    setStep(eStep.first)
   };
 
 
   const onNext = () => {
     setStep(eStep.second)
-    console.log(selectRow)
     const [row] = selectRow
     const content = row.content.replace(/\s+/g, ',').replace(/{{/g, '').replace(/\.DATA}}/g, '');
     const arr = content.split(',')
@@ -160,9 +167,12 @@ function List(props: RouteComponentProps & FormComponentProps): JSX.Element {
     for (const item of arr) {
       // g没有index这些
       /([\u4e00-\u9fa5]+)[^\w]?(\w+)/.test(item)
+      const label = RegExp.$1
+      const value = RegExp.$2
+      if (!label || !value) { continue }
       result.push({
-        label: RegExp.$1,
-        value: RegExp.$2
+        label,
+        value
       })
     }
     console.log(result)
@@ -174,14 +184,11 @@ function List(props: RouteComponentProps & FormComponentProps): JSX.Element {
   }
 
   const onCreate = () => {
-    console.log('click');
     props.form.validateFieldsAndScroll(async (err, values) => {
       if (err) {
         return;
       }
       const [row] = selectRow
-
-      console.log(values)
 
       const res = Object.keys(values).reduce((prev, key) => {
         return {
@@ -202,23 +209,20 @@ function List(props: RouteComponentProps & FormComponentProps): JSX.Element {
       }
 
       console.log(params)
-
-      apiTem.sendTemplate(params)
+      try {
+        setModalLoading(true)
+        await apiTem.sendTemplate(params)
+        message.success("发送成功");
+      } finally {
+        setModalLoading(false)
+        onCancel()
+      }
      
     });
-    // setVisible(false)
     
   };
 
 
-  /**
-   * 跳转路由
-   */
-  const handleOnClick = (id: string) => {
-    console.log(id)
-    setOpenId(id)
-    setVisible(true)
-  };
 
   const { getFieldDecorator } = props.form;
 
@@ -271,7 +275,7 @@ function List(props: RouteComponentProps & FormComponentProps): JSX.Element {
             <Button key="next" type="primary"  onClick={onPrev}>
               上一步
             </Button>,
-            <Button key="sumbit" type="primary"  onClick={onCreate}>
+            <Button key="sumbit" type="primary"  onClick={onCreate} loading={modalLoading}>
               确认
             </Button>,
           ]}>
@@ -316,4 +320,4 @@ function List(props: RouteComponentProps & FormComponentProps): JSX.Element {
   );
 }
 
-export default  Form.create({ name: 'form_in_modal' })(List);
+export default  Form.create({ name: 'TemplateList' })(List);
