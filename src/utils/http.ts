@@ -24,7 +24,7 @@ const accessTokenName = "Authorization";
 // };
 
 const http = axios.create({
-  baseURL: `http://127.0.0.1:3330/v1/`,
+  baseURL: process.env.REACT_APP_API_DEFAULT,
   headers: {
     "Content-Type": "application/json; charset=UTF-8"
   }
@@ -35,7 +35,6 @@ const notice = throttle(() => {
     message: `token失效`,
     description: "请重新登录页面"
   });
-  console.log(1222222)
   history.push('/')
 }, 10000)
 
@@ -46,7 +45,7 @@ http.interceptors.response.use(
   (error: AxiosError) => {
     const response = error.response
     console.log(response)
-    if (response && (response.status === 401 || response.data === 'Unauthorized')) {
+    if (response && (response.status === 403)) {
       notice()
     } else {
       notification.error({

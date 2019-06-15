@@ -1,11 +1,14 @@
-import { Button, DatePicker, Input, Modal, Switch, Table } from "antd";
-import { ColumnProps } from "antd/lib/table";
+import { Button, DatePicker, Form, Input, Modal, Radio, Switch, Table } from "antd";
+import { FormComponentProps } from "antd/lib/form";
+import { ColumnProps, TableRowSelection } from "antd/lib/table";
 import * as React from "react";
 import { RouteComponentProps } from "react-router-dom";
-// import { Link } from "react-router-dom";
+import { CSSTransition } from "react-transition-group";
 import * as api from "../../api/student";
+import * as apiTem from '../../api/template';
 import * as enums from "../../const/enum";
 import { IStudent } from "../../const/type/student";
+import {ITemplate} from '../../const/type/template'
 import formatDate from "../../utils/format-date";
 
 import fetchApiHook from "../../common/hooks/featchApiList";
@@ -13,22 +16,25 @@ import fetchApiHook from "../../common/hooks/featchApiList";
 const Search = Input.Search;
 const confirm = Modal.confirm;
 const { RangePicker } = DatePicker;
+const { useState, useEffect } = React
 
+enum eStep {
+  first,
+  second
+}
+
+
+// 模板的表格配置
+const templateColumns: Array<ColumnProps<ITemplate>> = [
+  {
+    title: "标题",
+    dataIndex: "title"
+  },
+];
 
 const initList: IStudent[] = [];
 
-function List(props: RouteComponentProps): JSX.Element {
-  const {
-    loading,
-    data,
-    pagination,
-    handleTableChange,
-    onDateChange,
-    onSearch,
-    fetchData
-  } = fetchApiHook(initList, api.getStudentList);
-
-
+function List(props: RouteComponentProps & FormComponentProps): JSX.Element {
   const columns: Array<ColumnProps<IStudent>> = [
     {
       title: "姓名",
@@ -53,7 +59,6 @@ function List(props: RouteComponentProps): JSX.Element {
       title: "是否推送消息",
       dataIndex: "isSendTemplate",
       render: (val: boolean, row: any) => {
-        console.log(val, '---------------')
         return (
           <Switch
             checked={val}
@@ -63,12 +68,69 @@ function List(props: RouteComponentProps): JSX.Element {
           />
         );
       }
+    },
+    {
+      title: '推送',
+      dataIndex: 'send',
+      render: (val: any, row: any) => {
+        return (
+          <Button
+            type="default"
+            size="small"
+            disabled={!row.openId}
+            onClick={() => {handleOnClick(row.openId)}}>
+            推送
+        </Button>
+        )
+      }
     }
   ];
 
+  const {
+    loading,
+    data,
+    pagination,
+    handleTableChange,
+    onDateChange,
+    onSearch,
+    fetchData
+  } = fetchApiHook(initList, api.getStudentList);
+
+
+  const [visible, setVisible] = useState(false)
+  const [template, setTemplate] = useState([])
+  const [step, setStep] = useState(eStep.first)
+  const [selectRow, setRow] = useState([])
+  const [formItem, setFormItem] = useState([])
+  const [openId, setOpenId] = useState('')
+
+
+  useEffect(() => {
+    fetchTemplateList()
+  }, [])
+
+
+  const fetchTemplateList = async () => {
+    const {data: {template_list}} = await apiTem.getTemplateList()
+    setTemplate(template_list)
+  }
+
+
+  const rowSelection: TableRowSelection<ITemplate> = {
+    type: 'radio',
+    onSelect: (record, selected, selectedRows) => {
+      // // 当前项，当前是否选择， 当前所有选择
+      // console.log(selected, selectedRows);
+      setRow(selectedRows)
+    },
+  };
+
+
+
+
+  
    // 开启开关
    const onChange = (checked: boolean, id: string) => {
-    console.log(`switch to ${checked} ${id}`);
     confirm({
       title: "确定操作?",
       content: `消息将${checked ? '会' : '不会'}推送到学员微信上`,
@@ -82,26 +144,89 @@ function List(props: RouteComponentProps): JSX.Element {
     });
   }
 
+
+  const onCancel = () => {
+    setVisible(false)
+  };
+
+
+  const onNext = () => {
+    setStep(eStep.second)
+    console.log(selectRow)
+    const [row] = selectRow
+    const content = row.content.replace(/\s+/g, ',').replace(/{{/g, '').replace(/\.DATA}}/g, '');
+    const arr = content.split(',')
+    const result = []
+    for (const item of arr) {
+      // g没有index这些
+      /([\u4e00-\u9fa5]+)[^\w]?(\w+)/.test(item)
+      result.push({
+        label: RegExp.$1,
+        value: RegExp.$2
+      })
+    }
+    console.log(result)
+    setFormItem(result)
+  }
+  
+  const onPrev = () => {
+    setStep(eStep.first)
+  }
+
+  const onCreate = () => {
+    console.log('click');
+    props.form.validateFieldsAndScroll(async (err, values) => {
+      if (err) {
+        return;
+      }
+      const [row] = selectRow
+
+      console.log(values)
+
+      const res = Object.keys(values).reduce((prev, key) => {
+        return {
+          ...prev,
+          [key]: {
+            value: values[key],
+            color: '#173177',
+          }
+        }
+      }, {})
+      
+
+      const params = {
+        touser: openId,
+        template_id: row.template_id,
+        // url: 'http://47.107.144.222/platform',
+        data: res
+      }
+
+      console.log(params)
+
+      apiTem.sendTemplate(params)
+     
+    });
+    // setVisible(false)
+    
+  };
+
+
   /**
    * 跳转路由
    */
-  const handleOnClick = () => {
-    props.history.push("add");
+  const handleOnClick = (id: string) => {
+    console.log(id)
+    setOpenId(id)
+    setVisible(true)
   };
+
+  const { getFieldDecorator } = props.form;
 
 
   return (
     <div>
       <div className="main-title clearfix">
         <h2>学生列表</h2>
-        <Button
-          className="fr"
-          type="primary"
-          icon="plus"
-          onClick={handleOnClick}
-        >
-          添加老师
-        </Button>
       </div>
 
       <div className="content-wrap">
@@ -123,11 +248,72 @@ function List(props: RouteComponentProps): JSX.Element {
           dataSource={data}
           pagination={pagination}
           loading={loading}
-          onChange={handleTableChange}
-        />
+          onChange={handleTableChange}/>
       </div>
+
+      <Modal
+          visible={visible}
+          title="发送模板消息"
+          okText="确定"
+          style={{overflow: 'hidden'}}
+          onCancel={onCancel}
+          footer={step === eStep.first ? [
+            <Button key="back" onClick={onCancel}>
+              取消
+            </Button>,
+            <Button key="next" type="primary"  onClick={onNext} disabled={selectRow.length === 0}>
+              下一步
+            </Button>,
+          ]: [
+            <Button key="back" onClick={onCancel}>
+              取消
+            </Button>,
+            <Button key="next" type="primary"  onClick={onPrev}>
+              上一步
+            </Button>,
+            <Button key="sumbit" type="primary"  onClick={onCreate}>
+              确认
+            </Button>,
+          ]}>
+
+          {/* 1.表格 */}
+          <CSSTransition
+            in={step === eStep.first}
+            classNames="slideRight"
+            exit={false}
+            unmountOnExit={true}
+            timeout={300}>
+              
+            <Table<ITemplate>
+              bordered={true}
+              rowSelection={rowSelection}
+              columns={templateColumns}
+              rowKey="template_id"
+              dataSource={template}/>
+          </CSSTransition>
+           
+           {/* 2.表单 */}
+          <CSSTransition
+            in={step === eStep.second}
+            classNames="slideLeft"
+            exit={false}
+            unmountOnExit={true}
+            timeout={300}>
+            <Form layout="vertical">
+              {formItem.length > 0 && formItem.map((item) => {
+                return (
+                  <Form.Item label={item.label} key={item.value}>
+                  {getFieldDecorator(item.value as never, {
+                    rules: [{ required: true, message: 'Please input the title of collection!' }],
+                  })(<Input />)}
+                </Form.Item>
+                )
+              })}
+            </Form>
+          </CSSTransition>
+        </Modal>
     </div>
   );
 }
 
-export default List;
+export default  Form.create({ name: 'form_in_modal' })(List);

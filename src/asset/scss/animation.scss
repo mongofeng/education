@@ -1,3 +1,4 @@
+// 不能用-
 /* 放大 */
 .page-enter {
   opacity: 0;
@@ -10,30 +11,48 @@
   transition: opacity 300ms, transform 300ms;
 }
 
-// .page-exit {
-//   opacity: 1;
-//   transform: scale(1);
-// }
-
-// .page-exit-active {
-//   opacity: 0;
-//   transform: scale(0.9);
-//   transition: opacity 300ms, transform 300ms;
-// }
 
 
 /* 左滑进场 */
-.slide-left-enter-active{
-  transition: all 0.3s ease;
-}
 
-
-.slide-left-enter {
+.slideLeft-enter {
   transform: translateX(100%);
 }
 
-.slide-left-enter-to {
+.slideLeft-enter-active {
   transform: translateX(0);
+  transition: transform 300ms;
 }
+
+
+/* 右滑进场 */
+
+.slideRight-enter {
+  transform: translateX(-100%);
+}
+.slideRight-enter-active {
+  transform: translateX(0);
+  transition: transform 300ms;
+}
+
+
+.alert-enter {
+  opacity: 0;
+  transform: scale(0.9);
+}
+.alert-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 300ms, transform 300ms;
+}
+.alert-exit {
+  opacity: 1;
+}
+.alert-exit-active {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 300ms, transform 300ms;
+}
+
 
 
