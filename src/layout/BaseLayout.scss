@@ -24,9 +24,13 @@
   }
   
   .base-layout .logo {
-    height: 32px;
-    background: rgba(255,255,255,.2);
-    margin: 16px;
+    box-sizing: border-box;
+    border-right: 1px solid #001529;
+    height: 63px;
+    background: url('../asset/images/logo/logo.JPG') no-repeat  center {
+      size: auto 100%;
+      color: #fff;
+    };
   }
 
 

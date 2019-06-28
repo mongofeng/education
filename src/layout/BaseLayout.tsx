@@ -8,7 +8,7 @@ import SiderMenu from '../components/Sider-Menu'
 import { Navs} from '../config/nav'
 import {IUser} from '../const/type/user'
 import * as action from "../store/actions/user";
-import "./BaseLayout.css";
+import "./BaseLayout.scss";
 const { Header, Content, Sider } = Layout;
 
 

@@ -29,6 +29,7 @@ const UserLayout: React.FC<RouteComponentProps> = (props) => {
       cn.destroy();
     }
   }, [])
+  
   return (
     <div className="user-layout-container" ref={element}>
       <div className="user-layout-logo" />
