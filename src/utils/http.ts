@@ -1,5 +1,5 @@
 import { notification } from "antd";
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import history from './histroy'
 import {throttle} from './util'
 
@@ -23,12 +23,7 @@ const accessTokenName = "Authorization";
 //   504: '网关超时。',
 // };
 
-const http = axios.create({
-  baseURL: process.env.REACT_APP_API_DEFAULT,
-  headers: {
-    "Content-Type": "application/json; charset=UTF-8"
-  }
-});
+
 
 const notice = throttle(() => {
   notification.error({
@@ -38,40 +33,57 @@ const notice = throttle(() => {
   history.push('/')
 }, 10000)
 
-http.interceptors.response.use(
-  (response: AxiosResponse) => {
-    return response;
-  },
-  (error: AxiosError) => {
-    const response = error.response
-    console.log(response)
-    if (response && (response.status === 403)) {
-      notice()
-    } else {
-      notification.error({
-        message: `请求错误`,
-        description: "请求错误"
-      });
+function interceptors (http: AxiosInstance) {
+  http.interceptors.response.use(
+    (response: AxiosResponse) => {
+      return response;
+    },
+    (error: AxiosError) => {
+      const response = error.response
+      if (response && (response.status === 403)) {
+        notice()
+      } else {
+        notification.error({
+          message: `请求错误`,
+          description: "请求错误"
+        });
+      }
+      
+      return Promise.reject(error);
     }
-    
-    return Promise.reject(error);
-  }
-);
-
-http.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
-    const localStorageAccessTokenName = window.localStorage.getItem(
-      accessTokenName
-    );
-    if (localStorageAccessTokenName) {
-      config.headers[accessTokenName] = localStorageAccessTokenName;
+  );
+  
+  http.interceptors.request.use(
+    (config: AxiosRequestConfig) => {
+      const localStorageAccessTokenName = window.localStorage.getItem(
+        accessTokenName
+      );
+      if (localStorageAccessTokenName) {
+        config.headers[accessTokenName] = localStorageAccessTokenName;
+      }
+  
+      return config;
+    },
+    (error: AxiosError) => {
+      return Promise.reject(error);
     }
+  );
+}
 
-    return config;
-  },
-  (error: AxiosError) => {
-    return Promise.reject(error);
-  }
-);
 
-export default http;
+function createHttp (baseURL: string): AxiosInstance {
+  const http = axios.create({
+    baseURL,
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8"
+    }
+  });
+  interceptors(http)
+  return http
+}
+
+
+
+export default createHttp(process.env.REACT_APP_API_DEFAULT);
+
+export const wechat = createHttp(process.env.REACT_APP_API_WECHAT);
