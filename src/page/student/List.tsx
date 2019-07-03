@@ -2,6 +2,7 @@ import { Button, DatePicker, Input, Table   } from "antd";
 import {PaginationProps} from 'antd/lib/pagination'
 import { ColumnProps } from 'antd/lib/table';
 import * as React from "react";
+import CsvDownloader from 'react-csv-downloader';
 import { connect } from "react-redux";
 import { Redirect, RouteComponentProps } from 'react-router-dom';
 import { Link } from "react-router-dom";
@@ -97,6 +98,14 @@ const columns: Array<ColumnProps<IStudent>> = [
     }
   }
 ];
+
+
+const csvColumns = columns.reduce((initVal: Array<{id: string; displayName: string}>, item: any) => {
+  return item.dataIndex ? initVal.concat({
+    id: item.dataIndex,
+    displayName: item.title,
+  }) : initVal;
+}, [])
 
 class List extends React.PureComponent<IList> {
   state: IState = {
@@ -226,6 +235,29 @@ class List extends React.PureComponent<IList> {
     if (this.state.redirect) {
       return <Redirect push={true} to='add' />; 
     }
+    const csvData = this.props.data.map(item => {
+      return {
+        ...item,
+        sex: enums.SEX_LABEL[item.sex],
+        address: `${item.province}${item.city}${item.region}${item.address}`,
+        createDate: formatDate(new Date(item.createDate)),
+        status: enums.STUDENT_STATUS_LABEL[item.status],
+      }
+    })
+    const footer = () => {
+      return (<CsvDownloader
+        filename="学生列表"
+        columns={csvColumns}
+        suffix={true}
+        datas={csvData}>
+          <Button 
+            type="primary"
+            icon="download">
+              导出
+            </Button>
+      </CsvDownloader>)
+    }
+
     return (
       <div>
         <div className="main-title clearfix">
@@ -259,6 +291,7 @@ class List extends React.PureComponent<IList> {
             pagination={this.state.pagination}
             loading={this.props.loading}
             onChange={this.handleTableChange}
+            footer={footer}
           />
         </div>
       </div>
