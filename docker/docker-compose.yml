@@ -1,0 +1,22 @@
+
+version: '2.1'
+
+services:
+  edu_build:
+    build: ../
+    container_name: 'edu_build'
+    volumes:
+      - edu_volume:/usr/src/app/build
+
+  edu_web:
+    image: nginx
+    ports:
+      - 164:80
+    container_name: 'edu_web'
+    restart: unless-stopped
+    volumes:
+      - edu_volume:/usr/share/nginx/html
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+
+volumes:
+  edu_volume:

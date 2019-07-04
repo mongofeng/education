@@ -1,8 +1,9 @@
 FROM node:10.13-alpine
-ENV NODE_ENV production
+# https://github.com/vuejs/vue-cli/issues/2404
 WORKDIR /usr/src/app
+# ENV NODE_ENV production 以production的环境安装依赖
 COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
-RUN npm install --production --silent && mv node_modules ../
+RUN npm install --registry=https://registry.npm.taobao.org  --sass_binary_site=https://npm.taobao.org/mirrors/node-sass/
 COPY . .
-EXPOSE 3000
-CMD npm start
+RUN ls
+CMD ["npm", "run", "build"]

@@ -32,7 +32,10 @@
     "redux-saga": "^1.0.2",
     "sass": "^1.20.1",
     "sass-loader": "^7.1.0",
-    "typescript": "^3.3.3333"
+    "typescript": "^3.3.3333",
+    "babel-plugin-import": "^1.11.0",
+    "less": "^3.9.0",
+    "less-loader": "^4.1.0"
   },
   "scripts": {
     "start": "react-app-rewired start",
@@ -51,9 +54,6 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "babel-plugin-import": "^1.11.0",
-    "less": "^3.9.0",
-    "less-loader": "^4.1.0",
     "redux-devtools-extension": "^2.13.8",
     "tslint": "^5.16.0",
     "tslint-config-prettier": "^1.18.0",
