@@ -51,7 +51,7 @@ interface IAreas {
  */
 export function getLocalDistricts(): AxiosPromise<IAreas> {
     return axios.get(
-        `/data/districts/index.json`
+        `data/districts/index.json`
     )
 }
 
