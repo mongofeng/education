@@ -8,7 +8,8 @@ import {
   Input,
   message,
   Select,
-  Tooltip
+  TimePicker,
+  Tooltip,
 } from "antd";
 import { FormComponentProps } from "antd/lib/form";
 import * as React from "react";
@@ -61,10 +62,12 @@ const FormCompent: React.FC<IFormProps> = (props)=> {
       }
   
       props.form.validateFieldsAndScroll(async (err, values) => {
+        console.log(values)
         if (err) {
           return;
         }
-        const {rangeValue, ...reset} = values
+        // tslint:disable-next-line:no-shadowed-variable
+        const {rangeValue, startTime, endTime, ...reset} = values
         const [startDate, endDate] =  [
           rangeValue[0].format('YYYY-MM-DD 00:00:00'), 
           rangeValue[1].format('YYYY-MM-DD 23:59:59')
@@ -72,6 +75,8 @@ const FormCompent: React.FC<IFormProps> = (props)=> {
         const params = {
           startDate: new Date(startDate).getTime(),
           endDate: new Date(endDate).getTime(),
+          endTime: endTime.format('HH:mm'),
+          startTime: startTime.format('HH:mm'),
           ...reset
         }
         try {
@@ -152,6 +157,9 @@ const FormCompent: React.FC<IFormProps> = (props)=> {
         format: 'yyyy-MM-dd',
       }), 'YYYY-MM-DD')
     ] : []
+
+    const startTime = (form && form.startTime) ? moment(form.startTime, 'HH:mm') : null
+    const endTime = (form && form.endTime) ? moment(form.endTime, 'HH:mm') : null
 
     return (
       <div>
@@ -242,6 +250,28 @@ const FormCompent: React.FC<IFormProps> = (props)=> {
               rules: [{ type: 'array', required: true, message: '请选择开始和结束的时间!' }],
             })(
               <RangePicker />
+            )}
+          </Form.Item>
+
+
+          <Form.Item
+            label="上课时间">
+            {getFieldDecorator('startTime', {
+              initialValue: startTime,
+              rules: [{  required: true, message: '请选择上课的时间!' }],
+            })(
+              <TimePicker format="HH:mm"/>
+            )}
+          </Form.Item>
+
+
+          <Form.Item
+            label="下课时间">
+            {getFieldDecorator('endTime', {
+              initialValue: endTime,
+              rules: [{  required: true, message: '请选择下课的时间!' }],
+            })(
+              <TimePicker format="HH:mm"/>
             )}
           </Form.Item>
 
