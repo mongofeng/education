@@ -44,6 +44,7 @@
     "eject": "react-scripts eject",
     "lint": "tslint -c tslint.json 'src/**/*.ts'"
   },
+  "proxy": "http://127.0.0.1:7777",
   "eslintConfig": {
     "extends": "react-app"
   },

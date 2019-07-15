@@ -1,4 +1,4 @@
-import { Breadcrumb, Button, Col, Divider, Icon, Popover, Row, Statistic, Tabs, Tag } from "antd";
+import { Breadcrumb, Button, Col, Divider, Icon, message, Modal, Popover, Row, Statistic, Tabs, Tag } from "antd";
 import * as React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import * as api from "../../api/student";
@@ -14,75 +14,8 @@ import MessageNotice from './components/MessageNotice'
 import Schedule from './components/Schedule'
 import SignIn from './components/SignIn'
 const TabPane = Tabs.TabPane;
+const confirm = Modal.confirm;
 
-
-const columns: IField[] = [
-  {
-    label: "姓名",
-    prop: "name",
-    render: ({data, field}: {data: IStudent, field: string}) => <a href="javascript:;">{data[field]}</a>
-  },
-  {
-    label: "生日",
-    prop: "birthday",
-  },
-  {
-    label: "联系人",
-    prop: "contacts",
-  },
-  {
-    label: "性别",
-    prop: "sex",
-    render: ({data, field}: {data: IStudent, field: string}) => <span>{enums.SEX_LABEL[data[field]]}</span>
-  },
-  {
-    label: "年龄",
-    prop: "age"
-  },
-  {
-    label: "手机号码",
-    prop: "phone"
-  },
-  {
-    label: "地址",
-    prop: "address",
-    render: ({data}: {data: IStudent}) => {
-      const {province, city, region, address} = data
-      const adress = `${province}${city}${region}${address}`
-      return (
-        <span>
-         {adress}
-        </span>
-      )
-    }
-  },
-  {
-    label: "微信openId",
-    prop: "openId",
-  },
-  {
-    label: "teacherId",
-    prop: "teacherId",
-  },
-  {
-    label: "状态",
-    prop: "status",
-    render: ({data, field}: {data: IStudent, field: string}) => (
-    <Tag color={data[field] === enums.STUDENT_STATUS.reading ? "blue" : "red"}>
-      {enums.STUDENT_STATUS_LABEL[data[field]]}
-    </Tag>)
-  },
-  {
-    label: "创建时间",
-    prop: "createDate",
-    render: ({data}: {data: Required<IStudent>}) => <span>{formatDate(new Date(data.createDate))}</span>
-  },
-  {
-    label: "创建时间",
-    prop: "updateDate",
-    render: ({data}: {data: Required<IStudent>}) => <span>{formatDate(new Date(data.updateDate))}</span>
-  },
-];
 
 interface IState {
   info: IStudent | null
@@ -115,6 +48,22 @@ class Detail extends React.PureComponent<RouteComponentProps<IParams>> {
   }
 
 
+  resetOpenId = async (id: string) => {
+    confirm({
+      title: "确定操作?",
+      content: `重置后需要重新绑定微信`,
+      onOk: async() => {
+        await api.updateStudent(id, {
+          openId: ''
+        });
+        message.success("重置微信号成功");
+        this.fetchDetail();
+      }
+    });
+    
+  }
+
+
 
   handleClick = () => {
     this.props.history.push(`../edit/${this.props.match.params.id}`)
@@ -138,6 +87,92 @@ class Detail extends React.PureComponent<RouteComponentProps<IParams>> {
       num: totalInfo ? totalInfo.num : 0,
       used: totalInfo ? totalInfo.used : 0,
     }
+
+    const columns: IField[] = [
+      {
+        label: "姓名",
+        prop: "name",
+        render: ({data, field}: {data: IStudent, field: string}) => <a href="javascript:;">{data[field]}</a>
+      },
+      {
+        label: "生日",
+        prop: "birthday",
+      },
+      {
+        label: "联系人",
+        prop: "contacts",
+      },
+      {
+        label: "性别",
+        prop: "sex",
+        render: ({data, field}: {data: IStudent, field: string}) => <span>{enums.SEX_LABEL[data[field]]}</span>
+      },
+      {
+        label: "年龄",
+        prop: "age"
+      },
+      {
+        label: "手机号码",
+        prop: "phone"
+      },
+      {
+        label: "地址",
+        prop: "address",
+        render: ({data}: {data: IStudent}) => {
+          const {province, city, region, address} = data
+          const adress = `${province}${city}${region}${address}`
+          return (
+            <span>
+             {adress}
+            </span>
+          )
+        }
+      },
+      {
+        label: "微信openId",
+        prop: "openId",
+        render: ({data, field}: {data: IStudent, field: string}) => {
+          if (data[field]) {
+            return [
+              <span key="1">{data[field].slice(0, 20)}</span>,
+              <Button   
+                onClick={() => {this.resetOpenId(data._id)}} 
+                key="2"
+                className="ml10"
+                type="link"
+                icon="delete" 
+                size="small"/>
+            ]
+          }
+    
+          return <div>暂无绑定</div>
+          
+        }
+      },
+      {
+        label: "teacherId",
+        prop: "teacherId",
+      },
+      {
+        label: "状态",
+        prop: "status",
+        render: ({data, field}: {data: IStudent, field: string}) => (
+        <Tag color={data[field] === enums.STUDENT_STATUS.reading ? "blue" : "red"}>
+          {enums.STUDENT_STATUS_LABEL[data[field]]}
+        </Tag>)
+      },
+      {
+        label: "创建时间",
+        prop: "createDate",
+        render: ({data}: {data: Required<IStudent>}) => <span>{formatDate(new Date(data.createDate))}</span>
+      },
+      {
+        label: "创建时间",
+        prop: "updateDate",
+        render: ({data}: {data: Required<IStudent>}) => <span>{formatDate(new Date(data.updateDate))}</span>
+      },
+    ];
+
     return (
       <div>
         <div className="main-title">
