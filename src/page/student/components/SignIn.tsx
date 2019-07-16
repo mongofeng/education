@@ -121,6 +121,7 @@ const List: React.FC<IProps> = (props) => {
                     name,
                     num,
                     courseId: res._id,
+                    course: res.name,
                     teacherId: res.teacherId,
                     studentId: id,
                     type: enums.COURSE_HOUR_ACTION_TYPE.del,
