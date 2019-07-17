@@ -129,8 +129,11 @@ const List: React.FC<IProps> = (props) => {
                     amount: 0,
                     desc: desc || '',
                 }
-                await apiHour.addHour(condition)
-                message.success('提交成功')
+                const {data: {data: result}} = await apiHour.addHour(condition)
+                console.log(result)
+                let str = (result.student_hour.ok === 1 && result.student_hour.n !== 0) ? '成功扣除课时' : '扣除课时失败'
+                str += result.templateMsg.errcode === 0 ? ',微信推送成功' : ',微信推送失败,请到课时里面推送'
+                message.success(str)
                 props.update()
             } finally {
                 handleCancel();

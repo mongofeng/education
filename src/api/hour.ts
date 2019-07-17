@@ -2,14 +2,23 @@ import {IHour} from '../const/type/hour'
 import { ApiListData, ApiResponse } from '../types/api'
 import http from '../utils/http'
 
-
+interface IResult {
+    templateMsg: {
+        errcode: number
+    }
+    student_hour: {
+        n: number
+        nModified: number
+        ok: number
+    }
+}
 
 
 /**
  * 添加课程
  * @param {*} params
  */
-export function addHour(params: IHour) {
+export function addHour(params: IHour): ApiResponse<IResult> {
     return http.post('class-hour', params)
 }
 
