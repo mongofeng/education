@@ -10,7 +10,7 @@ import {IStudentHour} from '../../const/type/student-hour'
 import formatDate from "../../utils/format-date";
 import Course from './components/course'
 import Hours from './components/hour'
-import MessageNotice from './components/MessageNotice'
+
 import Schedule from './components/Schedule'
 import SignIn from './components/SignIn'
 const TabPane = Tabs.TabPane;
@@ -220,11 +220,6 @@ class Detail extends React.PureComponent<RouteComponentProps<IParams>> {
 
             <TabPane tab="当天课程签到表" key="5">
               <SignIn {...hourProps}/>
-            </TabPane>
-
-
-            <TabPane tab="消息推送" key="6">
-              <MessageNotice id={id}/>
             </TabPane>
             
           </Tabs>
