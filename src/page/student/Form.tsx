@@ -2,13 +2,14 @@ import {
   BackTop,
   Breadcrumb,
   Button,
+  DatePicker,
   Form,
   Icon,
   Input,
   message,
   Select,
-  Tooltip
-} from "antd";
+  Tooltip,
+} from 'antd'
 import { FormComponentProps } from "antd/lib/form";
 import * as React from "react";
 import { Link, RouteComponentProps } from 'react-router-dom';
@@ -18,6 +19,7 @@ import {getAgeOptions} from '../../common/effect-utils'
 import {IStudent} from '../../const/type/student'
 import * as validator from '../../utils/validator'
 import Location from '.././../components/Location'
+const moment = require('moment')
 const { TextArea } = Input;
 const { Option } = Select;
 
@@ -25,7 +27,7 @@ interface IRouteParams {
   id?: string;
 }
 
-type IFormProps = FormComponentProps & RouteComponentProps<IRouteParams> 
+type IFormProps = FormComponentProps & RouteComponentProps<IRouteParams>
 
 interface IState {
   loading: boolean
@@ -35,7 +37,7 @@ interface IState {
 }
 
 
-class FormComp extends React.PureComponent<IFormProps> {
+class StudentForm extends React.PureComponent<IFormProps> {
   state: IState = {
     loading: false,
     form: null,
@@ -54,7 +56,7 @@ class FormComp extends React.PureComponent<IFormProps> {
       isEdit: true
     });
   };
-  
+
 
   /**
    * 提交表单
@@ -74,14 +76,17 @@ class FormComp extends React.PureComponent<IFormProps> {
 
       console.log(values)
 
-      const { residence, ...reset } = values;
+      const { residence, birthday, ...reset } = values;
       const [province, city, region] = residence;
       const params = {
         ...reset,
         province,
         city,
-        region
+        region,
+        birthday: birthday.format('YYYY-MM-DD')
       };
+
+      console.log(params)
 
       try {
         this.setState({ loading: true });
@@ -92,7 +97,7 @@ class FormComp extends React.PureComponent<IFormProps> {
           await api.addStudent(params);
           message.success("添加成功");
         }
-        
+
         this.props.history.goBack();
       } finally {
         this.setState({ loading: false });
@@ -154,6 +159,12 @@ class FormComp extends React.PureComponent<IFormProps> {
     };
 
     const areaVal = this.state.form ? [this.state.form.province, this.state.form.city, this.state.form.region]: []
+    const regex = /(\d{4})[-./](\d{1,2})[-./](\d{1,2})/;
+    const result = this.state.form ? this.state.form.birthday.replace(regex, () => {
+      return `${RegExp.$1}-${RegExp.$2.padStart(2, '0')}-${RegExp.$3.padStart(2, '0')}`
+    }) : '' ;
+    const startTime = result ? moment(result, 'YYYY-MM-DD') : null
+    console.log(result);
 
     return (
       <div>
@@ -192,11 +203,11 @@ class FormComp extends React.PureComponent<IFormProps> {
 
             <Form.Item label="生日">
               {getFieldDecorator("birthday", {
-                initialValue: this.state.form ? this.state.form.birthday : '',
+                initialValue: startTime,
                 rules: [
-                  { required: true, message: "请填写生日", whitespace: true }
+                  { required: true, message: "请填写生日" }
                 ]
-              })(<Input />)}
+              })(<DatePicker  />)}
             </Form.Item>
 
             <Form.Item label="性别">
@@ -281,7 +292,7 @@ class FormComp extends React.PureComponent<IFormProps> {
                       <Option value={item.value} key={item.value}>{item.label}</Option>
                     ))
                   }
-                  
+
                 </Select>
               )}
             </Form.Item>
@@ -326,7 +337,5 @@ class FormComp extends React.PureComponent<IFormProps> {
   }
 }
 
-const FormComponent = Form.create({ name: "FormComp" })(FormComp);
+export default Form.create({ name: "StudentForm" })(StudentForm);
 
-
-export default FormComponent
