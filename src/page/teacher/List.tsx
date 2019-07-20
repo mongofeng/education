@@ -9,6 +9,7 @@ import { ITeacher } from "../../const/type/teacher";
 import formatDate from "../../utils/format-date";
 
 import fetchApiHook from '../../common/hooks/featchApiList'
+import getAge from '../../utils/getAge'
 
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
@@ -76,15 +77,15 @@ const initList: ITeacher[] = [];
 function List(props: RouteComponentProps): JSX.Element {
 
   const {
-    loading, 
-    data, 
-    pagination, 
-    handleTableChange, 
-    onDateChange, 
+    loading,
+    data,
+    pagination,
+    handleTableChange,
+    onDateChange,
     onSearch
   } = fetchApiHook(initList, api.getteacherList)
 
-  
+
 
   /**
    * 跳转路由
@@ -124,7 +125,12 @@ function List(props: RouteComponentProps): JSX.Element {
           bordered={true}
           columns={columns}
           rowKey="_id"
-          dataSource={data}
+          dataSource={data.map(item => {
+            return {
+              ...item,
+              age: getAge(item.birthday)
+            }
+          })}
           pagination={pagination}
           loading={loading}
           onChange={handleTableChange}/>

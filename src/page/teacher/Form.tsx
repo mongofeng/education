@@ -6,6 +6,7 @@ import {
   Icon,
   Input,
   message,
+  DatePicker,
   Select,
   Tooltip
 } from "antd";
@@ -16,10 +17,8 @@ import * as api from "../../api/teacher";
 import fetchFormHook from '../../common/hooks/fetchForm'
 import {ITeacher} from '../../const/type/teacher'
 import Location from '.././../components/Location'
-
+const moment = require('moment')
 import * as validator from '../../utils/validator'
-
-import {getAgeOptions} from '../../common/effect-utils'
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -28,7 +27,7 @@ interface IRouteParams {
   id?: string;
 }
 
-type IFormProps = FormComponentProps & RouteComponentProps<IRouteParams> 
+type IFormProps = FormComponentProps & RouteComponentProps<IRouteParams>
 
 const initForm = {} as ITeacher
 
@@ -43,29 +42,30 @@ const FormCompent: React.FC<IFormProps> = (props)=> {
 
     /**
      * 提交表单
-     * @param e 
+     * @param e
      */
     const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault();
-  
+
       if (loading) {
         return;
       }
-  
+
       props.form.validateFieldsAndScroll(async (err, values) => {
         if (err) {
           return;
         }
-  
-        const { residence, ...reset } = values;
+
+        const { residence, birthday, ...reset } = values;
         const [province, city, region] = residence;
         const params = {
           ...reset,
           province,
           city,
-          region
+          region,
+          birthday: birthday.format('YYYY-MM-DD')
         };
-  
+
         try {
           setLoading(true);
           if (isEdit && props.match.params.id) {
@@ -75,7 +75,7 @@ const FormCompent: React.FC<IFormProps> = (props)=> {
             await api.addteacher(params);
             message.success("添加成功");
           }
-          
+
           props.history.goBack();
         } finally {
           setLoading(false);
@@ -109,6 +109,13 @@ const FormCompent: React.FC<IFormProps> = (props)=> {
     };
 
     const areaVal = form ? [form.province, form.city, form.region]: []
+
+
+  const regex = /(\d{4})[-./](\d{1,2})[-./](\d{1,2})/;
+  const result = (form && form.birthday) ? form.birthday.replace(regex, () => {
+    return `${RegExp.$1}-${RegExp.$2.padStart(2, '0')}-${RegExp.$3.padStart(2, '0')}`
+  }) : '' ;
+  const startTime = result ? moment(result, 'YYYY-MM-DD') : null
 
     return (
       <div>
@@ -146,11 +153,11 @@ const FormCompent: React.FC<IFormProps> = (props)=> {
 
             <Form.Item label="生日">
               {getFieldDecorator("birthday", {
-                initialValue: form ? form.birthday : '',
+                initialValue: startTime,
                 rules: [
-                  { required: true, message: "请填写生日", whitespace: true }
+                  { required: true, message: "请选择生日"}
                 ]
-              })(<Input />)}
+              })(<DatePicker />)}
             </Form.Item>
 
             <Form.Item label="性别">
@@ -161,21 +168,6 @@ const FormCompent: React.FC<IFormProps> = (props)=> {
                 <Select>
                   <Option value={1}>男</Option>
                   <Option value={2}>女</Option>
-                </Select>
-              )}
-            </Form.Item>
-
-            <Form.Item label="年龄">
-              {getFieldDecorator("age", {
-                initialValue: form ? form.age : '',
-                rules: [{ type: "number", required: true, message: "请选择年龄" }]
-              })(
-                <Select>
-                  {getAgeOptions(80).map(item => (
-                    <Option value={item.value} key={item.value}>
-                      {item.label}
-                    </Option>
-                  ))}
                 </Select>
               )}
             </Form.Item>

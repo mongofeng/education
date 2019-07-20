@@ -13,6 +13,7 @@ import Hours from './components/hour'
 
 import Schedule from './components/Schedule'
 import SignIn from './components/SignIn'
+import getAge from '../../utils/getAge'
 const TabPane = Tabs.TabPane;
 const confirm = Modal.confirm;
 
@@ -60,7 +61,7 @@ class Detail extends React.PureComponent<RouteComponentProps<IParams>> {
         this.fetchDetail();
       }
     });
-    
+
   }
 
 
@@ -109,7 +110,8 @@ class Detail extends React.PureComponent<RouteComponentProps<IParams>> {
       },
       {
         label: "年龄",
-        prop: "age"
+        prop: "age",
+        render: ({data, field}: {data: IStudent, field: string}) => <span>{getAge(data.birthday)}</span>
       },
       {
         label: "手机号码",
@@ -135,18 +137,18 @@ class Detail extends React.PureComponent<RouteComponentProps<IParams>> {
           if (data[field]) {
             return [
               <span key="1">{data[field].slice(0, 20)}</span>,
-              <Button   
-                onClick={() => {this.resetOpenId(data._id)}} 
+              <Button
+                onClick={() => {this.resetOpenId(data._id)}}
                 key="2"
                 className="ml10"
                 type="link"
-                icon="delete" 
+                icon="delete"
                 size="small"/>
             ]
           }
-    
+
           return <div>暂无绑定</div>
-          
+
         }
       },
       {
@@ -183,7 +185,7 @@ class Detail extends React.PureComponent<RouteComponentProps<IParams>> {
           <Popover content="点击编辑学员信息"  trigger="hover" placement="left">
             <Button icon="edit" className="fr" onClick={this.handleClick}/>
           </Popover>
-          
+
         </div>
         <div className="content-wrap">
           <Divider orientation="left">基本信息</Divider>
@@ -193,7 +195,7 @@ class Detail extends React.PureComponent<RouteComponentProps<IParams>> {
             </Col>
             <Col span={8} >
             <Row gutter={16}>
-              
+
               <Col span={8}>
                 <Statistic title="使用" value={info.used} suffix="h" valueStyle={{color: 'red'}}/>
               </Col>
@@ -221,7 +223,7 @@ class Detail extends React.PureComponent<RouteComponentProps<IParams>> {
             <TabPane tab="当天课程签到表" key="5">
               <SignIn {...hourProps}/>
             </TabPane>
-            
+
           </Tabs>
         </div>
       </div>

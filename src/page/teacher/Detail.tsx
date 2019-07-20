@@ -10,6 +10,7 @@ import BarCharts from './components/BarCharts'
 import Course from './components/Course'
 import Schedule from './components/Schedule'
 import Student from './components/Student'
+import getAge from '../../utils/getAge'
 const { useState, useEffect } = React;
 const TabPane = Tabs.TabPane;
 
@@ -31,7 +32,8 @@ const columns: IField[] = [
   },
   {
     label: "年龄",
-    prop: "age"
+    prop: "age",
+    render: ({data, field}: {data: ITeacher, field: string}) => <span>{getAge(data.birthday)}</span>
   },
   {
     label: "手机号码",
@@ -114,7 +116,7 @@ const  Detail: React.FC<RouteComponentProps<IParams>>  = (props) => {
         <Popover content="点击编辑老师信息"  trigger="hover" placement="left">
           <Button icon="edit" className="fr" onClick={handleClick}/>
         </Popover>
-        
+
       </div>
       <div className="content-wrap">
         <Divider orientation="left">基本信息</Divider>
@@ -123,10 +125,10 @@ const  Detail: React.FC<RouteComponentProps<IParams>>  = (props) => {
             <FieldInfo fields={columns} data={info || {}}/>
           </Col>
           <Col span={8} >
-            <Statistic 
-              title={<div style={{textAlign: 'center'}}>课时</div>} 
+            <Statistic
+              title={<div style={{textAlign: 'center'}}>课时</div>}
               value={568}
-              suffix="h" 
+              suffix="h"
               valueStyle={{fontSize: '42px', color: 'red', textAlign: 'center'}}/>
           </Col>
         </Row>

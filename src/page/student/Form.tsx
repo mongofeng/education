@@ -15,7 +15,6 @@ import * as React from "react";
 import { Link, RouteComponentProps } from 'react-router-dom';
 import * as api from "../../api/student";
 import * as apiTeacher from '../../api/teacher'
-import {getAgeOptions} from '../../common/effect-utils'
 import {IStudent} from '../../const/type/student'
 import * as validator from '../../utils/validator'
 import Location from '.././../components/Location'
@@ -222,20 +221,6 @@ class StudentForm extends React.PureComponent<IFormProps> {
               )}
             </Form.Item>
 
-            <Form.Item label="年龄">
-              {getFieldDecorator("age", {
-                initialValue: this.state.form ? this.state.form.age : '',
-                rules: [{ type: "number", required: true, message: "请选择年龄" }]
-              })(
-                <Select>
-                  {getAgeOptions().map(item => (
-                    <Option value={item.value} key={item.value}>
-                      {item.label}
-                    </Option>
-                  ))}
-                </Select>
-              )}
-            </Form.Item>
 
             <Form.Item label="紧急联系人">
               {getFieldDecorator("contacts", {
