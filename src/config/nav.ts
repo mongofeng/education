@@ -42,4 +42,8 @@ export const Navs: INavs[] = [
     label: '消息管理',
     value: 'template'
   },
+  {
+    label: '课程包',
+    value: 'package'
+  }
 ]
