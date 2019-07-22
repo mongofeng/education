@@ -22,15 +22,6 @@ const columns: IField[] = [
     prop: "teacherId"
   },
   {
-    label: "一周",
-    prop: "day",
-    render: ({data, field}: {data: ICourse, field: string}) => {
-      return (
-        <div>{enums.WEEK_LABEL[data[field]]}</div>
-      )
-    }
-  },
-  {
     label: "一天",
     prop: "time",
     render: ({data, field}: {data: ICourse, field: string}) => {
@@ -70,6 +61,21 @@ const columns: IField[] = [
     prop: "updateDate",
     render: ({data}: {data: Required<ICourse>}) => (
       <span>{formatDate(new Date(data.updateDate))}</span>)
+  },
+  {
+    label: "一周",
+    prop: "day",
+    render: ({data, field}: {data: ICourse, field: string}) => {
+      console.log(data, field)
+      // return 1
+      return (data[field] || []).map((key) => {
+        return (
+          <Tag color="blue" key={key}>
+            {enums.WEEK_LABEL[key]}
+          </Tag>
+        )
+      })
+    }
   },
 ];
 
@@ -141,7 +147,8 @@ const  Detail: React.FC<RouteComponentProps<IParams>>  = (props) => {
           <TabPane tab="签到流水" key="1">
               <Hour id={id} />
           </TabPane>
-          {info && info.studentIds && info.studentIds && <TabPane tab="课程的学员列表" key="2"><Student ids={info.studentIds}/></TabPane> }
+          {info && info.studentIds && info.studentIds && <TabPane tab="课程的学员列表" key="2">
+            <Student ids={info.studentIds}/></TabPane> }
         </Tabs>
       </div>
     </div>

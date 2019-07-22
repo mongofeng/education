@@ -1,4 +1,4 @@
-import { Button, DatePicker, Input, Table } from "antd";
+import { Button, DatePicker, Input, Table, Tag } from "antd";
 import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
 import { RouteComponentProps } from "react-router-dom";
@@ -25,11 +25,15 @@ const columns: Array<ColumnProps<ICourse>> = [
   {
     title: "一周",
     dataIndex: "day",
-    filterMultiple: false,
-    filters: Object.keys(enums.WEEK_LABEL).map(key => ({text: enums.WEEK_LABEL[key], value: key})),
-    render: (str: enums.WEEK) => (
-      <span>{enums.WEEK_LABEL[str]}</span>
-    )
+    render: (days: enums.WEEK[]) => {
+      return days.map((key) => {
+        return (
+          <Tag color="blue" key={key}>
+            {enums.WEEK_LABEL[key]}
+          </Tag>
+        )
+      })
+    },
   },
   {
     title: "一天",
