@@ -6,11 +6,11 @@ import FieldInfo, { IField} from '../../components/Fields-info'
 import * as enums from '../../const/enum'
 import {ITeacher} from '../../const/type/teacher'
 import formatDate from "../../utils/format-date";
+import getAge from '../../utils/getAge'
 import BarCharts from './components/BarCharts'
 import Course from './components/Course'
 import Schedule from './components/Schedule'
 import Student from './components/Student'
-import getAge from '../../utils/getAge'
 const { useState, useEffect } = React;
 const TabPane = Tabs.TabPane;
 

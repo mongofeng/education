@@ -11,9 +11,9 @@ import formatDate from "../../utils/format-date";
 import Course from './components/course'
 import Hours from './components/hour'
 
+import getAge from '../../utils/getAge'
 import Schedule from './components/Schedule'
 import SignIn from './components/SignIn'
-import getAge from '../../utils/getAge'
 const TabPane = Tabs.TabPane;
 const confirm = Modal.confirm;
 

@@ -1,4 +1,4 @@
-import { Button, DatePicker, Input, Table   } from "antd";
+import { Button, DatePicker, Input, Table, Tabs    } from "antd";
 import {PaginationProps} from 'antd/lib/pagination'
 import { ColumnProps } from 'antd/lib/table';
 import * as React from "react";
@@ -11,8 +11,10 @@ import * as enums from '../../const/enum'
 import {IStudent} from '../../const/type/student'
 import * as action from "../../store/actions/student";
 import formatDate from "../../utils/format-date";
+import getAge from "../../utils/getAge";
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
+const { TabPane } = Tabs;
 
 interface IList extends RouteComponentProps {
   onGetList: (params: any) => void
@@ -28,6 +30,7 @@ interface IState {
   filters: ITableFilter
   sorter: any
   keyword: string
+  status: number
   pagination: PaginationProps
 }
 
@@ -53,6 +56,9 @@ const columns: Array<ColumnProps<IStudent>> = [
   {
     title: "年龄",
     dataIndex: "age",
+    render: (text: string, row: IStudent) => {
+      return getAge(row.birthday)
+    }
     
   },
   {
@@ -81,11 +87,6 @@ const columns: Array<ColumnProps<IStudent>> = [
   {
     title: "状态",
     dataIndex: "status",
-    filterMultiple: false,
-    filters: [
-      { text: '在读', value: '1' },
-      { text: '毕业', value: '2' },
-    ],
     render: (str: enums.STUDENT_STATUS) => <span>{enums.STUDENT_STATUS_LABEL[str]}</span>
   },
   {
@@ -120,12 +121,15 @@ class List extends React.PureComponent<IList> {
       pageSize: 10,
       showSizeChanger: true,
       pageSizeOptions: ['5', '10', '20', '100']
-    }
+    },
+    status: 1 // 在读
   };
 
 
   condition = () => {
-    const query: any = {}
+    const query: any = {
+      status: this.state.status
+    }
     // 时间
     if (this.state.dateString[0] && this.state.dateString[1]) {
       query.createDate = {
@@ -216,6 +220,20 @@ class List extends React.PureComponent<IList> {
 
   }
 
+  /**
+   * tab改变后
+   */
+  onTabChange = (status: string) => {
+    console.log(status)
+    this.setState({
+      status: Number(status),
+      dateString: [],
+      filters: {},
+      sorter: {},
+      keyword: '',
+    }, this.fetch);
+  }
+
   componentWillReceiveProps(nexProps: IList) {
     if (nexProps.total !== this.state.pagination.total) {
       this.setState({
@@ -272,6 +290,10 @@ class List extends React.PureComponent<IList> {
         </div>
 
         <div className="content-wrap">
+          <Tabs defaultActiveKey="1" onChange={this.onTabChange}>
+            <TabPane tab="在读" key="1"/>
+            <TabPane tab="毕业" key="2"/>
+          </Tabs>
           <div className="mb10">
             <RangePicker onChange={this.onDateChange} />
 
@@ -279,8 +301,7 @@ class List extends React.PureComponent<IList> {
             className="ml10"
               placeholder="请输入名字"
               onSearch={this.onSearch}
-              style={{ width: 200 }}
-            />
+              style={{ width: 200 }}/>
           </div>
 
           <Table<IStudent>
@@ -291,8 +312,7 @@ class List extends React.PureComponent<IList> {
             pagination={this.state.pagination}
             loading={this.props.loading}
             onChange={this.handleTableChange}
-            footer={footer}
-          />
+            footer={footer}/>
         </div>
       </div>
     );

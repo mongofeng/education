@@ -2,17 +2,11 @@
 import { call, put, takeLatest } from 'redux-saga/effects'
 import * as api from '../../api/student'
 import * as actions from '../actions/student'
-import getAge from '../../utils/getAge'
 export function* getList(action: any) {
     try {
         yield put(actions.Loading(true)) // 请求中
         const {data: {data: {list, count}}} = yield call(api.getStudentList, action.params)
-        yield put(actions.listResult(list.map(item => {
-            return {
-                ...item,
-                age: getAge(item.birthday)
-            }
-        }), count))
+        yield put(actions.listResult(list, count))
     } catch (error) {
         // yield put(actions.LoginStatus(false))
     }

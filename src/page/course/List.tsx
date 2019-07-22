@@ -1,4 +1,4 @@
-import { Button, DatePicker, Input, Table, Tag } from "antd";
+import { Button, DatePicker, Input, Table, Tabs, Tag } from "antd";
 import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
 import { RouteComponentProps } from "react-router-dom";
@@ -9,7 +9,7 @@ import { ICourse } from "../../const/type/course";
 import formatDate from "../../utils/format-date";
 
 import fetchApiHook from '../../common/hooks/featchApiList'
-
+const { TabPane } = Tabs;
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
 
@@ -67,11 +67,6 @@ const columns: Array<ColumnProps<ICourse>> = [
   {
     title: "状态",
     dataIndex: "status",
-    filterMultiple: false,
-    filters: Object.keys(enums.COURSE_STATUS_LABEL).map(key => ({text: enums.COURSE_STATUS_LABEL[key], value: key})),
-    render: (str: enums.COURSE_STATUS) => (
-      <span>{enums.COURSE_STATUS_LABEL[str]}</span>
-    )
   },
   {
     title: "操作",
@@ -92,8 +87,16 @@ function List(props: RouteComponentProps): JSX.Element {
     pagination, 
     handleTableChange, 
     onDateChange, 
-    onSearch
-  } = fetchApiHook(initList, api.getCourserList)
+    onSearch,
+    setQuery
+  } = fetchApiHook(initList, api.getCourserList, {
+    limit: 10,
+    page: 1,
+    query: {
+      status: enums.COURSE_STATUS.open
+    },
+    sort: { createDate: -1 }
+  })
 
   
 
@@ -103,6 +106,12 @@ function List(props: RouteComponentProps): JSX.Element {
   const handleOnClick = () => {
     props.history.push("add");
   };
+
+  const onTabChange = (status: string) => {
+    setQuery({
+      status: Number(status)
+    })
+  }
 
 
   return (
@@ -120,6 +129,12 @@ function List(props: RouteComponentProps): JSX.Element {
       </div>
 
       <div className="content-wrap">
+        <Tabs defaultActiveKey="1" onChange={onTabChange}>
+          {Object.keys(enums.COURSE_STATUS_LABEL).map(key => (
+              <TabPane tab={enums.COURSE_STATUS_LABEL[key]} key={key}/>
+            )
+          )}
+        </Tabs>
         <div className="mb10">
           <RangePicker onChange={onDateChange} />
 

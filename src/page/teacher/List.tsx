@@ -1,19 +1,18 @@
-import { Button, DatePicker, Input, Table } from "antd";
+import { Button, DatePicker, Input, Table, Tabs } from "antd";
 import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { Link } from "react-router-dom";
 import * as api from "../../api/teacher";
+import fetchApiHook from '../../common/hooks/featchApiList'
 import * as enums from "../../const/enum";
 import { ITeacher } from "../../const/type/teacher";
 import formatDate from "../../utils/format-date";
-
-import fetchApiHook from '../../common/hooks/featchApiList'
 import getAge from '../../utils/getAge'
 
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
-
+const { TabPane } = Tabs;
 
 const columns: Array<ColumnProps<ITeacher>> = [
   {
@@ -33,7 +32,10 @@ const columns: Array<ColumnProps<ITeacher>> = [
   },
   {
     title: "年龄",
-    dataIndex: "age"
+    dataIndex: "age",
+    render: (text: string, row: ITeacher) => {
+      return getAge(row.birthday)
+    }
   },
   {
     title: "手机号码",
@@ -82,8 +84,16 @@ function List(props: RouteComponentProps): JSX.Element {
     pagination,
     handleTableChange,
     onDateChange,
-    onSearch
-  } = fetchApiHook(initList, api.getteacherList)
+    onSearch,
+    setQuery
+  } = fetchApiHook(initList, api.getteacherList, {
+    limit: 10,
+    page: 1,
+    query: {
+      status: 1
+    },
+    sort: { createDate: -1 }
+  })
 
 
 
@@ -93,6 +103,13 @@ function List(props: RouteComponentProps): JSX.Element {
   const handleOnClick = () => {
     props.history.push("add");
   };
+
+
+  const onTabChange = (status: string) => {
+    setQuery({
+      status: Number(status)
+    })
+  }
 
 
   return (
@@ -111,6 +128,12 @@ function List(props: RouteComponentProps): JSX.Element {
 
       <div className="content-wrap">
         <div className="mb10">
+
+          <Tabs defaultActiveKey="1" onChange={onTabChange}>
+            <TabPane tab="在职" key="1"/>
+            <TabPane tab="离职" key="2"/>
+          </Tabs>
+
           <RangePicker onChange={onDateChange} />
 
           <Search
@@ -125,12 +148,7 @@ function List(props: RouteComponentProps): JSX.Element {
           bordered={true}
           columns={columns}
           rowKey="_id"
-          dataSource={data.map(item => {
-            return {
-              ...item,
-              age: getAge(item.birthday)
-            }
-          })}
+          dataSource={data}
           pagination={pagination}
           loading={loading}
           onChange={handleTableChange}/>

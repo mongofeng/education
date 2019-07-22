@@ -138,6 +138,19 @@ export default function <T extends object>(initList: T[], fetchApi: IApiList<T>,
     setParams(condition)
   };
 
+  /**
+   * 
+   * @param query setQuery
+   */
+  const setQuery = (query: any) => {
+    const condition = getcondition({})
+    condition.query = {
+      ...condition.query,
+      ...query
+    }
+    setParams(condition);
+  }
+
 
   const fetchData = async (reset?:boolean) => {
     try {
@@ -171,5 +184,5 @@ export default function <T extends object>(initList: T[], fetchApi: IApiList<T>,
     }
   }, [params]);
 
-  return {loading, data, pagination, handleTableChange, onDateChange, onSearch, fetchData}
+  return {loading, data, pagination, handleTableChange, onDateChange, onSearch, fetchData, setQuery}
 }
