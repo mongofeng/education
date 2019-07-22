@@ -32,7 +32,7 @@ interface IRouteParams {
 
 
 
-type IFormProps = FormComponentProps & RouteComponentProps<IRouteParams> 
+type IFormProps = FormComponentProps & RouteComponentProps<IRouteParams>
 
 const initForm = {} as ICourse
 
@@ -52,15 +52,15 @@ const FormCompent: React.FC<IFormProps> = (props)=> {
 
     /**
      * 提交表单
-     * @param e 
+     * @param e
      */
     const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault();
-  
+
       if (loading) {
         return;
       }
-  
+
       props.form.validateFieldsAndScroll(async (err, values) => {
         console.log(values)
         if (err) {
@@ -68,17 +68,28 @@ const FormCompent: React.FC<IFormProps> = (props)=> {
         }
         // tslint:disable-next-line:no-shadowed-variable
         const {rangeValue, startTime, endTime, ...reset} = values
+
+        // 上课开始和结束的时间
         const [startDate, endDate] =  [
-          rangeValue[0].format('YYYY-MM-DD 00:00:00'), 
+          rangeValue[0].format('YYYY-MM-DD 00:00:00'),
           rangeValue[1].format('YYYY-MM-DD 23:59:59')
         ]
+
+        // 上课时间段,早/中/晚
+        const start = Number(startTime.format('HH'));
+        const time = start > 12 ? (
+          start > 18 ? enums.DAY.evening : enums.DAY.afternoon
+        ) :  enums.DAY.monrning
+
         const params = {
           startDate: new Date(startDate).getTime(),
           endDate: new Date(endDate).getTime(),
           endTime: endTime.format('HH:mm'),
           startTime: startTime.format('HH:mm'),
-          ...reset
+          ...reset,
+          time
         }
+        console.log(params);
         try {
           setLoading(true);
           if (isEdit && props.match.params.id) {
@@ -88,7 +99,7 @@ const FormCompent: React.FC<IFormProps> = (props)=> {
             await api.addCourse(params);
             message.success("添加成功");
           }
-          
+
           props.history.goBack();
         } finally {
           setLoading(false);
@@ -206,36 +217,20 @@ const FormCompent: React.FC<IFormProps> = (props)=> {
                       <Option value={item.value} key={item.value}>{item.label}</Option>
                     ))
                   }
-                  
+
                 </Select>
               )}
             </Form.Item>
 
             <Form.Item label="一周">
               {getFieldDecorator("day", {
-                initialValue: form ? form.day : '',
-                rules: [{ type: "number", required: true, message: "请选择上课的时间" }]
+                initialValue: form ? form.day : [],
+                rules: [{ type: "array", required: true, message: "请选择上课的时间" }]
               })(
-                <Select>
+                <Select mode="multiple">
                     {Object.keys(enums.WEEK_LABEL).map(key => (
                       <Option value={Number(key)} key={key}>
                         {enums.WEEK_LABEL[key]}
-                      </Option>
-                    ))}
-                </Select>
-              )}
-            </Form.Item>
-
-
-            <Form.Item label="一天">
-              {getFieldDecorator("time", {
-                initialValue: form ? form.time : '',
-                rules: [{ type: "number", required: true, message: "请选择上课的时间段" }]
-              })(
-                  <Select>
-                    {Object.keys(enums.DAY_LABEL).map(key => (
-                      <Option value={Number(key)} key={key}>
-                        {enums.DAY_LABEL[key]}
                       </Option>
                     ))}
                 </Select>

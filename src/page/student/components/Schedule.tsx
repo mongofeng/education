@@ -40,23 +40,25 @@ function HandleDate(List: ICourse[]) {
     const afternoon: any = { key: 2, day: '下午' }
     const evening: any = { key: 3, day: '晚上' }
     for (const item of List) {
-        if (item.time === enums.DAY.monrning) {
-            if (morning[enums.WEEK[item.day]]) {
-                morning[enums.WEEK[item.day]].push(item.name)
-            } else {
-                morning[enums.WEEK[item.day]] = [item.name]
-            }
-        } else if (item.time === enums.DAY.afternoon) {
-            if (afternoon[enums.WEEK[item.day]]) {
-                afternoon[enums.WEEK[item.day]].push(item.name)
-            } else {
-                afternoon[enums.WEEK[item.day]] = [item.name]
-            }
-        } else if (item.time === enums.DAY.evening) {
-            if (evening[enums.WEEK[item.day]]) {
-                evening[enums.WEEK[item.day]].push(item.name)
-            } else {
-                evening[enums.WEEK[item.day]] = [item.name]
+        for (const dayItem of item.day) {
+            if (item.time === enums.DAY.monrning) {
+                if (morning[enums.WEEK[dayItem]]) {
+                    morning[enums.WEEK[dayItem]].push(item.name)
+                } else {
+                    morning[enums.WEEK[dayItem]] = [item.name]
+                }
+            } else if (item.time === enums.DAY.afternoon) {
+                if (afternoon[enums.WEEK[dayItem]]) {
+                    afternoon[enums.WEEK[dayItem]].push(item.name)
+                } else {
+                    afternoon[enums.WEEK[dayItem]] = [item.name]
+                }
+            } else if (item.time === enums.DAY.evening) {
+                if (evening[enums.WEEK[dayItem]]) {
+                    evening[enums.WEEK[dayItem]].push(item.name)
+                } else {
+                    evening[enums.WEEK[dayItem]] = [item.name]
+                }
             }
         }
     }
