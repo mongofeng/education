@@ -1,4 +1,4 @@
-import { Button, message, Table } from "antd";
+import { Button, message, Table, Tag } from "antd";
 import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
 import { Link } from "react-router-dom";
@@ -153,9 +153,15 @@ const List: React.FC<IProps> = (props) => {
         {
             title: "一周",
             dataIndex: "day",
-            render: (str: enums.WEEK) => (
-                <span>{enums.WEEK_LABEL[str]}</span>
-            )
+            render: (days: enums.WEEK[]) => {
+                return days.map((key) => {
+                  return (
+                    <Tag color="blue" key={key}>
+                      {enums.WEEK_LABEL[key]}
+                    </Tag>
+                  )
+                })
+              },
         },
         {
             title: "一天",

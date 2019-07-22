@@ -197,13 +197,13 @@ class Detail extends React.PureComponent<RouteComponentProps<IParams>> {
             <Row gutter={16}>
 
               <Col span={8}>
-                <Statistic title="使用" value={info.used} suffix="h" valueStyle={{color: 'red'}}/>
+                <Statistic title="使用" value={info.used} suffix="课时" valueStyle={{color: 'red'}}/>
               </Col>
               <Col span={8}>
-                <Statistic title="总学时" value={info.num} prefix={<Icon type="like" />}  valueStyle={{color: 'blue'}} suffix="h"/>
+                <Statistic title="总学时" value={info.num} prefix={<Icon type="like" />}  valueStyle={{color: 'blue'}} suffix="课时"/>
               </Col>
               <Col span={8}>
-                <Statistic title="剩余" value={info.num - info.used} suffix="h" valueStyle={{color: 'red'}}/>
+                <Statistic title="剩余" value={info.num - info.used} suffix="课时" valueStyle={{color: 'red'}}/>
               </Col>
             </Row>
             </Col>
