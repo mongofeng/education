@@ -11,4 +11,5 @@ export interface IStudentPackage {
   isActive: boolean // 是否激活
   beOverdue: boolean // // 是否过时
   isPush: boolean // 是否推送过期的通知
+  period: number
 }

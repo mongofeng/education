@@ -44,14 +44,16 @@ const columns: Array<ColumnProps<IStudentPackage>> = [
     title: "激活时间",
     dataIndex: "activeTime",
     render: (date: string) => {
-      return (<span>{formatDate(new Date(date))}</span>)
+      if (!date) { return '-' }
+      return formatDate(new Date(date))
     }
   },
   {
     title: "结束时间",
     dataIndex: "endTime",
     render: (date: string) => {
-      return (<span>{formatDate(new Date(date))}</span>)
+      if (!date) { return '-' }
+      return formatDate(new Date(date))
     }
   },
   {
@@ -69,24 +71,6 @@ const columns: Array<ColumnProps<IStudentPackage>> = [
         return '1'
       }
       return  <Tag color='blue'>否</Tag>
-    }
-  },
-  {
-    title: "激活",
-    dataIndex: "isActive",
-    render: (val: boolean) => {
-      if (val) {
-        return <Tag color='blue'>已激活</Tag>
-      }
-
-      // 激活按钮
-      return (
-        <Button
-          type="primary"
-          icon="plus">
-          激活
-        </Button>
-      )
     }
   },
 ];
@@ -173,6 +157,51 @@ function List(props: IProps): JSX.Element {
   }
 
 
+  const Activite =  {
+    title: "激活",
+    dataIndex: "isActive",
+    render: (val: boolean, row: IStudentPackage) => {
+      if (val) {
+        return <Tag color='blue'>已激活</Tag>
+      }
+
+
+      const handleActivite = async () => {
+        if (!row.period) {
+          message.error('没有年限不能激活')
+          return
+        }
+        const today = new Date()
+        today.setDate(today.getFullYear() + row.period)
+        const params = {
+          activeTime: new Date().toISOString(),
+          isActive: true,
+          endTime: today.toISOString()
+        }
+        try {
+          await apiPack.updateStudentPackage(row._id, params)
+          message.success('激活成功')
+        } finally {
+          fetchData()
+        }
+      }
+
+      // 激活按钮
+      return (
+        <Button
+          type="primary"
+          size="small"
+          onClick={handleActivite}>
+          激活
+        </Button>
+      )
+    }
+  }
+
+
+  
+
+
 
   return (
     <React.Fragment>
@@ -209,7 +238,7 @@ function List(props: IProps): JSX.Element {
 
         <Table<IStudentPackage>
           bordered={true}
-          columns={columns}
+          columns={columns.concat([Activite])}
           rowKey="_id"
           dataSource={data}
           pagination={pagination}
