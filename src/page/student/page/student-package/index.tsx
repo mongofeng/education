@@ -1,11 +1,12 @@
-import { Button, DatePicker, Input, Table, Tag, message } from 'antd'
+import { Button, DatePicker, Input, message, Table, Tag } from 'antd'
 import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
-import * as api from "../../../../api/student-package";
+import { useState } from 'react'
+import * as api from "../../../../api/student-operation";
+import * as apiPack from '../../../../api/student-package'
+import fetchApiHook from '../../../../common/hooks/featchApiList'
 import { IStudentPackage } from "../../../../const/type/student-package";
 import formatDate from "../../../../utils/format-date";
-import fetchApiHook from '../../../../common/hooks/featchApiList'
-import { useState } from 'react'
 import BuyCourse from './buy-course-modal'
 
 const Search = Input.Search;
@@ -14,16 +15,16 @@ const { RangePicker } = DatePicker;
 
 const columns: Array<ColumnProps<IStudentPackage>> = [
   {
-    title: "课程包id",
+    title: "课程包",
     dataIndex: "packageId",
   },
   {
-    title: "课时",
+    title: "总课时",
     dataIndex: "count",
   },
   {
     title: "剩余课时",
-    dataIndex: "count",
+    dataIndex: "surplus",
   },
   {
     title: "使用课时",
@@ -54,11 +55,14 @@ const columns: Array<ColumnProps<IStudentPackage>> = [
     }
   },
   {
-    title: "是否过时",
+    title: "过时",
     dataIndex: "beOverdue",
+    render: (val: boolean) => {
+      return val ? '是' : '否'
+    }
   },
   {
-    title: "是否推送过期的通知",
+    title: "过期推送",
     dataIndex: "isPush",
     render: (val: boolean) => {
       if (val) { // 如果已经推送了可以再开启
@@ -68,7 +72,7 @@ const columns: Array<ColumnProps<IStudentPackage>> = [
     }
   },
   {
-    title: "是否激活",
+    title: "激活",
     dataIndex: "isActive",
     render: (val: boolean) => {
       if (val) {
@@ -109,7 +113,7 @@ function List(props: IProps): JSX.Element {
     onDateChange,
     onSearch,
     fetchData
-  } = fetchApiHook([], api.getStudentPackageList, {
+  } = fetchApiHook([], apiPack.getStudentPackageList, {
     query: {
       studentIds: props.id
     },
@@ -144,7 +148,7 @@ function List(props: IProps): JSX.Element {
   /**
    * 确定模态框
    */
-  const handleOk = async (selectRows: object[]) => {
+  const handleOk = async (selectRows: IStudentPackage[]) => {
     // 打开loading
     console.log(selectRows)
     if (!selectRows.length) { return }
@@ -153,7 +157,12 @@ function List(props: IProps): JSX.Element {
       confirmLoading: true,
     })
     try {
-
+      const [res] = selectRows
+      const params = {
+        packageId: res._id,
+        studentId: props.id 
+      }
+      await api.buyStudentPackage(params)
       message.success('关联成功')
       fetchData(true)
     } finally {

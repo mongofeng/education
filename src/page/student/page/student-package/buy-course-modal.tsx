@@ -2,10 +2,10 @@ import {  message, Modal, Table } from "antd";
 import {ModalProps} from 'antd/lib/modal';
 import { ColumnProps, TableRowSelection } from "antd/lib/table";
 import * as React from "react";
-import formatDate from "../../../../utils/format-date";
+import * as api from '../../../../api/package'
 import fetchApiHook from '../../../../common/hooks/featchApiList'
 import { IPackage } from '../../../../const/type/package'
-import * as api from '../../../../api/package'
+import formatDate from "../../../../utils/format-date";
 const { useState, useEffect } = React;
 
 interface IProps extends ModalProps{
@@ -82,13 +82,9 @@ const List: React.FC<IProps> =  (props) => {
 
   // rowSelection objects indicates the need for row selection
   const rowSelection: TableRowSelection<IPackage> = {
+    type: 'radio',
     onSelect: (record, selected, selectedRows) => {
       // 当前项，当前是否选择， 当前所有选择
-      console.log(selected, selectedRows);
-      setSelectRows(selectedRows)
-    },
-    onSelectAll: (selected, selectedRows) => {
-      // 当前是否选择， 当前所有选择，当前项，
       console.log(selected, selectedRows);
       setSelectRows(selectedRows)
     },

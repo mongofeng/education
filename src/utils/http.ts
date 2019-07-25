@@ -40,14 +40,27 @@ function interceptors (http: AxiosInstance) {
     },
     (error: AxiosError) => {
       const response = error.response
-      if (response && (response.status === 403)) {
-        notice()
+      if (response) {
+        console.log(response.data)
+        if (response.status === 403) {
+          notice()
+        } else {
+          const {
+            message,
+            error: err
+          } = response.data
+          notification.error({
+            message: `请求错误`,
+            description: message || err || '请求错误'
+          });
+        }
       } else {
         notification.error({
           message: `请求错误`,
-          description: "请求错误"
+          description: '请求错误'
         });
       }
+      
       
       return Promise.reject(error);
     }
