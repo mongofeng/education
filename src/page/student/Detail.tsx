@@ -14,6 +14,8 @@ import Hours from './components/hour'
 import getAge from '../../utils/getAge'
 import Schedule from './components/Schedule'
 import SignIn from './components/SignIn'
+
+import StudentPakcage from './page/student-package' // 课程包
 const TabPane = Tabs.TabPane;
 const confirm = Modal.confirm;
 
@@ -213,6 +215,11 @@ class Detail extends React.PureComponent<RouteComponentProps<IParams>> {
             <TabPane tab="课程" key="1">
               <Course id={id}/>
             </TabPane>
+
+            <TabPane tab="课程包" key="6">
+              <StudentPakcage id={id}/>
+            </TabPane>
+
             <TabPane tab="课时" key="2">
               <Hours {...hourProps}/>
             </TabPane>

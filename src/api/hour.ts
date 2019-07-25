@@ -19,21 +19,21 @@ interface IResult {
  * @param {*} params
  */
 export function addHour(params: IHour): ApiResponse<IResult> {
-    return http.post('class-hour', params)
+    return http.post('course-hour-flow', params)
 }
 
 /**
- * 
+ *
  * @param params 查询参数
  */
 export function getHourrList(params: QueryCondition<IHour>): ApiListData<IHour> {
-    return http.post('class-hour/list', params)
+    return http.post('course-hour-flow/list', params)
 }
 
 /**
- * 
+ *
  * @param id 课程的id
  */
 export function getHour(id: string): ApiResponse<IHour> {
-    return http.get(`class-hour/${id}`)
+    return http.get(`course-hour-flow/${id}`)
 }

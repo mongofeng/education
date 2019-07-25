@@ -125,12 +125,14 @@ export const COURSE_HOUR_STATUS_LABEL: LabelMapping<COURSE_HOUR_STATUS> = {
  */
 export enum COURSE_HOUR_ACTION_TYPE {
     add = 1,
-    del
+    del,
+    sign
 }
 
 export const COURSE_HOUR_ACTION_TYPE_LABEL: LabelMapping<COURSE_HOUR_ACTION_TYPE> = {
     [COURSE_HOUR_ACTION_TYPE.add]: '增加',
-    [COURSE_HOUR_ACTION_TYPE.del]: '减少'
+    [COURSE_HOUR_ACTION_TYPE.del]: '减少',
+    [COURSE_HOUR_ACTION_TYPE.sign]: '签到'
 }
 
 
