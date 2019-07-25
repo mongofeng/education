@@ -10,7 +10,7 @@ import http from '../utils/http'
  * @param {*} params
  */
 export function addStudentPackage(params: IStudentPackage) {
-    return http.post('studentPackage', params)
+    return http.post('student-package', params)
 }
 
 /**
@@ -18,7 +18,7 @@ export function addStudentPackage(params: IStudentPackage) {
  * @param params 查询参数
  */
 export function getStudentPackageList(params: IStudentPackage): ApiListData<IStudentPackage> {
-    return http.post('studentPackage/list', params)
+    return http.post('student-package/list', params)
 }
 
 /**
@@ -26,7 +26,7 @@ export function getStudentPackageList(params: IStudentPackage): ApiListData<IStu
  * @param id 学员课程包的id
  */
 export function getPackage(id: string): ApiResponse<IStudentPackage> {
-    return http.get(`studentPackage/${id}`)
+    return http.get(`student-package/${id}`)
 }
 
 /**
@@ -35,10 +35,10 @@ export function getPackage(id: string): ApiResponse<IStudentPackage> {
  * @param params 
  */
 export function updateStudentPackage(id: string, params: Partial<IStudentPackage>): ApiResponse<IStudentPackage> {
-    return http.put(`studentPackage/${id}`, params)
+    return http.put(`student-package/${id}`, params)
 }
 
 
 export function delStudentPackage(id: string): ApiResponse<IStudentPackage> {
-    return http.delete(`studentPackage/${id}`)
+    return http.delete(`student-package/${id}`)
 }
