@@ -1,4 +1,4 @@
-import { Button, DatePicker, Input, message, Table, Tag } from 'antd'
+import { Button, DatePicker, Input, message, Table, Tag, Tooltip } from 'antd'
 import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
 import { useState } from 'react'
@@ -70,7 +70,7 @@ const columns: Array<ColumnProps<IStudentPackage>> = [
       if (val) { // 如果已经推送了可以再开启
         return '1'
       }
-      return  <Tag color='blue'>否</Tag>
+      return <Tag color='blue'>否</Tag>
     }
   },
 ];
@@ -144,7 +144,7 @@ function List(props: IProps): JSX.Element {
       const [res] = selectRows
       const params = {
         packageId: res._id,
-        studentId: props.id 
+        studentId: props.id
       }
       await api.buyStudentPackage(params)
       message.success('关联成功')
@@ -157,7 +157,7 @@ function List(props: IProps): JSX.Element {
   }
 
 
-  const Activite =  {
+  const Activite = {
     title: "激活",
     dataIndex: "isActive",
     render: (val: boolean, row: IStudentPackage) => {
@@ -199,52 +199,57 @@ function List(props: IProps): JSX.Element {
   }
 
 
-  
+
 
 
 
   return (
     <React.Fragment>
-      <div className="main-title clearfix">
-        <h2>课程包列表</h2>
-        <Button
-          className="fr"
-          type="primary"
-          icon="plus"
-          onClick={showModal}>
-          添加课程包
-        </Button>
-      </div>
-
       <BuyCourse
+        title="添加课程包"
+        width={800}
         id={props.id}
         destroyOnClose={true}
         onSelect={handleOk}
-        title="添加课程包"
-        width={800}
         onCancel={handleCancel}
         {...modalState} />
 
-      <div className="content-wrap">
-        <div className="mb10">
-          <RangePicker onChange={onDateChange} />
+      <div className="mb10 clearfix">
+        <RangePicker onChange={onDateChange} />
 
-          <Search
-            className="ml10"
-            placeholder="请输入课程包名字"
-            onSearch={onSearch}
-            style={{ width: 200 }}/>
-        </div>
-
-        <Table<IStudentPackage>
-          bordered={true}
-          columns={columns.concat([Activite])}
-          rowKey="_id"
-          dataSource={data}
-          pagination={pagination}
-          loading={loading}
-          onChange={handleTableChange}/>
+        <Search
+          className="ml10"
+          placeholder="请输入课程包名字"
+          onSearch={onSearch}
+          style={{ width: 200 }} />
+            <Tooltip placement="top" title="购买课程包,然后主动激活之后可用于课程的使用，没激活的课程包不能用在课时签到和补签等操作">
+              <Button
+                className="fr"
+                type="primary"
+                icon="plus"
+                onClick={showModal}>
+                购买
+              </Button>
+            </Tooltip>
+            <Tooltip placement="top" title="学员不购买课程包，与其他学员一起共享课程包里面的课时，签到，补签等扣课程包里的课时">
+              <Button
+                className="fr mr5"
+                icon="reddit"
+                onClick={showModal}>
+                共享
+              </Button>
+            </Tooltip>
       </div>
+
+      <Table<IStudentPackage>
+        bordered={true}
+        columns={columns.concat([Activite])}
+        rowKey="_id"
+        dataSource={data}
+        pagination={pagination}
+        loading={loading}
+        onChange={handleTableChange} />
+
     </React.Fragment>
   );
 }

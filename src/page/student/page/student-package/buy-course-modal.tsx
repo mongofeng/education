@@ -85,7 +85,6 @@ const List: React.FC<IProps> =  (props) => {
     type: 'radio',
     onSelect: (record, selected, selectedRows) => {
       // 当前项，当前是否选择， 当前所有选择
-      console.log(selected, selectedRows);
       setSelectRows(selectedRows)
     },
   };
