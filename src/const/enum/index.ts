@@ -108,47 +108,23 @@ export const DAY_LABEL: LabelMapping<DAY> = {
 
 
 /**
- * 学时状态
- */
-export enum COURSE_HOUR_STATUS {
-    pass = 1,
-    refuse
-}
-
-export const COURSE_HOUR_STATUS_LABEL: LabelMapping<COURSE_HOUR_STATUS> = {
-    [COURSE_HOUR_STATUS.pass]: '通过',
-    [COURSE_HOUR_STATUS.refuse]: '拒绝'
-}
-
-/**
  * 学时类型添加
  */
 export enum COURSE_HOUR_ACTION_TYPE {
-    add = 1,
-    del,
+    buy = 1,
+    supplement,
     sign
 }
 
 export const COURSE_HOUR_ACTION_TYPE_LABEL: LabelMapping<COURSE_HOUR_ACTION_TYPE> = {
-    [COURSE_HOUR_ACTION_TYPE.add]: '增加',
-    [COURSE_HOUR_ACTION_TYPE.del]: '减少',
+    [COURSE_HOUR_ACTION_TYPE.buy]: '购买',
+    [COURSE_HOUR_ACTION_TYPE.supplement]: '补签',
     [COURSE_HOUR_ACTION_TYPE.sign]: '签到'
 }
 
 
-/**
- * 学时类型
- */
-export enum COURSE_HOUR_TYPE {
-    buy = 1,
-    send,
-    sign,
-    other
-}
-
-export const COURSE_HOUR_TYPE_LABEL: LabelMapping<COURSE_HOUR_TYPE> = {
-    [COURSE_HOUR_TYPE.buy]: '购买',
-    [COURSE_HOUR_TYPE.send]: '赠送',
-    [COURSE_HOUR_TYPE.sign]: '签到',
-    [COURSE_HOUR_TYPE.other]: '其他'
+export const COURSE_HOUR_ACTION_TYPE_COLOR: LabelMapping<COURSE_HOUR_ACTION_TYPE> = {
+    [COURSE_HOUR_ACTION_TYPE.buy]: 'blue',
+    [COURSE_HOUR_ACTION_TYPE.supplement]: 'red',
+    [COURSE_HOUR_ACTION_TYPE.sign]: 'yellow'
 }

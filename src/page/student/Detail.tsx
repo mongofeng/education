@@ -44,10 +44,10 @@ class Detail extends React.PureComponent<RouteComponentProps<IParams>> {
 
 
   fetchTotalHours = async () => {
-    const {data: {data}} = await apiHour.getStudentHour(this.props.match.params.id)
-    this.setState({
-      totalInfo: data
-    })
+    // const {data: {data}} = await apiHour.getStudentHour(this.props.match.params.id)
+    // this.setState({
+    //   totalInfo: data
+    // })
   }
 
 

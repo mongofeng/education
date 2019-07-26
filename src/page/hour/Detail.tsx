@@ -1,4 +1,4 @@
-import { Breadcrumb, Col, Divider, Row, Statistic, Tag } from "antd";
+import { Breadcrumb, Col, Divider, Row, Statistic} from "antd";
 import * as React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import * as api from "../../api/hour";
@@ -16,10 +16,6 @@ const columns: IField[] = [
     prop: "name"
   },
   {
-    label: "所属老师",
-    prop: "teacherId"
-  },
-  {
     label: "课时数量",
     prop: "num"
   },
@@ -32,23 +28,7 @@ const columns: IField[] = [
       )
     }
   },
-  {
-    label: "类型",
-    prop: "classTypes",
-    render: ({data, field}: {data: IHour, field: string}) => {
-      return (
-        <div>{enums.COURSE_HOUR_TYPE_LABEL[data[field]]}</div>
-      )
-    }
-  },
-  {
-    label: "状态",
-    prop: "status",
-    render: ({data, field}: {data: IHour, field: string}) => (
-    <Tag color={data[field] === enums.COURSE_HOUR_STATUS.pass ? "blue" : "red"}>
-      {enums.COURSE_HOUR_STATUS_LABEL[data[field]]}
-    </Tag>)
-  },
+
   {
     label: "创建时间",
     prop: "createDate",
@@ -61,6 +41,29 @@ const columns: IField[] = [
     render: ({data}: {data: Required<IHour>}) => (
       <span>{formatDate(new Date(data.updateDate))}</span>)
   },
+  {
+    label: "课程",
+    prop: "course",
+    render: ({data}: {data: Required<IHour>}) => {
+      const {course: val} = data
+      if (!val || !val.length) {
+        return  '-'
+      }
+      return val.map((item) => {
+        return [
+          (
+            <div key={item.id}>
+              {`${item.name}:${item.count}课时`}
+            </div>
+          )
+        ]
+      })
+    }
+  },
+  {
+    label: "备注",
+    prop: "desc"
+  },
 ];
 
 interface IParams {
@@ -71,12 +74,17 @@ const initInfo: Partial<IHour> = {}
 
 const  Detail: React.FC<RouteComponentProps<IParams>>  = (props) => {
   const [info, setInfo] = useState(initInfo);
+  const [courseCount, setCourseCount] = useState(0)
 
   const id = props.match.params.id
 
 
   const fetchDetail = async () => {
     const { data: {data} } = await api.getHour(id);
+    const total = data.course.reduce((initVal, item) => {
+      return initVal + item.count;
+    }, 0)
+    setCourseCount(total)
     setInfo(data)
   };
 
@@ -108,10 +116,10 @@ const  Detail: React.FC<RouteComponentProps<IParams>>  = (props) => {
             <FieldInfo fields={columns} data={info || {}}/>
           </Col>
           <Col span={8} >
-            <Statistic 
-              title={<div style={{textAlign: 'center'}}>课时金额</div>} 
-              value={(info && info.amount) ? info.amount : 0}
-              suffix="元" 
+            <Statistic
+              title={<div style={{textAlign: 'center'}}>课时数量</div>}
+              value={courseCount}
+              suffix="课时"
               valueStyle={
                 {fontSize: '42px', color: 'red', textAlign: 'center'}
               }/>

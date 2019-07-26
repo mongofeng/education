@@ -6,22 +6,14 @@ import * as api from "../../api/hour";
 import * as enums from "../../const/enum";
 import { IHour } from "../../const/type/hour";
 import formatDate from "../../utils/format-date";
-
 import fetchApiHook from '../../common/hooks/featchApiList'
+import { ICourse } from '../../const/type/student-operation'
 
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
 
 
 const columns: Array<ColumnProps<IHour>> = [
-  {
-    title: "学员名字",
-    dataIndex: "name",
-  },
-  {
-    title: "金额",
-    dataIndex: "amount",
-  },
   {
     title: "课时数量",
     dataIndex: "num",
@@ -32,35 +24,40 @@ const columns: Array<ColumnProps<IHour>> = [
     filterMultiple: false,
     filters: Object.keys(enums.COURSE_HOUR_ACTION_TYPE_LABEL).map(key => ({text: enums.COURSE_HOUR_ACTION_TYPE_LABEL[key], value: key})),
     render: (str: enums.COURSE_HOUR_ACTION_TYPE) => {
-      const color = str === enums.COURSE_HOUR_ACTION_TYPE.add ? 'green' : 'red';
       return (
-        <Tag color={color}>{enums.COURSE_HOUR_ACTION_TYPE_LABEL[str]}</Tag>
+        <Tag color={enums.COURSE_HOUR_ACTION_TYPE_COLOR[str]}>
+          {enums.COURSE_HOUR_ACTION_TYPE_LABEL[str]}
+        </Tag>
       )
     }
   },
   {
-    title: "类型",
-    dataIndex: "classTypes",
-    filterMultiple: false,
-    filters: Object.keys(enums.COURSE_HOUR_TYPE_LABEL).map(key => ({text: enums.COURSE_HOUR_TYPE_LABEL[key], value: key})),
-    render: (str: enums.COURSE_HOUR_TYPE) => (
-      <span>{enums.COURSE_HOUR_TYPE_LABEL[str]}</span>
-    )
+    title: "课程",
+    dataIndex: "course",
+    render: (val: ICourse[]) => {
+      if (!val || !val.length) {
+        return  '-'
+      }
+      return val.map((item) => {
+        return [
+          (
+            <div key={item.id}>
+              {`${item.name}:${item.count}课时`}
+            </div>
+          )
+        ]
+      })
+    }
   },
   {
-    title: "状态",
-    dataIndex: "status",
-    filterMultiple: false,
-    filters: Object.keys(enums.COURSE_HOUR_STATUS_LABEL).map(key => ({text: enums.COURSE_HOUR_STATUS_LABEL[key], value: key})),
-    render: (str: enums.COURSE_HOUR_STATUS) => (
-      <span>{enums.COURSE_HOUR_STATUS_LABEL[str]}</span>
-    )
+    title: "备注",
+    dataIndex: "desc",
   },
   {
     title: "创建时间",
     dataIndex: "createDate",
     sorter: true,
-    render: (date: string) => <span>{formatDate(new Date(date))}</span>
+    render: (date: string) => formatDate(new Date(date))
   },
   {
     title: "操作",
@@ -76,11 +73,11 @@ const initList: IHour[] = [];
 function List(): JSX.Element {
 
   const {
-    loading, 
-    data, 
-    pagination, 
-    handleTableChange, 
-    onDateChange, 
+    loading,
+    data,
+    pagination,
+    handleTableChange,
+    onDateChange,
     onSearch
   } = fetchApiHook(initList, api.getHourrList)
 
