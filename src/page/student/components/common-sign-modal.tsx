@@ -4,6 +4,7 @@ import * as React from "react";
 
 
 type IProps = FormComponentProps & {
+  title: string
   visible: boolean;
   confirmLoading: boolean;
   onCancel: () => void;
@@ -16,9 +17,12 @@ const FormList: React.FC<IProps> =  (props) => {
     onCreate,
     form,
     visible,
+    title,
     confirmLoading,
     onCancel
   } = props
+
+
 
   const { getFieldDecorator } = form;
 
@@ -52,15 +56,17 @@ const FormList: React.FC<IProps> =  (props) => {
   }
 
 
-
+  const modalProps = {
+    width: 400,
+    okText: '提交',
+    visible,
+    title,
+    confirmLoading,
+  }
 
   return (
     <Modal
-      visible={visible}
-      width={400}
-      title="补签"
-      okText="提交"
-      confirmLoading={confirmLoading}
+      {...modalProps}
       onCancel={handleFormCancel}
       onOk={handleSubmit}>
 

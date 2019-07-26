@@ -201,6 +201,7 @@ const List: React.FC<IProps> = (props) => {
 
             {/*补签模块*/}
             <SupplementModal
+              title="签到"
               onCreate={handleSupplementSumbit}
               onCancel={handleSupplementCancel}
               { ...supplementState}/>
