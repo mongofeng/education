@@ -6,7 +6,7 @@ import * as api from "../../../../api/course";
 import * as enums from "../../../../const/enum";
 import { ICourse } from "../../../../const/type/course";
 import formatDate from "../../../../utils/format-date";
-import IModal from './Modal'
+import CourseModal from './course-modal'
 import SupplementModal from '../../components/common-sign-modal'
 import * as apiPack from '../../../../api/student-operation'
 import fetchApiHook from '../../../../common/hooks/featchApiList'
@@ -286,6 +286,16 @@ const List: React.FC<IProps> = (props) => {
         onCancel={handleSupplementCancel}
         { ...supplementState}/>
 
+      {/*添加课程模块*/}
+      <CourseModal
+        title="添加课程"
+        id={props.id}
+        destroyOnClose={true}
+        onSelect={handleOk}
+        width={800}
+        {...modalState}
+        onCancel={handleCancel} />
+
       <div className="mb10">
         <RangePicker onChange={onDateChange} />
 
@@ -304,15 +314,7 @@ const List: React.FC<IProps> = (props) => {
         </Button>
       </div>
 
-      <IModal
-        id={props.id}
-        destroyOnClose={true}
-        onSelect={handleOk}
-        title="添加课程"
-        width={800}
-        visible={modalState.visible}
-        confirmLoading={modalState.confirmLoading}
-        onCancel={handleCancel} />
+
 
       <Table<ICourse>
         columns={columns.concat(specialColumn)}
