@@ -7,7 +7,7 @@ import * as enums from "../../../../const/enum";
 import { ICourse } from "../../../../const/type/course";
 import formatDate from "../../../../utils/format-date";
 import IModal from './Modal'
-import SupplementModal from './supplement-moda'
+import SupplementModal from '../../components/common-sign-modal'
 import * as apiPack from '../../../../api/student-operation'
 import fetchApiHook from '../../../../common/hooks/featchApiList'
 import { ISupplement } from '../../../../const/type/student-operation'

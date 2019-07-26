@@ -1,9 +1,9 @@
 import { DatePicker, Table, Tag } from 'antd';
 import * as React from "react";
-import * as api from "../../../api/course";
-import * as enums from '../../../const/enum'
-import { ICourse } from "../../../const/type/course";
-import { getWeek } from '../../../utils/time'
+import * as api from "../../../../api/course";
+import * as enums from '../../../../const/enum'
+import { ICourse } from "../../../../const/type/course";
+import { getWeek } from '../../../../utils/time'
 const { WeekPicker } = DatePicker;
 const { useState, useEffect } = React;
 

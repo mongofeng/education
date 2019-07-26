@@ -9,11 +9,11 @@ import {IStudent} from '../../const/type/student'
 import {IStudentHour} from '../../const/type/student-hour'
 import formatDate from "../../utils/format-date";
 import Course from './page/course'
-import Hours from './components/hour'
+import Hours from './page/hour'
 
 import getAge from '../../utils/getAge'
-import Schedule from './components/Schedule'
-import SignIn from './components/SignIn'
+import Schedule from './page/shchedule'
+import SignIn from './page/sign'
 
 import StudentPakcage from './page/student-package' // 课程包
 const TabPane = Tabs.TabPane;
