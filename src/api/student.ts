@@ -14,15 +14,15 @@ export function addStudent(params: IStudent) {
 }
 
 /**
- * 
+ *
  * @param params 查询参数
  */
-export function getStudentList(params: IStudent): ApiListData<IStudent> {
+export function getStudentList(params: any): ApiListData<IStudent> {
     return http.post('student/list', params)
 }
 
 /**
- * 
+ *
  * @param id 学生的id
  */
 export function getStudent(id: string): ApiResponse<IStudent> {
@@ -30,9 +30,9 @@ export function getStudent(id: string): ApiResponse<IStudent> {
 }
 
 /**
- * 
+ *
  * @param id 学生id
- * @param params 
+ * @param params
  */
 export function updateStudent(id: string, params: Partial<IStudent>): ApiResponse<IStudent> {
     return http.put(`student/${id}`, params)

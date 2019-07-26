@@ -1,13 +1,16 @@
 import { Button, DatePicker, Input, message, Modal, Table, Tag, Tooltip } from 'antd'
 import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import * as api from "../../../../api/student-operation";
 import * as apiPack from '../../../../api/student-package'
 import fetchApiHook from '../../../../common/hooks/featchApiList'
 import { IStudentPackage } from "../../../../const/type/student-package";
 import formatDate from "../../../../utils/format-date";
+
 import BuyCourse from './buy-course-modal'
+import ShareStudentPackage from './share-student-package-modal'
+
 const moment = require('moment')
 
 const Search = Input.Search;
@@ -108,6 +111,10 @@ function List(props: IProps): JSX.Element {
 
   // 模态框
   const [modalState, setModalState] = useState(initModalState)
+  const [formState, setFormState] = useState(initModalState)
+
+
+  const formRef = useRef(null);
 
   // 激活模态框
   const [visible, setVisible] = useState(false)
@@ -124,6 +131,7 @@ function List(props: IProps): JSX.Element {
       visible: true
     })
   }
+
 
   /**
    * 取消模态框
@@ -162,7 +170,9 @@ function List(props: IProps): JSX.Element {
     }
   }
 
-
+  /**
+   * 激活模态框确认
+   */
   const Activite = {
     title: "激活",
     dataIndex: "isActive",
@@ -186,9 +196,6 @@ function List(props: IProps): JSX.Element {
     }
   }
 
-  /**
-   * 激活模态框确认
-   */
 
   const handleActivite = async () => {
     if (!row || !row.period) {
@@ -222,6 +229,52 @@ function List(props: IProps): JSX.Element {
     setActiviteTime(val);
   }
 
+  /**
+   * 共享课程包
+   */
+
+  const showShareModal = () => {
+    setFormState({
+      ...formState,
+      visible: true
+    })
+  }
+
+  const handleFormCancel = () => {
+    const form = (formRef.current as any).props.form;
+    form.resetFields();
+    setFormState({
+      ...initModalState,
+    })
+  }
+
+  const handleFormCreate = () => {
+    if (formRef.current === null) {
+      return
+    }
+    const form = (formRef.current as any).props.form;
+    form.validateFields(async (err: any, values: any) => {
+      if (err) {
+        return;
+      }
+
+      console.log('Received values of form: ', values);
+
+
+      setFormState({
+        ...modalState,
+        confirmLoading: true,
+      })
+      try {
+
+
+        message.success('success')
+      } finally {
+        handleCancel();
+      }
+    });
+  }
+
 
 
 
@@ -235,6 +288,13 @@ function List(props: IProps): JSX.Element {
         onSelect={handleOk}
         onCancel={handleCancel}
         {...modalState} />
+
+       <ShareStudentPackage
+          wrappedComponentRef={formRef}
+          id={props.id}
+          onCreate={handleFormCreate}
+          onCancel={handleFormCancel}
+          { ...formState}/>
 
 
       <Modal
@@ -268,7 +328,7 @@ function List(props: IProps): JSX.Element {
               <Button
                 className="fr mr5"
                 icon="reddit"
-                onClick={showModal}>
+                onClick={showShareModal}>
                 共享
               </Button>
             </Tooltip>
