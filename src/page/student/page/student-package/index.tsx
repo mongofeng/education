@@ -81,6 +81,7 @@ const columns: Array<ColumnProps<IStudentPackage>> = [
 
 interface IProps {
   id: string
+  update: () => Promise<void>
 }
 
 
@@ -147,7 +148,6 @@ function List(props: IProps): JSX.Element {
    */
   const handleOk = async (selectRows: IStudentPackage[]) => {
     // 打开loading
-    console.log(selectRows)
     if (!selectRows.length) { return }
     setModalState({
       ...modalState,
@@ -162,6 +162,7 @@ function List(props: IProps): JSX.Element {
       await api.buyStudentPackage(params)
       message.success('关联成功')
       fetchData(true)
+      props.update()
     } finally {
       setModalState({
         ...initModalState,

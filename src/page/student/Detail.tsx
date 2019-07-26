@@ -272,11 +272,11 @@ function Detail(props: RouteComponentProps<IParams>): JSX.Element {
 
         <Tabs defaultActiveKey="1" className="mt10">
           <TabPane tab="课程" key="1">
-            <Course id={id} />
+            <Course {...hourProps} />
           </TabPane>
 
           <TabPane tab="课程包" key="6">
-            <StudentPakcage id={id} />
+            <StudentPakcage {...hourProps} />
           </TabPane>
 
           <TabPane tab="课时" key="2">

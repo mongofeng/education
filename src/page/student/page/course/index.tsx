@@ -3,14 +3,14 @@ import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
 import { Link } from "react-router-dom";
 import * as api from "../../../../api/course";
-import * as enums from "../../../../const/enum";
-import { ICourse } from "../../../../const/type/course";
-import formatDate from "../../../../utils/format-date";
-import CourseModal from './course-modal'
-import SupplementModal from '../../components/common-sign-modal'
 import * as apiPack from '../../../../api/student-operation'
 import fetchApiHook from '../../../../common/hooks/featchApiList'
+import * as enums from "../../../../const/enum";
+import { ICourse } from "../../../../const/type/course";
 import { ISupplement } from '../../../../const/type/student-operation'
+import formatDate from "../../../../utils/format-date";
+import SupplementModal from '../../components/common-sign-modal'
+import CourseModal from './course-modal'
 
 const { useState } = React;
 const Search = Input.Search;
@@ -30,6 +30,7 @@ const initModalState = {
 
 interface IProps {
   id: string
+  update: () => Promise<void>
 }
 
 
@@ -135,7 +136,6 @@ const List: React.FC<IProps> = (props) => {
    */
   const handleOk = async (selectRows: object[]) => {
     // 打开loading
-    console.log(selectRows)
     if (!selectRows.length) { return }
     setModalState({
       ...modalState,
@@ -181,7 +181,6 @@ const List: React.FC<IProps> = (props) => {
    * 取消模态框
    */
   const handleCancel = () => {
-    console.log('Clicked cancel button');
     setModalState({
       ...modalState,
       visible: false
@@ -212,7 +211,6 @@ const List: React.FC<IProps> = (props) => {
   }
 
   const handleSupplementSumbit = async (values) => {
-    console.log('Received values of form: ', values);
     const {
       num,
       desc
@@ -242,6 +240,7 @@ const List: React.FC<IProps> = (props) => {
     try {
       await apiPack.supplement(params)
       message.success('补签成功')
+      props.update()
     } finally {
       handleSupplementCancel();
     }
