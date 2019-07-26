@@ -36,13 +36,8 @@ const columns: Array<ColumnProps<ICourse>> = [
     },
   },
   {
-    title: "一天",
-    dataIndex: "time",
-    filterMultiple: false,
-    filters: Object.keys(enums.DAY_LABEL).map(key => ({text: enums.DAY_LABEL[key], value: key})),
-    render: (str: enums.DAY) => (
-      <span>{enums.DAY_LABEL[str]}</span>
-    )
+    title: "上课时间",
+    dataIndex: "startTime"
   },
   {
     title: "开课时间",
@@ -58,6 +53,7 @@ const columns: Array<ColumnProps<ICourse>> = [
       format: 'yyyy-MM-dd',
     })}</span>
   },
+  
   {
     title: "创建时间",
     dataIndex: "createDate",
@@ -67,6 +63,9 @@ const columns: Array<ColumnProps<ICourse>> = [
   {
     title: "状态",
     dataIndex: "status",
+    render: (val: string) => {
+      return enums.COURSE_STATUS_LABEL[val]
+    }
   },
   {
     title: "操作",

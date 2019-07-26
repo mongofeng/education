@@ -22,6 +22,14 @@ const columns: IField[] = [
     prop: "teacherId"
   },
   {
+    label: "上课时间",
+    prop: "startTime"
+  },
+  {
+    label: "下课时间",
+    prop: "endTime"
+  },
+  {
     label: "一天",
     prop: "time",
     render: ({data, field}: {data: ICourse, field: string}) => {
@@ -66,8 +74,6 @@ const columns: IField[] = [
     label: "一周",
     prop: "day",
     render: ({data, field}: {data: ICourse, field: string}) => {
-      console.log(data, field)
-      // return 1
       return (data[field] || []).map((key) => {
         return (
           <Tag color="blue" key={key}>
@@ -76,6 +82,10 @@ const columns: IField[] = [
         )
       })
     }
+  },
+  {
+    label: "备注",
+    prop: "desc"
   },
 ];
 

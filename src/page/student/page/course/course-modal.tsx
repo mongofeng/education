@@ -1,4 +1,4 @@
-import {  message, Modal, Table } from "antd";
+import {  message, Modal, Table, Tag } from "antd";
 import {ModalProps} from 'antd/lib/modal';
 import { PaginationProps } from "antd/lib/pagination";
 import { ColumnProps, TableRowSelection } from "antd/lib/table";
@@ -27,27 +27,19 @@ const columns: Array<ColumnProps<ICourse>> = [
   {
     title: "课程",
     dataIndex: "name",
-    render: (val: string, row: any) => {
-      return <Link to={`edit/${row._id}`}>{val}</Link>;
-    }
   },
   {
     title: "一周",
     dataIndex: "day",
-    filterMultiple: false,
-    filters: Object.keys(enums.WEEK_LABEL).map(key => ({text: enums.WEEK_LABEL[key], value: key})),
-    render: (str: enums.WEEK) => (
-      <span>{enums.WEEK_LABEL[str]}</span>
-    )
-  },
-  {
-    title: "一天",
-    dataIndex: "time",
-    filterMultiple: false,
-    filters: Object.keys(enums.DAY_LABEL).map(key => ({text: enums.DAY_LABEL[key], value: key})),
-    render: (str: enums.DAY) => (
-      <span>{enums.DAY_LABEL[str]}</span>
-    )
+    render: (days: enums.WEEK[]) => {
+      return days.map((key) => {
+        return (
+          <Tag color="blue" key={key}>
+            {enums.WEEK_LABEL[key]}
+          </Tag>
+        )
+      })
+    },
   },
   {
     title: "开课时间",
@@ -57,27 +49,16 @@ const columns: Array<ColumnProps<ICourse>> = [
     })}</span>
   },
   {
-    title: "结课时间",
-    dataIndex: "endDate",
-    render: (date: number) => <span>{formatDate(new Date(date), {
-      format: 'yyyy-MM-dd',
-    })}</span>
-  },
-  {
-    title: "创建时间",
-    dataIndex: "createDate",
-    sorter: true,
-    render: (date: string) => <span>{formatDate(new Date(date))}</span>
+    title: "上课时间",
+    dataIndex: "startTime"
   },
   {
     title: "状态",
     dataIndex: "status",
-    filterMultiple: false,
-    filters: Object.keys(enums.COURSE_STATUS_LABEL).map(key => ({text: enums.COURSE_STATUS_LABEL[key], value: key})),
-    render: (str: enums.COURSE_STATUS) => (
-      <span>{enums.COURSE_STATUS_LABEL[str]}</span>
-    )
-  }
+    render: (val: string) => {
+      return enums.COURSE_STATUS_LABEL[val]
+    }
+  },
 ];
 
 /**

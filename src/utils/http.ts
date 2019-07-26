@@ -41,30 +41,28 @@ function interceptors (http: AxiosInstance) {
     (error: AxiosError) => {
       const response = error.response
       console.log(response)
-      if (response) {
-        console.log(response.data)
-        if (response.status === 403) {
-          notice()
-        } else {
+      console.log(response.data)
+      if (response.status === 403) { // token失效
+        notice()
+      } else {
+        let description = '请求错误'
+        if (typeof response.data === 'string') {
+          description = response.data
+        } else if (typeof response.data === 'object') {
           const {
             message,
             err: errMsg,
             error: err
           } = response.data
 
-          const description = message || (errMsg && errMsg.desc) || err || '请求错误'
-          notification.error({
-            message: `请求错误`,
-            description
-          });
+          description = message || (errMsg && errMsg.desc) || err || '请求错误'
         }
-      } else {
+
         notification.error({
           message: `请求错误`,
-          description: '请求错误'
+          description
         });
       }
-
 
       return Promise.reject(error);
     }
