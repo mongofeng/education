@@ -2,9 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b910e175-f40f-4b07-a1b6-f2cb4f27595b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/api/student-package.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/student-package.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/page/student/page/student-package/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/page/student/page/student-package/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/page/student/page/course/supplement-moda.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/page/student/Detail.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/page/student/Detail.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/page/student/components/Modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/page/student/page/course/Modal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/page/student/components/course.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/page/student/page/course/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/page/student/page/student-package/share-student-package-modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/page/student/page/student-package/share-student-package-modal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/http.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/http.ts" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -17,51 +21,57 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/page/student/page/student-package/share-student-package-modal.tsx">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/page/student/page/course/index.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="196">
-              <caret line="82" column="9" lean-forward="true" selection-start-line="82" selection-start-column="9" selection-end-line="82" selection-end-column="9" />
+            <state relative-caret-position="252">
+              <caret line="258" column="28" selection-start-line="258" selection-start-column="28" selection-end-line="258" selection-end-column="28" />
               <folding>
-                <element signature="e#0#60#0" expanded="true" />
-                <element signature="e#1357#2232#0" />
+                <element signature="e#0#77#0" expanded="true" />
+                <element signature="e#874#2644#0" />
+                <element signature="e#1394#1844#0" />
+                <element signature="e#1891#2264#0" />
+                <element signature="e#2318#2434#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/node_modules/antd/lib/form/Form.d.ts">
+        <entry file="file://$PROJECT_DIR$/src/utils/http.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="29">
-              <caret line="49" column="7" selection-start-line="49" selection-start-column="4" selection-end-line="49" selection-end-column="7" />
+            <state relative-caret-position="-615">
+              <caret line="53" lean-forward="true" selection-start-line="53" selection-end-line="53" />
+              <folding>
+                <element signature="e#0#36#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/api/student-package.ts">
+        <entry file="file://$PROJECT_DIR$/src/api/student-operation.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="19" selection-start-column="19" selection-end-column="19" />
+            <state relative-caret-position="290">
+              <caret line="27" column="47" selection-start-line="27" selection-start-column="47" selection-end-line="27" selection-end-column="47" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/const/type/student-package.ts">
+        <entry file="file://$PROJECT_DIR$/src/const/type/student-operation.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="168">
-              <caret line="6" column="22" lean-forward="true" selection-start-line="6" selection-start-column="22" selection-end-line="6" selection-end-column="22" />
+            <state relative-caret-position="362">
+              <caret line="13" column="2" lean-forward="true" selection-start-line="13" selection-start-column="2" selection-end-line="16" selection-end-column="16" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/page/student/components/Schedule.tsx">
+        <entry file="file://$PROJECT_DIR$/src/page/student/page/course/Modal.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1064">
-              <caret line="43" column="51" selection-start-line="43" selection-start-column="51" selection-end-line="43" selection-end-column="51" />
+            <state relative-caret-position="1120">
+              <caret line="109" column="19" lean-forward="true" selection-start-line="109" selection-start-column="19" selection-end-line="109" selection-end-column="19" />
               <folding>
                 <element signature="e#0#46#0" expanded="true" />
               </folding>
@@ -70,34 +80,48 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/page/student/components/Modal-Signin-Form.tsx">
+        <entry file="file://$PROJECT_DIR$/src/page/student/page/course/supplement-moda.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="84">
-              <caret line="3" column="1" selection-start-line="3" selection-start-column="1" selection-end-line="3" selection-end-column="52" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/page/student/page/student-package/index.tsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="121">
-              <caret line="271" lean-forward="true" selection-start-line="271" selection-end-line="271" />
+            <state relative-caret-position="140">
+              <caret line="5" column="36" selection-start-line="5" selection-start-column="36" selection-end-line="5" selection-end-column="36" />
               <folding>
-                <element signature="e#0#85#0" expanded="true" />
+                <element signature="e#0#64#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/page/teacher/Form.tsx">
+        <entry file="file://$PROJECT_DIR$/src/page/student/page/student-package/index.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2">
-              <caret line="42" column="4" lean-forward="true" selection-start-line="42" selection-start-column="4" selection-end-line="83" selection-end-column="6" />
+            <state relative-caret-position="140">
+              <caret line="5" selection-start-line="5" selection-end-line="5" selection-end-column="58" />
               <folding>
-                <element signature="e#0#128#0" expanded="true" />
-                <element signature="e#1064#1939#0" />
+                <element signature="e#4722#5161#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/page/student/components/Modal-Signin-Form.tsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1176">
+              <caret line="42" column="36" lean-forward="true" selection-start-line="42" selection-start-column="36" selection-end-line="42" selection-end-column="36" />
+              <folding>
+                <element signature="e#0#60#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/page/student/page/student-package/share-student-package-modal.tsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="308">
+              <caret line="11" column="25" lean-forward="true" selection-end-line="163" />
+              <folding>
+                <element signature="e#0#60#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -108,20 +132,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="28">
               <caret line="1" column="7" selection-start-line="1" selection-start-column="3" selection-end-line="1" selection-end-column="7" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/page/student/components/SignIn.tsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2352">
-              <caret line="141" column="5" selection-start-line="82" selection-start-column="4" selection-end-line="141" selection-end-column="5" />
-              <folding>
-                <element signature="e#0#51#0" expanded="true" />
-                <element signature="e#1837#1996#0" />
-                <element signature="e#2029#3782#0" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -152,6 +162,7 @@
       <find>getFieldDecorator</find>
       <find>wrappedComponentRef</find>
       <find>apiPack</find>
+      <find>handleSupplementCancel</find>
     </findStrings>
     <replaceStrings>
       <replace>StudentForm</replace>
@@ -185,8 +196,12 @@
         <option value="$PROJECT_DIR$/src/page/student/Detail.tsx" />
         <option value="$PROJECT_DIR$/src/api/student.ts" />
         <option value="$PROJECT_DIR$/src/api/student-package.ts" />
-        <option value="$PROJECT_DIR$/src/page/student/page/student-package/share-student-package-modal.tsx" />
         <option value="$PROJECT_DIR$/src/page/student/page/student-package/index.tsx" />
+        <option value="$PROJECT_DIR$/src/page/student/page/course/course.tsx" />
+        <option value="$PROJECT_DIR$/src/page/student/page/student-package/share-student-package-modal.tsx" />
+        <option value="$PROJECT_DIR$/src/page/student/page/course/supplement-moda.tsx" />
+        <option value="$PROJECT_DIR$/src/utils/http.ts" />
+        <option value="$PROJECT_DIR$/src/page/student/page/course/index.tsx" />
       </list>
     </option>
   </component>
@@ -245,7 +260,24 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="page" type="462c0819:PsiDirectoryNode" />
               <item name="student" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="education" type="b2602c69:ProjectViewProjectNode" />
+              <item name="education" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="page" type="462c0819:PsiDirectoryNode" />
+              <item name="student" type="462c0819:PsiDirectoryNode" />
+              <item name="page" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="education" type="b2602c69:ProjectViewProjectNode" />
+              <item name="education" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="page" type="462c0819:PsiDirectoryNode" />
+              <item name="student" type="462c0819:PsiDirectoryNode" />
+              <item name="page" type="462c0819:PsiDirectoryNode" />
+              <item name="course" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="education" type="b2602c69:ProjectViewProjectNode" />
@@ -263,6 +295,12 @@
               <item name="page" type="462c0819:PsiDirectoryNode" />
               <item name="teacher" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="education" type="b2602c69:ProjectViewProjectNode" />
+              <item name="education" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="utils" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -274,7 +312,7 @@
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/page/student/page/student-package" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/page/student/page/course" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
@@ -284,6 +322,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/page/student/page/course" />
       <recent name="$PROJECT_DIR$/src/page/student/page/student-package" />
     </key>
   </component>
@@ -318,12 +357,12 @@
       <workItem from="1564026554405" duration="8192000" />
       <workItem from="1564109476910" duration="6133000" />
       <workItem from="1564116947122" duration="1591000" />
-      <workItem from="1564118955858" duration="4227000" />
+      <workItem from="1564118955858" duration="7756000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="28685000" />
+    <option name="totallyTimeSpent" value="32214000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="143" y="115" width="1717" height="815" extended-state="0" />
@@ -334,14 +373,14 @@
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32980332" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.46456692" />
-      <window_info anchor="bottom" id="Terminal" order="8" visible="true" weight="0.3827534" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.3827534" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Docker" order="10" show_stripe_button="false" />
       <window_info anchor="bottom" id="TypeScript" order="11" weight="0.32829046" />
@@ -533,32 +572,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/page/student/components/hour.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1092">
-          <folding>
-            <element signature="e#0#52#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/page/package/List.tsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="56">
           <caret line="65" column="2" lean-forward="true" selection-start-line="65" selection-start-column="2" selection-end-line="70" selection-end-column="4" />
           <folding>
             <element signature="e#0#56#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/page/student/components/course.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2632">
-          <caret line="114" column="2" selection-start-line="114" selection-start-column="2" selection-end-line="123" selection-end-column="3" />
-          <folding>
-            <element signature="e#0#77#0" expanded="true" />
-            <element signature="e#1394#1844#0" />
           </folding>
         </state>
       </provider>
@@ -585,16 +604,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/moment/moment.d.ts">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/page/student/components/Modal.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="14">
-          <caret line="103" column="10" selection-start-line="103" selection-start-column="10" selection-end-line="103" selection-end-column="10" />
-          <folding>
-            <element signature="e#0#46#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/common/effect-utils/index.ts">
       <provider selected="true" editor-type-id="text-editor" />
@@ -656,20 +665,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/page/student/components/Modal-Signin-Form.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="84">
-          <caret line="3" column="1" selection-start-line="3" selection-start-column="1" selection-end-line="3" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/page/student/components/Modal-Form.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="28">
-          <caret line="1" column="7" selection-start-line="1" selection-start-column="3" selection-end-line="1" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/page/student/components/SignIn.tsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2352">
@@ -714,23 +709,106 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/page/student/components/hour.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#52#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/page/student/components/Modal-Form.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="28">
+          <caret line="1" column="7" selection-start-line="1" selection-start-column="3" selection-end-line="1" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/page/student/page/course/Modal.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1120">
+          <caret line="109" column="19" lean-forward="true" selection-start-line="109" selection-start-column="19" selection-end-line="109" selection-end-column="19" />
+          <folding>
+            <element signature="e#0#46#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/page/student/page/student-package/share-student-package-modal.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="196">
-          <caret line="82" column="9" lean-forward="true" selection-start-line="82" selection-start-column="9" selection-end-line="82" selection-end-column="9" />
+        <state relative-caret-position="308">
+          <caret line="11" column="25" lean-forward="true" selection-end-line="163" />
           <folding>
             <element signature="e#0#60#0" expanded="true" />
-            <element signature="e#1357#2232#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/page/student/components/Modal-Signin-Form.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1176">
+          <caret line="42" column="36" lean-forward="true" selection-start-line="42" selection-start-column="36" selection-end-line="42" selection-end-column="36" />
+          <folding>
+            <element signature="e#0#60#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/page/student/page/student-package/index.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="121">
-          <caret line="271" lean-forward="true" selection-start-line="271" selection-end-line="271" />
+        <state relative-caret-position="140">
+          <caret line="5" selection-start-line="5" selection-end-line="5" selection-end-column="58" />
           <folding>
-            <element signature="e#0#85#0" expanded="true" />
+            <element signature="e#4722#5161#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/page/student/page/course/supplement-moda.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="140">
+          <caret line="5" column="36" selection-start-line="5" selection-start-column="36" selection-end-line="5" selection-end-column="36" />
+          <folding>
+            <element signature="e#0#64#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/const/type/student-operation.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="362">
+          <caret line="13" column="2" lean-forward="true" selection-start-line="13" selection-start-column="2" selection-end-line="16" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/api/student-operation.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="290">
+          <caret line="27" column="47" selection-start-line="27" selection-start-column="47" selection-end-line="27" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/utils/http.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-615">
+          <caret line="53" lean-forward="true" selection-start-line="53" selection-end-line="53" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/page/student/page/course/index.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="252">
+          <caret line="258" column="28" selection-start-line="258" selection-start-column="28" selection-end-line="258" selection-end-column="28" />
+          <folding>
+            <element signature="e#0#77#0" expanded="true" />
+            <element signature="e#874#2644#0" />
+            <element signature="e#1394#1844#0" />
+            <element signature="e#1891#2264#0" />
+            <element signature="e#2318#2434#0" />
           </folding>
         </state>
       </provider>

@@ -40,6 +40,7 @@ function interceptors (http: AxiosInstance) {
     },
     (error: AxiosError) => {
       const response = error.response
+      console.log(response)
       if (response) {
         console.log(response.data)
         if (response.status === 403) {
@@ -47,11 +48,14 @@ function interceptors (http: AxiosInstance) {
         } else {
           const {
             message,
+            err: errMsg,
             error: err
           } = response.data
+
+          const description = message || (errMsg && errMsg.desc) || err || '请求错误'
           notification.error({
             message: `请求错误`,
-            description: message || err || '请求错误'
+            description
           });
         }
       } else {
@@ -60,12 +64,12 @@ function interceptors (http: AxiosInstance) {
           description: '请求错误'
         });
       }
-      
-      
+
+
       return Promise.reject(error);
     }
   );
-  
+
   http.interceptors.request.use(
     (config: AxiosRequestConfig) => {
       const localStorageAccessTokenName = window.localStorage.getItem(
@@ -74,7 +78,7 @@ function interceptors (http: AxiosInstance) {
       if (localStorageAccessTokenName) {
         config.headers[accessTokenName] = localStorageAccessTokenName;
       }
-  
+
       return config;
     },
     (error: AxiosError) => {

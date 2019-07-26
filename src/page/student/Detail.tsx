@@ -8,7 +8,7 @@ import * as enums from '../../const/enum'
 import {IStudent} from '../../const/type/student'
 import {IStudentHour} from '../../const/type/student-hour'
 import formatDate from "../../utils/format-date";
-import Course from './components/course'
+import Course from './page/course'
 import Hours from './components/hour'
 
 import getAge from '../../utils/getAge'

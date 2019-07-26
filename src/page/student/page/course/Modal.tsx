@@ -6,12 +6,12 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { Dispatch } from "redux";
-import * as enums from "../../../const/enum";
-import { ICourse } from "../../../const/type/course";
-import * as action from '../../../store/actions/course'
-import formatDate from "../../../utils/format-date";
+import * as enums from "../../../../const/enum";
+import { ICourse } from "../../../../const/type/course";
+import * as action from '../../../../store/actions/course'
+import formatDate from "../../../../utils/format-date";
 
-import {IFilter, IParmas} from '../../../common/hooks/featchApiList'
+import {IFilter, IParmas} from '../../../../common/hooks/featchApiList'
 const { useState, useEffect } = React;
 
 interface IProps extends ModalProps{
@@ -21,7 +21,7 @@ interface IProps extends ModalProps{
   onSelect: (params: object[]) => void
   data: ICourse[]
   id: string
-} 
+}
 
 const columns: Array<ColumnProps<ICourse>> = [
   {
@@ -87,9 +87,9 @@ const initPagination: PaginationProps = {
   total: 0,
   current: 1,
   pageSize: 10
-} 
+}
 /**
- * 
+ *
  * @param props 选择项
  */
 const initSelectedRows: object[] = []
@@ -102,7 +102,7 @@ const List: React.FC<IProps> =  (props) => {
     onGetList,
     loading,
     total,
-    data, 
+    data,
     ...resetProps} = props
 
   const initCondition: QueryCondition<ICourse> = {
@@ -155,7 +155,7 @@ const List: React.FC<IProps> =  (props) => {
         query[key] = val;
       }
     }
-    
+
 
     // 名字的搜索
     const like: any = {};
@@ -211,7 +211,7 @@ const List: React.FC<IProps> =  (props) => {
       console.log('init fetch data')
       onGetList(condition)
     }
-    
+
   }, [props.visible])
 
 
@@ -230,7 +230,7 @@ const List: React.FC<IProps> =  (props) => {
   };
 
 
-  
+
   return (
     <Modal
     onOk={() => {
