@@ -1,4 +1,4 @@
-import { Button, DatePicker, Input, message, Table, Tag, Tooltip } from 'antd'
+import { Button, DatePicker, Input, message, Modal, Table, Tag, Tooltip } from 'antd'
 import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
 import { useState } from 'react'
@@ -8,6 +8,7 @@ import fetchApiHook from '../../../../common/hooks/featchApiList'
 import { IStudentPackage } from "../../../../const/type/student-package";
 import formatDate from "../../../../utils/format-date";
 import BuyCourse from './buy-course-modal'
+const moment = require('moment')
 
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
@@ -108,6 +109,11 @@ function List(props: IProps): JSX.Element {
   // 模态框
   const [modalState, setModalState] = useState(initModalState)
 
+  // 激活模态框
+  const [visible, setVisible] = useState(false)
+  const [activiteTime, setActiviteTime] = useState(moment())
+  const [row, setRow] = useState(null)
+
 
   /**
    * 添加课程包
@@ -165,40 +171,56 @@ function List(props: IProps): JSX.Element {
         return <Tag color='blue'>已激活</Tag>
       }
 
-
-      const handleActivite = async () => {
-        if (!row.period) {
-          message.error('没有年限不能激活')
-          return
-        }
-        const today = new Date()
-        today.setDate(today.getFullYear() + row.period)
-        const params = {
-          activeTime: new Date().toISOString(),
-          isActive: true,
-          endTime: today.toISOString()
-        }
-        try {
-          await apiPack.updateStudentPackage(row._id, params)
-          message.success('激活成功')
-        } finally {
-          fetchData()
-        }
-      }
-
       // 激活按钮
       return (
         <Button
           type="primary"
           size="small"
-          onClick={handleActivite}>
+          onClick={() => {
+            setRow(row)
+            setVisible(true)
+          }}>
           激活
         </Button>
       )
     }
   }
 
+  /**
+   * 激活模态框确认
+   */
 
+  const handleActivite = async () => {
+    if (!row || !row.period) {
+      message.error('没有年限不能激活')
+      return
+    }
+
+    const date = activiteTime.toDate()
+    const act = activiteTime.toISOString()
+    console.log(date)
+    date.setFullYear(date.getFullYear() + row.period)
+    const end = date.toISOString()
+
+    const params = {
+      activeTime: act,
+      isActive: true,
+      endTime: end
+    }
+
+    try {
+      await apiPack.updateStudentPackage(row._id, params)
+      fetchData()
+      message.success('激活成功')
+    } finally {
+      setVisible(false)
+    }
+  }
+
+
+  const onChange = (val:any) => {
+    setActiviteTime(val);
+  }
 
 
 
@@ -213,6 +235,17 @@ function List(props: IProps): JSX.Element {
         onSelect={handleOk}
         onCancel={handleCancel}
         {...modalState} />
+
+
+      <Modal
+        title="选择激活时间"
+        visible={visible}
+        onOk={handleActivite}
+        onCancel={() => setVisible(false)}
+        okText="确认"
+        cancelText="取消">
+        <DatePicker defaultValue={activiteTime} onChange={onChange} />
+      </Modal>
 
       <div className="mb10 clearfix">
         <RangePicker onChange={onDateChange} />
