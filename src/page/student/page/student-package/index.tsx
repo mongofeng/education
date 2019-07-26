@@ -1,7 +1,7 @@
 import { Button, DatePicker, Input, message, Modal, Table, Tag, Tooltip } from 'antd'
 import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import * as api from "../../../../api/student-operation";
 import * as apiPack from '../../../../api/student-package'
 import fetchApiHook from '../../../../common/hooks/featchApiList'
@@ -114,7 +114,6 @@ function List(props: IProps): JSX.Element {
   const [formState, setFormState] = useState(initModalState)
 
 
-  const formRef = useRef(null);
 
   // 激活模态框
   const [visible, setVisible] = useState(false)
@@ -241,38 +240,36 @@ function List(props: IProps): JSX.Element {
   }
 
   const handleFormCancel = () => {
-    const form = (formRef.current as any).props.form;
-    form.resetFields();
     setFormState({
       ...initModalState,
     })
   }
 
-  const handleFormCreate = () => {
-    if (formRef.current === null) {
-      return
+  const handleFormCreate = async (values) => {
+    console.log('Received values of form: ', values);
+    const {
+      packId,
+      desc
+    } = values
+
+    const params = {
+      desc,
+      packId: packId[packId.length - 1],
+      studentId: props.id
     }
-    const form = (formRef.current as any).props.form;
-    form.validateFields(async (err: any, values: any) => {
-      if (err) {
-        return;
-      }
 
-      console.log('Received values of form: ', values);
+    setFormState({
+      ...modalState,
+      confirmLoading: true,
+    })
+    try {
+      await api.iSharePackage(params)
+      message.success('关联成功')
+      fetchData()
+    } finally {
+      handleFormCancel();
+    }
 
-
-      setFormState({
-        ...modalState,
-        confirmLoading: true,
-      })
-      try {
-
-
-        message.success('success')
-      } finally {
-        handleCancel();
-      }
-    });
   }
 
 
@@ -290,7 +287,6 @@ function List(props: IProps): JSX.Element {
         {...modalState} />
 
        <ShareStudentPackage
-          wrappedComponentRef={formRef}
           id={props.id}
           onCreate={handleFormCreate}
           onCancel={handleFormCancel}
