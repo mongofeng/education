@@ -3,11 +3,11 @@ import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
 import { Link } from "react-router-dom";
 import * as api from "../../api/hour";
+import fetchApiHook from '../../common/hooks/featchApiList'
 import * as enums from "../../const/enum";
 import { IHour } from "../../const/type/hour";
-import formatDate from "../../utils/format-date";
-import fetchApiHook from '../../common/hooks/featchApiList'
 import { ICourse } from '../../const/type/student-operation'
+import formatDate from "../../utils/format-date";
 
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
@@ -48,10 +48,6 @@ const columns: Array<ColumnProps<IHour>> = [
         ]
       })
     }
-  },
-  {
-    title: "备注",
-    dataIndex: "desc",
   },
   {
     title: "创建时间",
