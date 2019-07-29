@@ -28,41 +28,51 @@ const cols = Reflect.ownKeys(enums.WEEK_LABEL).map(key => {
 })
 
 
+
 const columns = [{
     title: '时间',
     dataIndex: 'day',
-}, ...cols];
+}, ...cols.slice(1), cols[0]];
 
 
 
-function HandleDate(List: ICourse[]) {
+function HandleDate(List: ICourse[], monday?: Date) {
     const morning: any = { key: 1, day: '上午' }
     const afternoon: any = { key: 2, day: '下午' }
     const evening: any = { key: 3, day: '晚上' }
     for (const item of List) {
-        for (const dataItem of  item.day) {
+        const endDate = new Date(item.endDate)
+        for (const dayItem of item.day) {
+            if (monday) {
+                const currentDate  = new Date(monday.getTime())
+                const  offset = (dayItem -  1) >=  0 ? (dayItem -  1) : 6
+                currentDate.setDate(currentDate.getDate() + offset)
 
-      
-        if (item.time === enums.DAY.monrning) {
-            if (morning[enums.WEEK[dataItem]]) {
-                morning[enums.WEEK[dataItem]].push(item.name)
-            } else {
-                morning[enums.WEEK[dataItem]] = [item.name]
+                if (endDate.getTime() < currentDate.getTime()) {
+                    continue
+                }
             }
-        } else if (item.time === enums.DAY.afternoon) {
-            if (afternoon[enums.WEEK[dataItem]]) {
-                afternoon[enums.WEEK[dataItem]].push(item.name)
-            } else {
-                afternoon[enums.WEEK[dataItem]] = [item.name]
-            }
-        } else if (item.time === enums.DAY.evening) {
-            if (evening[enums.WEEK[dataItem]]) {
-                evening[enums.WEEK[dataItem]].push(item.name)
-            } else {
-                evening[enums.WEEK[dataItem]] = [item.name]
+            
+            if (item.time === enums.DAY.monrning) {
+                if (morning[enums.WEEK[dayItem]]) {
+                    morning[enums.WEEK[dayItem]].push(item.name)
+                } else {
+                    morning[enums.WEEK[dayItem]] = [item.name]
+                }
+            } else if (item.time === enums.DAY.afternoon) {
+                if (afternoon[enums.WEEK[dayItem]]) {
+                    afternoon[enums.WEEK[dayItem]].push(item.name)
+                } else {
+                    afternoon[enums.WEEK[dayItem]] = [item.name]
+                }
+            } else if (item.time === enums.DAY.evening) {
+                if (evening[enums.WEEK[dayItem]]) {
+                    evening[enums.WEEK[dayItem]].push(item.name)
+                } else {
+                    evening[enums.WEEK[dayItem]] = [item.name]
+                }
             }
         }
-          }
     }
 
     return [
@@ -76,11 +86,10 @@ function HandleDate(List: ICourse[]) {
 interface IProps {
     id: string
 }
-const initList: ICourse[] = [];
 
 const {
-    mondayTimeStarmp,
-    sundayTimeStarmp,
+    monday,
+    sunday,
 } = getWeek()
 
 export default function (props: IProps) {
@@ -90,16 +99,16 @@ export default function (props: IProps) {
         query: {
             teacherId: props.id,
             startDate: {
-                $lte: sundayTimeStarmp
+                $lte: sunday
             },
             endDate: {
-                $gte: mondayTimeStarmp,
+                $gte: monday,
             }
         },
         sort: { createDate: -1 }
     }
 
-    const [data, setData] = useState(initList);
+    const [data, setData] = useState(HandleDate([]));
     const [loading, setLoading] = useState(false);
 
     const [params, setParams] = useState(initCondition)
@@ -110,17 +119,16 @@ export default function (props: IProps) {
     const onChange = (date: any, dateString: string) => {
         console.log(dateString)
         const res = getWeek(dateString)
-        console.log('res:', res)
 
         setParams({
             ...initCondition,
             query: {
                 ...initCondition.query,
                 startDate: {
-                    $lte: res.sundayTimeStarmp
+                    $lte: res.sunday
                 },
                 endDate: {
-                    $gte: res.mondayTimeStarmp,
+                    $gte: res.monday,
                 }
             }
         })
@@ -137,7 +145,7 @@ export default function (props: IProps) {
                     data: { list }
                 }
             } = await api.getCourserList(params);
-            setData(list);
+            setData(HandleDate(list, params.query.endDate.$gte));
             setLoading(false);
         } catch (error) {
             setLoading(false);
@@ -150,14 +158,15 @@ export default function (props: IProps) {
     }, [params]);
 
 
-    const tableData = HandleDate(data)
+
     return (
         <React.Fragment>
             <div className="mb10">
                 <WeekPicker onChange={onChange} format="YYYY-MM-DD" />
 
             </div>
-            <Table columns={columns} dataSource={tableData} bordered={true} loading={loading} />
+            <Table columns={columns} dataSource={data} bordered={true} loading={loading} />
         </React.Fragment>
     )
 }
+
