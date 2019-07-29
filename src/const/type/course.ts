@@ -8,8 +8,8 @@ export interface ICourse {
   desc: string
   day: enums.WEEK[] // 一周
   time: enums.DAY
-  startDate: number
-  endDate: number
+  startDate: string
+  endDate: string
   createDate?: string
   updateDate?: string
   endTime?: string

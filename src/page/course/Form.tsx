@@ -82,8 +82,8 @@ const FormCompent: React.FC<IFormProps> = (props)=> {
         ) :  enums.DAY.monrning
 
         const params = {
-          startDate: new Date(startDate).getTime(),
-          endDate: new Date(endDate).getTime(),
+          startDate: new Date(startDate).toISOString(),
+          endDate: new Date(endDate).toISOString(),
           endTime: endTime.format('HH:mm'),
           startTime: startTime.format('HH:mm'),
           ...reset,

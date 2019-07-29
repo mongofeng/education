@@ -77,8 +77,8 @@ interface IProps {
 const initList: ICourse[] = [];
 
 const {
-    mondayTimeStarmp,
-    sundayTimeStarmp,
+    monday,
+    sunday,
 } = getWeek()
 
 export default function (props: IProps) {
@@ -90,10 +90,10 @@ export default function (props: IProps) {
                 $in: [props.id]
             },
             startDate: {
-                $lte: sundayTimeStarmp
+                $lte: sunday.toISOString()
             },
             endDate: {
-                $gte: mondayTimeStarmp,
+                $gte: monday.toISOString(),
             }
         },
         sort: { createDate: -1 }
@@ -117,10 +117,10 @@ export default function (props: IProps) {
             query: {
                 ...initCondition.query,
                 startDate: {
-                    $lte: res.sundayTimeStarmp
+                    $lte: res.sunday
                 },
                 endDate: {
-                    $gte: res.mondayTimeStarmp,
+                    $gte: res.monday,
                 }
             }
         })

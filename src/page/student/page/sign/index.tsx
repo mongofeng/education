@@ -9,14 +9,10 @@ import * as enums from "../../../../const/enum";
 import { ICourse } from "../../../../const/type/course";
 import { ISign} from '../../../../const/type/student-operation'
 import formatDate from "../../../../utils/format-date";
-import { getWeek } from '../../../../utils/time'
 import SupplementModal from '../../components/common-sign-modal'
 const { useState} = React;
 
-const {
-    mondayTimeStarmp,
-    sundayTimeStarmp,
-} = getWeek()
+const nowDate = new Date();
 
 
 const columns: Array<ColumnProps<ICourse>> = [
@@ -99,10 +95,10 @@ const List: React.FC<IProps> = (props) => {
                 $in: [props.id]
             },
             startDate: {
-                $lte: sundayTimeStarmp
+                $lte: nowDate.toISOString()
             },
             endDate: {
-                $gte: mondayTimeStarmp,
+                $gte: nowDate.toISOString(),
             },
             day: new Date().getDay()
         },
