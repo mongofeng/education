@@ -218,6 +218,7 @@ function List(props: IProps): JSX.Element {
     try {
       await apiPack.updateStudentPackage(row._id, params)
       fetchData()
+      props.update()
       message.success('激活成功')
     } finally {
       setVisible(false)

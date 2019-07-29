@@ -5,8 +5,8 @@ import * as api from "../../../../api/hour";
 import fetchApiHook from '../../../../common/hooks/featchApiList'
 import * as enums from "../../../../const/enum";
 import { IHour } from "../../../../const/type/hour";
-import formatDate from "../../../../utils/format-date";
 import { ICourse } from '../../../../const/type/student-operation'
+import formatDate from "../../../../utils/format-date";
 const { RangePicker } = DatePicker;
 const Search = Input.Search;
 const columns: Array<ColumnProps<IHour>> = [
