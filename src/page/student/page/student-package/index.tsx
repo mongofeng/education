@@ -1,4 +1,4 @@
-import { Button, DatePicker, Input, message, Modal, Table, Tag, Tooltip } from 'antd'
+import { Button, Col, DatePicker, Input, message, Modal, Row, Switch, Table, Tag, Tooltip } from 'antd'
 import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
 import { useState } from 'react'
@@ -114,11 +114,13 @@ function List(props: IProps): JSX.Element {
   const [modalState, setModalState] = useState(initModalState)
   const [formState, setFormState] = useState(initModalState)
 
+  const [activeState, setActiveState] = useState(initModalState)
+
 
 
   // 激活模态框
-  const [visible, setVisible] = useState(false)
   const [activiteTime, setActiviteTime] = useState(moment())
+  const [isPuseMsg, setIsPuseMsg] = useState(true)
   const [row, setRow] = useState(null)
 
 
@@ -188,7 +190,10 @@ function List(props: IProps): JSX.Element {
           size="small"
           onClick={() => {
             setRow(row)
-            setVisible(true)
+            setActiveState({
+              ...activeState,
+              visible: true
+            })
           }}>
           激活
         </Button>
@@ -206,27 +211,41 @@ function List(props: IProps): JSX.Element {
     const date = activiteTime.toDate()
     const act = activiteTime.toISOString()
     console.log(date)
+    const {packageId, _id: id} = row
     date.setFullYear(date.getFullYear() + row.period)
     const end = date.toISOString()
 
     const params = {
       activeTime: act,
-      isActive: true,
+      packageId, 
+      studentId: props.id, 
+      wechat: isPuseMsg, 
+      id,
       endTime: end
     }
 
     try {
-      await apiPack.updateStudentPackage(row._id, params)
+      setActiveState({
+        ...activeState,
+        confirmLoading: true,
+      })
+      await api.activatePackage(params)
       fetchData()
       message.success('激活成功')
     } finally {
-      setVisible(false)
+      setActiveState({
+        ...initModalState,
+      })
     }
   }
 
 
   const onChange = (val:any) => {
     setActiviteTime(val);
+  }
+
+  const onPushMsg = (val: boolean) => {
+    setIsPuseMsg(val)
   }
 
   /**
@@ -247,7 +266,6 @@ function List(props: IProps): JSX.Element {
   }
 
   const handleFormCreate = async (values) => {
-    console.log('Received values of form: ', values);
     const {
       packId,
       desc
@@ -296,12 +314,30 @@ function List(props: IProps): JSX.Element {
 
       <Modal
         title="选择激活时间"
-        visible={visible}
+        {...activeState}
         onOk={handleActivite}
-        onCancel={() => setVisible(false)}
+        onCancel={() => setActiveState({
+          ...activeState,
+          visible: false
+        })}
         okText="确认"
         cancelText="取消">
-        <DatePicker defaultValue={activiteTime} onChange={onChange} />
+        <Row gutter={16}>
+          <Col  span={6}>
+            激活时间
+          </Col>
+          <Col  span={18}>
+            <DatePicker defaultValue={activiteTime} onChange={onChange} />
+          </Col>
+          <Col  span={6} className="mt10">
+            是否推送微信
+          </Col>
+          <Col  span={18} className="mt10">
+            <Switch defaultChecked={isPuseMsg} onChange={onPushMsg} />
+          </Col>
+        </Row>
+        
+        
       </Modal>
 
       <div className="mb10 clearfix">
