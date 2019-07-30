@@ -25,3 +25,13 @@ export interface ISharePackage {
   packId: string
   studentId: string
 }
+
+
+export interface IActivatePackage {
+  activeTime: string
+  endTime: string
+  packageId: string
+  studentId: string
+  wechat: boolean
+  id: string
+}

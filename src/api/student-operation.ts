@@ -39,3 +39,12 @@ export function iSharePackage(params: type.ISharePackage) {
 }
 
 
+/**
+ * 激活课程包
+ * @param params 查询参数
+ */
+export function activatePackage(params: type.IActivatePackage) {
+  return http.post('student-operation/activate-package', params)
+}
+
+
