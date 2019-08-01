@@ -10,7 +10,6 @@ import formatDate from "../../utils/format-date";
 import Course from './page/course'
 import Hours from './page/hour'
 
-import Item from "antd/lib/list/Item";
 import getAge from '../../utils/getAge'
 import Schedule from './page/shchedule'
 import SignIn from './page/sign'
@@ -96,7 +95,9 @@ function Detail(props: RouteComponentProps<IParams>): JSX.Element {
     count: 0,
     surplus: 0,
     used: 0,
-    amount: 0
+    amount: 0,
+    unActiveCount: 0,
+    activeCount: 0,
   })
 
   const fetchDetail = async () => {
@@ -106,7 +107,7 @@ function Detail(props: RouteComponentProps<IParams>): JSX.Element {
 
 
   /**
-   * 
+   *
    * @param id 用户id
    * 重置微信
    */
@@ -157,7 +158,7 @@ function Detail(props: RouteComponentProps<IParams>): JSX.Element {
     const params = {
       query: {
         studentIds: props.match.params.id,
-        isActive: true,
+        // isActive: true,
       },
       limit: 1000,
       page: 1,
@@ -168,21 +169,27 @@ function Detail(props: RouteComponentProps<IParams>): JSX.Element {
       count: 0,
       surplus: 0,
       used: 0,
-      amount: 0
+      amount: 0,
+      unActiveCount: 0,
+       activeCount: 0,
     }
     const result = list.reduce((initVal, item) => {
       const {
         count,
         surplus,
         used,
-        amount
+        amount,
+        unActiveCount,
+    activeCount
       } = initVal
 
       return {
         count: count + item.count,
         surplus: surplus + item.surplus,
         used: used + item.used,
-        amount: amount + item.amount
+        amount: amount + item.amount,
+        unActiveCount: unActiveCount + (item.isActive ? 0 : item.count),
+        activeCount: activeCount + (item.isActive ? item.count : 0),
       }
     }, initTatal)
 
@@ -232,6 +239,7 @@ function Detail(props: RouteComponentProps<IParams>): JSX.Element {
               data={info} />
           </Col>
           <Col span={8} >
+
             <Row gutter={16}>
               <Col span={12}>
                 <Statistic
@@ -240,15 +248,34 @@ function Detail(props: RouteComponentProps<IParams>): JSX.Element {
                   suffix="课时"
                   valueStyle={{ color: 'red' }} />
               </Col>
+
               <Col span={12}>
                 <Statistic
-                  title="总学时"
-                  value={staticTotal.count}
-                  prefix={<Icon type="like" />}
-                  valueStyle={{ color: 'blue' }}
+                  title="激活"
+                  value={staticTotal.activeCount}
+                  suffix="课时"
+                  valueStyle={{ color: 'red' }} />
+              </Col>
+            </Row>
+
+
+            <Row gutter={16}>
+              <Col span={12}>
+                <Statistic
+                  title="剩余"
+                  value={staticTotal.surplus}
+                  suffix="课时"
+                  valueStyle={{ color: 'red' }} />
+              </Col>
+              <Col span={12}>
+                <Statistic
+                  title="未激活"
+                  value={staticTotal.unActiveCount}
+                  valueStyle={{ color: 'red' }}
                   suffix="课时" />
               </Col>
             </Row>
+
             <Row gutter={16} className="mt20">
               <Col span={12}>
                 <Statistic
@@ -261,12 +288,15 @@ function Detail(props: RouteComponentProps<IParams>): JSX.Element {
 
               <Col span={12}>
                 <Statistic
-                  title="剩余"
-                  value={staticTotal.surplus}
-                  suffix="课时"
-                  valueStyle={{ color: 'red' }} />
+                  title="总学时"
+                  value={staticTotal.count}
+                  prefix={<Icon type="like" />}
+                  valueStyle={{ color: 'blue' }}
+                  suffix="课时" />
+
               </Col>
             </Row>
+
           </Col>
         </Row>
 
