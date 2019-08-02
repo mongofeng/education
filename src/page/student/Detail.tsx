@@ -163,6 +163,10 @@ function Detail(props: RouteComponentProps<IParams>): JSX.Element {
     const { data: { data } } = await apiStatic.caculatePackage(params as any)
     const [target] = data
 
+    if (!target) {
+      return;
+    }
+
     const {
       amount,
       count,
