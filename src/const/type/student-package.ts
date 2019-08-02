@@ -13,3 +13,14 @@ export interface IStudentPackage {
   isPush: boolean // 是否推送过期的通知
   period: number
 }
+
+export interface ICaculatePackage {
+  _id: string
+  amount: number
+  count: number
+  used: number
+  surplus: number
+  overdueCount: number
+  activiteCount: number
+  unActiviteCount: number
+}

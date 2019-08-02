@@ -1,6 +1,7 @@
 import { Breadcrumb, Button, Col, Divider, Icon, message, Modal, Popover, Row, Statistic, Tabs, Tag } from "antd";
 import * as React from "react";
 import { RouteComponentProps } from "react-router-dom";
+import * as apiStatic from '../../api/statistics'
 import * as api from "../../api/student";
 import * as apiPack from '../../api/student-package'
 import { default as FieldInfo, IField } from '../../components/Fields-info'
@@ -96,8 +97,9 @@ function Detail(props: RouteComponentProps<IParams>): JSX.Element {
     surplus: 0,
     used: 0,
     amount: 0,
-    unActiveCount: 0,
-    activeCount: 0,
+    unActiviteCount: 0,
+    activiteCount: 0,
+    overdueCount: 0,
   })
 
   const fetchDetail = async () => {
@@ -156,44 +158,30 @@ function Detail(props: RouteComponentProps<IParams>): JSX.Element {
 
   const fetchTotalHours = async () => {
     const params = {
-      query: {
-        studentIds: props.match.params.id,
-        // isActive: true,
-      },
-      limit: 1000,
-      page: 1,
-      sort: { activeTime: 1 }
+      studentIds: props.match.params.id,
     }
-    const { data: { data: { list } } } = await apiPack.getStudentPackageList(params)
-    const initTatal = {
-      count: 0,
-      surplus: 0,
-      used: 0,
-      amount: 0,
-      unActiveCount: 0,
-       activeCount: 0,
-    }
-    const result = list.reduce((initVal, item) => {
-      const {
-        count,
-        surplus,
-        used,
-        amount,
-        unActiveCount,
-    activeCount
-      } = initVal
+    const { data: { data } } = await apiStatic.caculatePackage(params as any)
+    const [target] = data
 
-      return {
-        count: count + item.count,
-        surplus: surplus + item.surplus,
-        used: used + item.used,
-        amount: amount + item.amount,
-        unActiveCount: unActiveCount + (item.isActive ? 0 : item.count),
-        activeCount: activeCount + (item.isActive ? item.count : 0),
-      }
-    }, initTatal)
-
-    setStaticTotal(result)
+    const {
+      amount,
+      count,
+      used,
+      surplus,
+      overdueCount,
+      activiteCount,
+      unActiviteCount,
+    } = target
+    
+    setStaticTotal({
+      amount,
+      count,
+      used,
+      surplus,
+      overdueCount,
+      activiteCount,
+      unActiviteCount,
+    })
   }
 
 
@@ -252,7 +240,7 @@ function Detail(props: RouteComponentProps<IParams>): JSX.Element {
               <Col span={12}>
                 <Statistic
                   title="激活"
-                  value={staticTotal.activeCount}
+                  value={staticTotal.activiteCount}
                   suffix="课时"
                   valueStyle={{ color: 'red' }} />
               </Col>
@@ -270,11 +258,15 @@ function Detail(props: RouteComponentProps<IParams>): JSX.Element {
               <Col span={12}>
                 <Statistic
                   title="未激活"
-                  value={staticTotal.unActiveCount}
+                  value={staticTotal.unActiviteCount}
                   valueStyle={{ color: 'red' }}
                   suffix="课时" />
               </Col>
             </Row>
+
+
+            
+
 
             <Row gutter={16} className="mt20">
               <Col span={12}>
@@ -294,6 +286,17 @@ function Detail(props: RouteComponentProps<IParams>): JSX.Element {
                   valueStyle={{ color: 'blue' }}
                   suffix="课时" />
 
+              </Col>
+            </Row>
+
+
+            <Row gutter={16} className="mt20">
+              <Col span={12}>
+                <Statistic
+                  title="已过期"
+                  value={staticTotal.overdueCount}
+                  suffix="课时"
+                  valueStyle={{ color: 'red' }} />
               </Col>
             </Row>
 
