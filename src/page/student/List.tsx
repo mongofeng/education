@@ -1,38 +1,21 @@
 import { Button, DatePicker, Input, Table, Tabs    } from "antd";
-import {PaginationProps} from 'antd/lib/pagination'
 import { ColumnProps } from 'antd/lib/table';
 import * as React from "react";
 import CsvDownloader from 'react-csv-downloader';
-import { connect } from "react-redux";
-import { Redirect, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import { Link } from "react-router-dom";
-import { Dispatch } from "redux";
 import * as enums from '../../const/enum'
 import {IStudent} from '../../const/type/student'
-import * as action from "../../store/actions/student";
 import formatDate from "../../utils/format-date";
 import getAge from "../../utils/getAge";
+import fetchApiHook from '../../common/hooks/featchApiList'
+import * as api from '../../api/student'
+
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
 
-interface IList extends RouteComponentProps {
-  onGetList: (params: any) => void
-  loading: boolean
-  total: number,
-  data: IStudent[]
-}
 
-type ITableFilter = Partial<Record<keyof IStudent, string[]>>
-interface IState {
-  redirect: boolean
-  dateString: string[]
-  filters: ITableFilter
-  sorter: any
-  keyword: string
-  status: number
-  pagination: PaginationProps
-}
 
 const columns: Array<ColumnProps<IStudent>> = [
   {
@@ -59,7 +42,7 @@ const columns: Array<ColumnProps<IStudent>> = [
     render: (text: string, row: IStudent) => {
       return getAge(row.birthday)
     }
-    
+
   },
   {
     title: "手机号码",
@@ -78,6 +61,12 @@ const columns: Array<ColumnProps<IStudent>> = [
       )
     }
   },
+
+  {
+    title: "状态",
+    dataIndex: "status",
+    render: (str: enums.STUDENT_STATUS) => <span>{enums.STUDENT_STATUS_LABEL[str]}</span>
+  },
   {
     title: "创建时间",
     dataIndex: "createDate",
@@ -85,21 +74,34 @@ const columns: Array<ColumnProps<IStudent>> = [
     render: (date: string) => <span>{formatDate(new Date(date))}</span>
   },
   {
-    title: "状态",
-    dataIndex: "status",
-    render: (str: enums.STUDENT_STATUS) => <span>{enums.STUDENT_STATUS_LABEL[str]}</span>
-  },
-  {
     title: "操作",
     render: (val: string, row: any) => {
       return (
         <Link to={`edit/${row._id}`}>编辑</Link>
-        
+
       );
     }
   }
 ];
 
+const initCsvCols = [
+  {
+    id: 'birthday',
+    displayName: '生日'
+  },
+  {
+    id: 'contacts',
+    displayName: '联系人'
+  },
+  // {
+  //   id: 'hasopenId',
+  //   displayName: '绑定微信'
+  // },
+  // {
+  //   id: 'teacherName',
+  //   displayName: '所属老师'
+  // }
+]
 
 const csvColumns = columns.reduce((initVal: Array<{id: string; displayName: string}>, item: any) => {
   return item.dataIndex ? initVal.concat({
@@ -108,230 +110,115 @@ const csvColumns = columns.reduce((initVal: Array<{id: string; displayName: stri
   }) : initVal;
 }, [])
 
-class List extends React.PureComponent<IList> {
-  state: IState = {
-    redirect: false,
-    dateString: [],
-    filters: {},
-    sorter: {},
-    keyword: '',
-    pagination: {
-      total: 0,
-      current: 1,
-      pageSize: 10,
-      showSizeChanger: true,
-      pageSizeOptions: ['5', '10', '20', '100']
+const LastCsvColumns = csvColumns.slice(0,3).concat(initCsvCols, csvColumns.slice(3))
+
+
+
+const initList: IStudent[] = [];
+
+
+function List(props: RouteComponentProps): JSX.Element {
+
+  const {
+    loading,
+    data,
+    pagination,
+    handleTableChange,
+    onDateChange,
+    onSearch,
+    setQuery
+  } = fetchApiHook(initList, api.getStudentList, {
+    limit: 10,
+    page: 1,
+    query: {
+      status: 1
     },
-    status: 1 // 在读
-  };
+    sort: { createDate: -1 }
+  })
 
 
-  condition = () => {
-    const query: any = {
-      status: this.state.status
-    }
-    // 时间
-    if (this.state.dateString[0] && this.state.dateString[1]) {
-      query.createDate = {
-        $gte: `${this.state.dateString[0]}T00:00:00.216Z`,
-        $lte: `${this.state.dateString[1]}T00:00:00.216Z`
-      }
-    }
-
-    // 过滤器
-    for (const [key, value] of Object.entries(this.state.filters)) {
-      if (!value || !Array.isArray(value)) { continue }
-        const [val] = value
-        if (!val) { continue }
-        query[key] = val
-    }
-
-    // 名字的搜索
-    const like: any = {}
-    if (this.state.keyword) {
-      like.name = this.state.keyword
-    }
-
-    // 排序
-    const sort = { createDate: -1 }
-    const sorter = this.state.sorter
-    if (this.state.sorter && this.state.sorter.columnKey) {
-      sort[sorter.columnKey] = sorter.order === 'ascend' ? 1 : -1
-    }
-
-    return {
-      limit: this.state.pagination.pageSize,
-      page: this.state.pagination.current,
-      like,
-      query, 
-      sort
-    }
-  }
-
-  fetch = () => {
-    this.props.onGetList(this.condition());
-  };
-
-  handleTableChange = (pagination: PaginationProps, filters: ITableFilter, sorter: any) => {
-    const pager = { ...this.state.pagination, ...pagination };
-    this.setState({
-      pagination: pager,
-      filters,
-      sorter
-    }, this.fetch);
-  };
 
   /**
    * 跳转路由
    */
-  handleOnClick = () => {
-    this.setState({redirect: true});
-  }
-
-  onSearch = (keyword: string) => {
-    this.setState({
-      pagination: {
-        ...this.state.pagination,
-        current: 1,
-      },
-      keyword
-    }, this.fetch);
-  }
+  const handleOnClick = () => {
+    props.history.push("add");
+  };
 
 
-  onDateChange = (date: any, dateString: string[]) => {
-    if (dateString[0] && dateString[1]) {
-      this.setState({
-        dateString,
-        pagination: {
-          ...this.state.pagination,
-          current: 1,
-        },
-      }, this.fetch)
-    } else {
-      this.setState({
-        dateString: [],
-        pagination: {
-          ...this.state.pagination,
-          current: 1,
-        },
-      }, this.fetch)
-    }
-
-  }
-
-  /**
-   * tab改变后
-   */
-  onTabChange = (status: string) => {
-    console.log(status)
-    this.setState({
-      status: Number(status),
-      dateString: [],
-      filters: {},
-      sorter: {},
-      keyword: '',
-    }, this.fetch);
-  }
-
-  componentWillReceiveProps(nexProps: IList) {
-    if (nexProps.total !== this.state.pagination.total) {
-      this.setState({
-        pagination: {
-          ...this.state.pagination,
-          total: nexProps.total
-        }
-      });
-    }
-  }
-
-  componentDidMount() {
-    this.fetch();
-  }
-
-  render() {
-    if (this.state.redirect) {
-      return <Redirect push={true} to='add' />; 
-    }
-    const csvData = this.props.data.map(item => {
-      return {
-        ...item,
-        sex: enums.SEX_LABEL[item.sex],
-        address: `${item.province}${item.city}${item.region}${item.address}`,
-        createDate: formatDate(new Date(item.createDate)),
-        status: enums.STUDENT_STATUS_LABEL[item.status],
-      }
+  const onTabChange = (status: string) => {
+    setQuery({
+      status: Number(status)
     })
-    const footer = () => {
-      return (<CsvDownloader
-        filename="学生列表"
-        columns={csvColumns}
-        suffix={true}
-        datas={csvData}>
-          <Button 
-            type="primary"
-            icon="download">
-              导出
-            </Button>
-      </CsvDownloader>)
-    }
-
-    return (
-      <div>
-        <div className="main-title clearfix">
-          <h2>学生列表</h2>
-          <Button 
-            className="fr"
-            type="primary"
-            icon="plus"
-            onClick={this.handleOnClick}>
-            添加学员
-          </Button>
-        </div>
-
-        <div className="content-wrap">
-          <Tabs defaultActiveKey="1" onChange={this.onTabChange}>
-            <TabPane tab="在读" key="1"/>
-            <TabPane tab="毕业" key="2"/>
-          </Tabs>
-          <div className="mb10">
-            <RangePicker onChange={this.onDateChange} />
-
-            <Search
-            className="ml10"
-              placeholder="请输入名字"
-              onSearch={this.onSearch}
-              style={{ width: 200 }}/>
-          </div>
-
-          <Table<IStudent>
-            bordered={true}
-            columns={columns}
-            rowKey="_id"
-            dataSource={this.props.data}
-            pagination={this.state.pagination}
-            loading={this.props.loading}
-            onChange={this.handleTableChange}
-            footer={footer}/>
-        </div>
-      </div>
-    );
   }
+
+  const csvData = data.map(item => {
+    return {
+      ...item,
+      sex: enums.SEX_LABEL[item.sex],
+      address: `${item.province}${item.city}${item.region}${item.address}`,
+      createDate: formatDate(new Date(item.createDate)),
+      status: enums.STUDENT_STATUS_LABEL[item.status],
+    }
+  })
+
+  const footer = () => {
+    return (<CsvDownloader
+      filename="学生列表"
+      columns={LastCsvColumns}
+      suffix={true}
+      datas={csvData}>
+      <Button
+        type="primary"
+        icon="download">
+        导出
+      </Button>
+    </CsvDownloader>)
+  }
+
+
+  return (
+    <div>
+      <div className="main-title clearfix">
+        <h2>学生列表</h2>
+        <Button
+          className="fr"
+          type="primary"
+          icon="plus"
+          onClick={handleOnClick}>
+          添加学员
+        </Button>
+      </div>
+
+      <div className="content-wrap">
+        <Tabs defaultActiveKey="1" onChange={onTabChange}>
+          <TabPane tab="在读" key="1"/>
+          <TabPane tab="毕业" key="2"/>
+        </Tabs>
+        <div className="mb10">
+          <RangePicker onChange={onDateChange} />
+
+          <Search
+            className="ml10"
+            placeholder="请输入名字"
+            onSearch={onSearch}
+            style={{ width: 200 }}/>
+        </div>
+
+        <Table<IStudent>
+          bordered={true}
+          columns={columns}
+          rowKey="_id"
+          dataSource={data}
+          pagination={pagination}
+          loading={loading}
+          onChange={handleTableChange}
+          footer={footer}/>
+      </div>
+    </div>
+  );
 }
 
-// 将 reducer 中的状态插入到组件的 props 中,一定要有
-const mapStateToProps = (state: any) => ({
-  loading: state.student.loading,
-  data: state.student.data,
-  total: state.student.total
-});
+export default List;
 
-// 将对应action 插入到组件的 props 中， 没有的时候把dispatch传进去
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  onGetList: (params: any) => dispatch(action.FetchList(params))
-});
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(List);
