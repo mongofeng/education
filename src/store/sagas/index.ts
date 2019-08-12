@@ -8,12 +8,14 @@ import courseSaga from './course'
 import lbsSaga from './lbs'
 import studentSaga from './student'
 import userSaga from './user'
+import  packageSaga from './package'
 export default function* root() {
   yield all([
-    fork(authSaga), 
-    fork(studentSaga), 
-    fork(lbsSaga), 
+    fork(authSaga),
+    fork(studentSaga),
+    fork(lbsSaga),
     fork(courseSaga),
-    fork(userSaga)
+    fork(userSaga),
+    fork(packageSaga)
   ])
 }

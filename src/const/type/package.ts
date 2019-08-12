@@ -5,4 +5,6 @@ export interface IPackage {
   desc: string // 描述
   amount: number // 价格
   period: number // 有效期
+  createDate?: string
+  updateDate?: string
 }

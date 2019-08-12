@@ -8,10 +8,11 @@ import SiderMenu from '../components/Sider-Menu'
 import { Navs} from '../config/nav'
 import {IUser} from '../const/type/user'
 import * as action from "../store/actions/user";
+import * as studentAction from '../store/actions/student'
+import * as packageAction from '../store/actions/package'
 import "./BaseLayout.scss";
 import { useEffect, useState } from 'react'
-import List from '../page/course/List'
-import Detail from '../page/course/Detail'
+
 const { Header, Content, Sider } = Layout;
 
 
@@ -97,9 +98,32 @@ const menu = (
 function BaseLayout (props: IProps): JSX.Element {
   const [collapsed, setCollapsed] = useState(false)
 
+  const fetchAllStudent  = () => {
+    props.dispatch(studentAction.FetchList({
+      limit: 10000,
+      page: 1,
+      query: {
+        status: 1
+      },
+      sort: { createDate: -1 }
+    }))
+  }
+
+  const fetchAllPackage = () => {
+    props.dispatch(packageAction.FetchList({
+      limit: 10000,
+      page: 1,
+      sort: { createDate: -1 }
+    }))
+  }
+
   useEffect(() => {
     // 获取用户的数据
     props.dispatch(action.FetchUser())
+
+    fetchAllStudent()
+
+    fetchAllPackage()
   }, [])
   return (
     <Layout className="base-layout">
@@ -150,7 +174,10 @@ function BaseLayout (props: IProps): JSX.Element {
             <Switch>
               {routes && routes.map(item => {
                 return (
-                  <Route path={`${props.match.path}/${item.path}`}  component={item.component} />
+                  <Route
+                    path={`${props.match.path}/${item.path}`}
+                    component={item.component} 
+                    key={`${props.match.path}/${item.path}`}/>
                 )
               })}
               <Redirect from={props.match.path} to={`${props.match.path}/${routes[0].path}`} />

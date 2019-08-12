@@ -1,7 +1,7 @@
 
-import * as studentAction from '../actions/student'
+import * as actions from '../actions/package'
 
-const studentStatus = {
+const initState = {
   loading: false,
   data: [],
   total: 0,
@@ -9,18 +9,18 @@ const studentStatus = {
 }
 
 /**
- * 登录
+ * 课程
  * @param state
  * @param action
  */
-function studentModel (state = studentStatus, action: any) {
+export default function reducer (state = initState, action: any) {
   switch (action.type) {
-    case studentAction.FETCH_STUDENT_STATUS:
+    case actions.FETCH_PACKAGE_STATUS:
       return {
         ...state,
         loading: action.loading
       }
-    case studentAction.FETCH_STUDENT_END:
+    case actions.FETCH_PACKAGE_END:
       return {
         ...state,
         data: action.data,
@@ -37,5 +37,3 @@ function studentModel (state = studentStatus, action: any) {
   }
 }
 
-
-export default studentModel
