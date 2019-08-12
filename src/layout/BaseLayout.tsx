@@ -176,7 +176,7 @@ function BaseLayout (props: IProps): JSX.Element {
                 return (
                   <Route
                     path={`${props.match.path}/${item.path}`}
-                    component={item.component} 
+                    component={item.component}
                     key={`${props.match.path}/${item.path}`}/>
                 )
               })}

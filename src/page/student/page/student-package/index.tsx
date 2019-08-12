@@ -1,7 +1,7 @@
 import { Button, Col, DatePicker, Input, message, Modal, Row, Switch, Table, Tag, Tooltip } from 'antd'
 import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import * as api from "../../../../api/student-operation";
 import * as apiPack from '../../../../api/student-package'
 import fetchApiHook from '../../../../common/hooks/featchApiList'
@@ -10,6 +10,7 @@ import formatDate from "../../../../utils/format-date";
 
 import BuyCourse from './buy-course-modal'
 import ShareStudentPackage from './share-student-package-modal'
+import { connect } from 'react-redux'
 
 const moment = require('moment')
 
@@ -17,70 +18,13 @@ const Search = Input.Search;
 const { RangePicker } = DatePicker;
 
 
-const columns: Array<ColumnProps<IStudentPackage>> = [
-  {
-    title: "课程包",
-    dataIndex: "packageId",
-  },
-  {
-    title: "总课时",
-    dataIndex: "count",
-  },
-  {
-    title: "剩余课时",
-    dataIndex: "surplus",
-  },
-  {
-    title: "使用课时",
-    dataIndex: "used",
-  },
-  {
-    title: "价格",
-    dataIndex: "amount",
-    render: (amount: number) => <span>{amount}元</span>
-  },
-  {
-    title: "有效期",
-    dataIndex: "period",
-    render: (period: number) => <span>{period}年</span>
-  },
-  {
-    title: "激活时间",
-    dataIndex: "activeTime",
-    render: (date: string) => {
-      if (!date) { return '-' }
-      return formatDate(new Date(date))
-    }
-  },
-  {
-    title: "结束时间",
-    dataIndex: "endTime",
-    render: (date: string) => {
-      if (!date) { return '-' }
-      return formatDate(new Date(date))
-    }
-  },
-  {
-    title: "过时",
-    dataIndex: "beOverdue",
-    render: (val: boolean) => {
-      return val ? '是' : '否'
-    }
-  },
-  {
-    title: "过期推送",
-    dataIndex: "isPush",
-    render: (val: boolean) => {
-      if (val) { // 如果已经推送了可以再开启
-        return '1'
-      }
-      return <Tag color='blue'>否</Tag>
-    }
-  },
-];
+
 
 interface IProps {
   id: string
+  package: {
+    [key in string]: string
+  },
   update: () => Promise<void>
 }
 
@@ -172,34 +116,99 @@ function List(props: IProps): JSX.Element {
     }
   }
 
-  /**
-   * 激活模态框确认
-   */
-  const Activite = {
-    title: "激活",
-    dataIndex: "isActive",
-    render: (val: boolean, row: IStudentPackage) => {
-      if (val) {
-        return <Tag color='blue'>已激活</Tag>
-      }
 
-      // 激活按钮
-      return (
-        <Button
-          type="primary"
-          size="small"
-          onClick={() => {
-            setRow(row)
-            setActiveState({
-              ...activeState,
-              visible: true
-            })
-          }}>
-          激活
-        </Button>
-      )
+  const columns: Array<ColumnProps<IStudentPackage>> = [
+    {
+      title: "课程包",
+      dataIndex: "packageId",
+      render: (val: string) => {
+        return props.package[val]
+      }
+    },
+    {
+      title: "总课时",
+      dataIndex: "count",
+    },
+    {
+      title: "剩余课时",
+      dataIndex: "surplus",
+    },
+    {
+      title: "使用课时",
+      dataIndex: "used",
+    },
+    {
+      title: "价格",
+      dataIndex: "amount",
+      render: (amount: number) => <span>{amount}元</span>
+    },
+    {
+      title: "有效期",
+      dataIndex: "period",
+      render: (period: number) => <span>{period}年</span>
+    },
+    {
+      title: "激活时间",
+      dataIndex: "activeTime",
+      render: (date: string) => {
+        if (!date) { return '-' }
+        return formatDate(new Date(date))
+      }
+    },
+    {
+      title: "结束时间",
+      dataIndex: "endTime",
+      render: (date: string) => {
+        if (!date) { return '-' }
+        return formatDate(new Date(date))
+      }
+    },
+    {
+      title: "过时",
+      dataIndex: "beOverdue",
+      render: (val: boolean) => {
+        return val ? '是' : '否'
+      }
+    },
+    {
+      title: "过期推送",
+      dataIndex: "isPush",
+      render: (val: boolean) => {
+        if (val) { // 如果已经推送了可以再开启
+          return '1'
+        }
+        return <Tag color='blue'>否</Tag>
+      }
+    },
+    {
+      title: "激活",
+      dataIndex: "isActive",
+      render: (val: boolean, row: IStudentPackage) => {
+        if (val) {
+          return <Tag color='blue'>已激活</Tag>
+        }
+
+        // 激活按钮
+        return (
+          <Button
+            type="primary"
+            size="small"
+            onClick={() => {
+              setRow(row)
+              setActiveState({
+                ...activeState,
+                visible: true
+              })
+            }}>
+            激活
+          </Button>
+        )
+      }
     }
-  }
+  ];
+
+
+
 
 
   const handleActivite = async () => {
@@ -217,9 +226,9 @@ function List(props: IProps): JSX.Element {
 
     const params = {
       activeTime: act,
-      packageId, 
-      studentId: props.id, 
-      wechat: isPuseMsg, 
+      packageId,
+      studentId: props.id,
+      wechat: isPuseMsg,
       id,
       endTime: end
     }
@@ -292,6 +301,11 @@ function List(props: IProps): JSX.Element {
 
   }
 
+  useEffect(() => {
+    console.log('package')
+    console.log(props.package)
+  }, [])
+
 
 
 
@@ -337,8 +351,8 @@ function List(props: IProps): JSX.Element {
             <Switch defaultChecked={isPuseMsg} onChange={onPushMsg} />
           </Col>
         </Row>
-        
-        
+
+
       </Modal>
 
       <div className="mb10 clearfix">
@@ -370,7 +384,7 @@ function List(props: IProps): JSX.Element {
 
       <Table<IStudentPackage>
         bordered={true}
-        columns={columns.concat([Activite])}
+        columns={columns}
         rowKey="_id"
         dataSource={data}
         pagination={pagination}
@@ -380,5 +394,9 @@ function List(props: IProps): JSX.Element {
     </React.Fragment>
   );
 }
-
-export default List;
+export default connect((state: any) => {
+  // console.log(state)
+  return {
+    package: state.package.labels,
+  }
+})(List);
