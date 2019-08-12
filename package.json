@@ -42,7 +42,8 @@
     "build": "react-app-rewired build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "tslint -c tslint.json 'src/**/*.ts'"
+    "lint": "tslint -c tslint.json 'src/**/*.ts'",
+    "deloy": "bash deloy.sh"
   },
   "proxy": "http://127.0.0.1:7777",
   "eslintConfig": {
