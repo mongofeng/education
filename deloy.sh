@@ -30,7 +30,7 @@ ssh $DELOY_SERVER "rm -rf $dir"
 
 echo 拷贝文件夹
 target=${DELOY_SERVER}:${DELOY_ROOT_PATH}${DEOLY_PATH}
-echo ${target}/
+echo ${target}
 scp -r build ${target}
 
 echo 部署成功
