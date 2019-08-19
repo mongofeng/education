@@ -3,7 +3,7 @@ import * as React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import * as apiStatic from '../../api/statistics'
 import * as api from "../../api/student";
-import * as apiPack from '../../api/student-package'
+import * as apiWechat from '../../api/wechat'
 import { default as FieldInfo, IField } from '../../components/Fields-info'
 import * as enums from '../../const/enum'
 import { IStudent } from '../../const/type/student'
@@ -92,6 +92,7 @@ const columns: IField[] = [
 
 function Detail(props: RouteComponentProps<IParams>): JSX.Element {
   const [info, setInfo] = React.useState({} as IStudent);
+  const [wechat, setWechat] = React.useState({} as {[key in string]: string});
   const [staticTotal, setStaticTotal] = React.useState({
     count: 0,
     surplus: 0,
@@ -105,7 +106,26 @@ function Detail(props: RouteComponentProps<IParams>): JSX.Element {
   const fetchDetail = async () => {
     const { data: { data } } = await api.getStudent(props.match.params.id);
     setInfo(data)
+    fetchUserInfo(data.openId.filter(key => !!key))
   };
+
+
+  const fetchUserInfo = async (ids: string[]) => {
+    const PromiseApi = ids.map(openid => {
+      return apiWechat.fetchUserInfo({
+        openid,
+      });
+    })
+    const res = await Promise.all(PromiseApi)
+
+    const result = res.reduce((initVal: {[key in string]: string}, item, index) => {
+      if (item.data && item.data.nickname) {
+        initVal[item.data.openid] = item.data.nickname
+      }
+      return initVal
+    }, {})
+    setWechat(result)
+  }
 
 
   /**
@@ -139,7 +159,9 @@ function Detail(props: RouteComponentProps<IParams>): JSX.Element {
           return  data[field].map(id => {
             return (
               <div key={id}>
-                <span key="1">{id.slice(0, 20)}</span>
+                <span key="1">{
+                  wechat[id] ? wechat[id] : id.slice(0, 20)
+                }</span>
                 <Button
                   onClick={() => { resetOpenId({
                     id: data._id,
