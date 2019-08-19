@@ -10,11 +10,15 @@ import formatDate from "../../utils/format-date";
 import getAge from "../../utils/getAge";
 import fetchApiHook from '../../common/hooks/featchApiList'
 import * as api from '../../api/student'
+import { connect } from 'react-redux'
 
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
 
+interface IProps {
+  allStudent: IStudent[]
+}
 
 
 const columns: Array<ColumnProps<IStudent>> = [
@@ -117,7 +121,7 @@ const LastCsvColumns = csvColumns.slice(0,3).concat(initCsvCols, csvColumns.slic
 const initList: IStudent[] = [];
 
 
-function List(props: RouteComponentProps): JSX.Element {
+function List(props: RouteComponentProps & IProps): JSX.Element {
 
   const {
     loading,
@@ -152,7 +156,7 @@ function List(props: RouteComponentProps): JSX.Element {
     })
   }
 
-  const csvData = data.map(item => {
+  const csvData = props.allStudent.map(item => {
     return {
       ...item,
       sex: enums.SEX_LABEL[item.sex],
@@ -203,6 +207,7 @@ function List(props: RouteComponentProps): JSX.Element {
             placeholder="请输入名字"
             onSearch={onSearch}
             style={{ width: 200 }}/>
+
         </div>
 
         <Table<IStudent>
@@ -219,6 +224,10 @@ function List(props: RouteComponentProps): JSX.Element {
   );
 }
 
-export default List;
+export default connect((state: any) => {
+  return {
+    allStudent: state.student.data,
+  }
+})(List);
 
 
