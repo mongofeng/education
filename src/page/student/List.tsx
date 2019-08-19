@@ -167,7 +167,7 @@ function List(props: RouteComponentProps & IProps): JSX.Element {
   })
 
   const resetOpenId = async () => {
-    const PromiseApi = props.allStudent.map(item => {
+    const PromiseApi = data.map(item => {
       return  api.updateStudent(item._id, {
         openId: item.openId.filter(id => !!id)
       });
