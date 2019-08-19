@@ -1,4 +1,4 @@
-import { Button, DatePicker, Input, Table, Tabs    } from "antd";
+import { Button, DatePicker, Input, message, Table, Tabs } from 'antd'
 import { ColumnProps } from 'antd/lib/table';
 import * as React from "react";
 import CsvDownloader from 'react-csv-downloader';
@@ -166,6 +166,17 @@ function List(props: RouteComponentProps & IProps): JSX.Element {
     }
   })
 
+  const resetOpenId = async () => {
+    const PromiseApi = props.allStudent.map(item => {
+      return  api.updateStudent(item._id, {
+        openId: item.openId.filter(id => !!id)
+      });
+    })
+
+    await Promise.all(PromiseApi)
+    message.success("重置微信号成功");
+  }
+
   const footer = () => {
     return (<CsvDownloader
       filename="学生列表"
@@ -208,6 +219,12 @@ function List(props: RouteComponentProps & IProps): JSX.Element {
             onSearch={onSearch}
             style={{ width: 200 }}/>
 
+          <Button
+            className="fr"
+            type="primary"
+            onClick={resetOpenId}>
+            重置学员微信
+          </Button>
         </div>
 
         <Table<IStudent>
