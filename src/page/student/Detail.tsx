@@ -91,7 +91,7 @@ const columns: IField[] = [
 
 
 function Detail(props: RouteComponentProps<IParams>): JSX.Element {
-  const [info, setInfo] = React.useState({});
+  const [info, setInfo] = React.useState({} as IStudent);
   const [staticTotal, setStaticTotal] = React.useState({
     count: 0,
     surplus: 0,
@@ -113,13 +113,14 @@ function Detail(props: RouteComponentProps<IParams>): JSX.Element {
    * @param id 用户id
    * 重置微信
    */
-  const resetOpenId = async (id: string) => {
+  const resetOpenId = async ({id, openId}: {id: string; openId: string}) => {
     confirm({
       title: "确定操作?",
       content: `重置后需要重新绑定微信`,
       onOk: async () => {
+        const params: string[] = info.openId.filter(key => key !== openId)
         await api.updateStudent(id, {
-          openId: ''
+          openId: params
         });
         message.success("重置微信号成功");
         fetchDetail();
@@ -130,20 +131,28 @@ function Detail(props: RouteComponentProps<IParams>): JSX.Element {
 
   const special = [
     {
-      label: "微信openId",
+      label: "微信",
       prop: "openId",
       render: ({ data, field }: { data: IStudent, field: string }) => {
-        if (data[field]) {
-          return [
-            <span key="1">{data[field].slice(0, 20)}</span>,
-            <Button
-              onClick={() => { this.resetOpenId(data._id) }}
-              key="2"
-              className="ml10"
-              type="link"
-              icon="delete"
-              size="small" />
-          ]
+        if (data[field] && data[field].length) {
+          console.log(data[field])
+          return  data[field].map(id => {
+            return (
+              <div key={id}>
+                <span key="1">{id.slice(0, 20)}</span>
+                <Button
+                  onClick={() => { resetOpenId({
+                    id: data._id,
+                    openId: id
+                  }) }}
+                  key="2"
+                  className="ml10"
+                  type="link"
+                  icon="delete"
+                  size="small" />
+              </div>
+            )
+          })
         }
         return <div>暂无绑定</div>
       }
@@ -176,7 +185,7 @@ function Detail(props: RouteComponentProps<IParams>): JSX.Element {
       activiteCount,
       unActiviteCount,
     } = target
-    
+
     setStaticTotal({
       amount,
       count,
@@ -269,7 +278,7 @@ function Detail(props: RouteComponentProps<IParams>): JSX.Element {
             </Row>
 
 
-            
+
 
 
             <Row gutter={16} className="mt20">

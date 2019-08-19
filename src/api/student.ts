@@ -42,3 +42,12 @@ export function updateStudent(id: string, params: Partial<IStudent>): ApiRespons
 export function delStudent(id: string): ApiResponse<IStudent> {
     return http.delete(`student/${id}`)
 }
+
+/**
+ *
+ * @param id 学生id
+ * @param params
+ */
+export function bindingWechat(id: string, params: {openId: string}): ApiResponse<IStudent> {
+    return http.put(`student/bindingWechat/${id}`, params);
+}

@@ -11,7 +11,7 @@ export interface IStudent {
   city: string
   region: string
   address: string
-  openId?: string
+  openId?: string[]
   teacherId?: string
   status: enums.STUDENT_STATUS
   desc: string
