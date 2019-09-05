@@ -2,15 +2,15 @@ import { Button, DatePicker, Input, message, Table, Tabs } from 'antd'
 import { ColumnProps } from 'antd/lib/table';
 import * as React from "react";
 import CsvDownloader from 'react-csv-downloader';
-import { RouteComponentProps } from 'react-router-dom';
+import { connect } from 'react-redux'
 import { Link } from "react-router-dom";
+import { RouteComponentProps } from 'react-router-dom';
+import * as api from '../../api/student'
+import fetchApiHook from '../../common/hooks/featchApiList'
 import * as enums from '../../const/enum'
 import {IStudent} from '../../const/type/student'
 import formatDate from "../../utils/format-date";
 import getAge from "../../utils/getAge";
-import fetchApiHook from '../../common/hooks/featchApiList'
-import * as api from '../../api/student'
-import { connect } from 'react-redux'
 
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
@@ -166,16 +166,16 @@ function List(props: RouteComponentProps & IProps): JSX.Element {
     }
   })
 
-  const resetOpenId = async () => {
-    const PromiseApi = data.map(item => {
-      return  api.updateStudent(item._id, {
-        openId: item.openId.filter(id => !!id)
-      });
-    })
+  // const resetOpenId = async () => {
+  //   const PromiseApi = data.map(item => {
+  //     return  api.updateStudent(item._id, {
+  //       openId: item.openId.filter(id => !!id)
+  //     });
+  //   })
 
-    await Promise.all(PromiseApi)
-    message.success("重置微信号成功");
-  }
+  //   await Promise.all(PromiseApi)
+  //   message.success("重置微信号成功");
+  // }
 
   const footer = () => {
     return (<CsvDownloader
@@ -218,13 +218,13 @@ function List(props: RouteComponentProps & IProps): JSX.Element {
             placeholder="请输入名字"
             onSearch={onSearch}
             style={{ width: 200 }}/>
-
+{/* 
           <Button
             className="fr"
             type="primary"
             onClick={resetOpenId}>
             重置学员微信
-          </Button>
+          </Button> */}
         </div>
 
         <Table<IStudent>

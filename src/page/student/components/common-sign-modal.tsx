@@ -1,7 +1,7 @@
 import { Form, Input, InputNumber, Modal } from 'antd'
 import { FormComponentProps } from "antd/lib/form";
 import * as React from "react";
-
+const { TextArea } = Input;
 
 type IProps = FormComponentProps & {
   title: string
@@ -12,7 +12,7 @@ type IProps = FormComponentProps & {
 }
 
 
-const FormList: React.FC<IProps> =  (props) => {
+const FormList: React.FC<IProps> = (props) => {
   const {
     onCreate,
     form,
@@ -72,17 +72,21 @@ const FormList: React.FC<IProps> =  (props) => {
 
       <Form layout="vertical">
         <Form.Item label="课时数量">
-          {getFieldDecorator('num' , {
+          {getFieldDecorator('num', {
             rules: [{ required: true, message: '请输入课时的数量', type: 'number' }],
           })(
-            <InputNumber min={1} max={100000}  />
+            <InputNumber min={1} max={100000} />
           )}
 
         </Form.Item>
 
 
         <Form.Item label="备注">
-          {getFieldDecorator('desc')(<Input type="textarea"  style={{width: 300}} />)}
+          {getFieldDecorator('desc')(
+
+            <TextArea
+              style={{ width: 300 }}
+              autosize={{ minRows: 5, maxRows: 16 }} />)}
         </Form.Item>
       </Form>
     </Modal>
