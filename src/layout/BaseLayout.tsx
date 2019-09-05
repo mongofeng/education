@@ -1,4 +1,5 @@
 import Form, { Avatar, Dropdown, Icon, Layout, Menu, Spin } from "antd";
+import { useEffect, useState } from 'react'
 import * as React from "react";
 import { connect } from 'react-redux';
 import { NavLink, Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
@@ -7,11 +8,10 @@ import { Dispatch } from "redux";
 import SiderMenu from '../components/Sider-Menu'
 import { Navs} from '../config/nav'
 import {IUser} from '../const/type/user'
-import * as action from "../store/actions/user";
-import * as studentAction from '../store/actions/student'
 import * as packageAction from '../store/actions/package'
+import * as studentAction from '../store/actions/student'
+import * as action from "../store/actions/user";
 import "./BaseLayout.scss";
-import { useEffect, useState } from 'react'
 
 const { Header, Content, Sider } = Layout;
 
@@ -102,9 +102,6 @@ function BaseLayout (props: IProps): JSX.Element {
     props.dispatch(studentAction.FetchList({
       limit: 10000,
       page: 1,
-      query: {
-        status: 1
-      },
       sort: { createDate: -1 }
     }))
   }
