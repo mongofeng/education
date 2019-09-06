@@ -1,6 +1,7 @@
 import {IHour} from '../const/type/hour'
 import { ApiListData, ApiResponse } from '../types/api'
 import http from '../utils/http'
+import { ICourse } from '../const/type/course'
 
 interface IResult {
     templateMsg: {
@@ -36,4 +37,8 @@ export function getHourrList(params: QueryCondition<IHour>): ApiListData<IHour> 
  */
 export function getHour(id: string): ApiResponse<IHour> {
     return http.get(`course-hour-flow/${id}`)
+}
+
+export function delHour(id: string): ApiResponse<IHour> {
+    return http.delete(`course-hour-flow/${id}`)
 }

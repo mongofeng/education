@@ -1,4 +1,4 @@
-import { Button, DatePicker, Input, Table, Tabs, Tag } from "antd";
+import { Button, DatePicker, Icon, Input, message, Modal, Table, Tabs, Tag } from 'antd'
 import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
 import { RouteComponentProps } from "react-router-dom";
@@ -9,10 +9,11 @@ import { ICourse } from "../../const/type/course";
 import formatDate from "../../utils/format-date";
 
 import fetchApiHook from '../../common/hooks/featchApiList'
+import { IStudent } from '../../const/type/student'
 const { TabPane } = Tabs;
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
-
+const confirm = Modal.confirm;
 
 const columns: Array<ColumnProps<ICourse>> = [
   {
@@ -53,7 +54,7 @@ const columns: Array<ColumnProps<ICourse>> = [
       format: 'yyyy-MM-dd',
     })}</span>
   },
-  
+
   {
     title: "创建时间",
     dataIndex: "createDate",
@@ -67,12 +68,6 @@ const columns: Array<ColumnProps<ICourse>> = [
       return enums.COURSE_STATUS_LABEL[val]
     }
   },
-  {
-    title: "操作",
-    render: (val: string, row: any) => {
-      return <Link to={`edit/${row._id}`}>编辑</Link>;
-    }
-  }
 ];
 
 const initList: ICourse[] = [];
@@ -81,13 +76,14 @@ const initList: ICourse[] = [];
 function List(props: RouteComponentProps): JSX.Element {
 
   const {
-    loading, 
-    data, 
-    pagination, 
-    handleTableChange, 
-    onDateChange, 
+    loading,
+    data,
+    pagination,
+    handleTableChange,
+    onDateChange,
     onSearch,
-    setQuery
+    setQuery,
+    fetchData
   } = fetchApiHook(initList, api.getCourserList, {
     limit: 10,
     page: 1,
@@ -97,7 +93,7 @@ function List(props: RouteComponentProps): JSX.Element {
     sort: { createDate: -1 }
   })
 
-  
+
 
   /**
    * 跳转路由
@@ -111,6 +107,48 @@ function List(props: RouteComponentProps): JSX.Element {
       status: Number(status)
     })
   }
+
+
+  const onDel= (id: string) => {
+    confirm({
+      title: '提示',
+      content: '确定删除该课程,请确保没有对应课时操作记录,如果有请先去清空对应课时操作记录?',
+      onOk: async () => {
+        try {
+          await api.delCourse(id)
+          message.success('删除成功')
+          fetchData(true)
+        } catch (error) {
+          message.error('删除失败')
+        }
+      },
+    });
+
+  }
+
+
+  const operate = [
+    {
+      title: "操作",
+      render: (val: string, row: ICourse) => {
+        return [
+          (<Link to={`edit/${row._id}`} key='1'>
+            <Icon type="edit" />
+          </Link>),
+          (<Button
+            key="2"
+            className="ml5"
+            type="link"
+            icon="delete"
+            size="small"
+            onClick={() => {
+              onDel(row._id)
+            }} >
+          </Button>)
+        ]
+      }
+    }
+  ]
 
 
   return (
@@ -147,7 +185,7 @@ function List(props: RouteComponentProps): JSX.Element {
 
         <Table<ICourse>
           bordered={true}
-          columns={columns}
+          columns={columns.concat(operate)}
           rowKey="_id"
           dataSource={data}
           pagination={pagination}

@@ -1,4 +1,4 @@
-import { DatePicker, Input, Table, Tag } from "antd";
+import { Button, DatePicker, Icon, Input, message, Modal, Table, Tag } from 'antd'
 import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
 import { Link } from "react-router-dom";
@@ -9,6 +9,7 @@ import { IHour } from "../../const/type/hour";
 import { ICourse } from '../../const/type/student-operation'
 import formatDate from "../../utils/format-date";
 import { connect } from 'react-redux'
+const confirm = Modal.confirm;
 
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
@@ -25,6 +26,22 @@ interface IProps {
 }
 
 function List(props: IProps): JSX.Element {
+
+  const onDel= (id: string) => {
+    confirm({
+      title: '提示',
+      content: '确定删除该课程记录,请确保没有课程包,请先删除不需要的课程包,防止数据的错乱',
+      onOk: async () => {
+        try {
+          await api.delHour(id)
+          message.success('删除成功')
+          fetchData(true)
+        } catch (error) {
+          message.error('删除失败')
+        }
+      },
+    });
+  }
 
   const columns: Array<ColumnProps<IHour>> = [
     {
@@ -79,7 +96,21 @@ function List(props: IProps): JSX.Element {
     {
       title: "操作",
       render: (val: string, row: any) => {
-        return <Link to={`detail/${row._id}`}>查看</Link>;
+        return [
+          (<Link to={`detail/${row._id}`} key='1'>
+            <Icon type="codepen" />
+          </Link>),
+          (<Button
+            key="2"
+            className="ml5"
+            type="link"
+            icon="delete"
+            size="small"
+            onClick={() => {
+              onDel(row._id)
+            }} >
+          </Button>)
+        ]
       }
     }
   ];
@@ -90,8 +121,14 @@ function List(props: IProps): JSX.Element {
     pagination,
     handleTableChange,
     onDateChange,
-    onSearch
+    onSearch,
+    fetchData
   } = fetchApiHook(initList, api.getHourrList)
+
+
+
+
+
 
 
 

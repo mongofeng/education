@@ -1,4 +1,4 @@
-import { Button, DatePicker, Input, message, Table, Tabs } from 'antd'
+import { Button, DatePicker, Icon, Input, message, Modal, Table, Tabs } from 'antd'
 import { ColumnProps } from 'antd/lib/table';
 import * as React from "react";
 import CsvDownloader from 'react-csv-downloader';
@@ -10,12 +10,11 @@ import fetchApiHook from '../../common/hooks/featchApiList'
 import * as enums from '../../const/enum'
 import {IStudent} from '../../const/type/student'
 import formatDate from "../../utils/format-date";
-import getAge from "../../utils/getAge";
 
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
-
+const confirm = Modal.confirm;
 interface IProps {
   allStudent: IStudent[]
 }
@@ -41,31 +40,9 @@ const columns: Array<ColumnProps<IStudent>> = [
     render: (str: enums.ESEX) => <span>{enums.SEX_LABEL[str]}</span>
   },
   {
-    title: "年龄",
-    dataIndex: "age",
-    render: (text: string, row: IStudent) => {
-      return getAge(row.birthday)
-    }
-
-  },
-  {
     title: "手机号码",
     dataIndex: "phone"
   },
-  {
-    title: "地址",
-    dataIndex: "address",
-    render: (text: string, row: IStudent) => {
-      const {province, city, region} = row
-      const adress = `${province}${city}${region}${text}`
-      return (
-        <span>
-         {adress}
-        </span>
-      )
-    }
-  },
-
   {
     title: "状态",
     dataIndex: "status",
@@ -77,15 +54,6 @@ const columns: Array<ColumnProps<IStudent>> = [
     sorter: true,
     render: (date: string) => <span>{formatDate(new Date(date))}</span>
   },
-  {
-    title: "操作",
-    render: (val: string, row: any) => {
-      return (
-        <Link to={`edit/${row._id}`}>编辑</Link>
-
-      );
-    }
-  }
 ];
 
 const initCsvCols = [
@@ -126,6 +94,7 @@ function List(props: RouteComponentProps & IProps): JSX.Element {
   const {
     loading,
     data,
+    fetchData,
     pagination,
     handleTableChange,
     onDateChange,
@@ -177,6 +146,47 @@ function List(props: RouteComponentProps & IProps): JSX.Element {
   //   message.success("重置微信号成功");
   // }
 
+  const onDel= (id: string) => {
+    confirm({
+      title: '提示',
+      content: '确定删除该学生,请确保没有课程包,或者课时操作记录,如果有请先去对应学员清空课程包和课时流水?',
+      onOk: async () => {
+        try {
+          await api.delStudent(id)
+          message.success('删除成功')
+          fetchData(true)
+        } catch (error) {
+          message.error('删除失败')
+        }
+      },
+    });
+
+  }
+
+
+  const operate = [
+    {
+      title: "操作",
+      render: (val: string, row: IStudent) => {
+        return [
+          (<Link to={`edit/${row._id}`} key='1'>
+            <Icon type="edit" />
+          </Link>),
+          (<Button
+            key="2"
+            className="ml5"
+            type="link"
+            icon="delete"
+            size="small"
+            onClick={() => {
+              onDel(row._id)
+            }} >
+          </Button>)
+        ]
+      }
+    }
+  ]
+
   const footer = () => {
     return (<CsvDownloader
       filename="学生列表"
@@ -218,7 +228,7 @@ function List(props: RouteComponentProps & IProps): JSX.Element {
             placeholder="请输入名字"
             onSearch={onSearch}
             style={{ width: 200 }}/>
-{/* 
+{/*
           <Button
             className="fr"
             type="primary"
@@ -229,7 +239,7 @@ function List(props: RouteComponentProps & IProps): JSX.Element {
 
         <Table<IStudent>
           bordered={true}
-          columns={columns}
+          columns={columns.concat(operate)}
           rowKey="_id"
           dataSource={data}
           pagination={pagination}

@@ -1,4 +1,4 @@
-import { Button, DatePicker, Input, Table, Tabs } from "antd";
+import { Button, DatePicker, Icon, Input, message, Modal, Table, Tabs } from 'antd'
 import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
 import { RouteComponentProps } from "react-router-dom";
@@ -7,7 +7,6 @@ import * as api from "../../api/teacher";
 import fetchApiHook from '../../common/hooks/featchApiList'
 import * as enums from "../../const/enum";
 import { ITeacher } from "../../const/type/teacher";
-import formatDate from "../../utils/format-date";
 import getAge from '../../utils/getAge'
 
 const Search = Input.Search;
@@ -31,31 +30,10 @@ const columns: Array<ColumnProps<ITeacher>> = [
     render: (str: enums.ESEX) => <span>{enums.SEX_LABEL[str]}</span>
   },
   {
-    title: "年龄",
-    dataIndex: "age",
-    render: (text: string, row: ITeacher) => {
-      return getAge(row.birthday)
-    }
-  },
-  {
     title: "手机号码",
     dataIndex: "phone"
   },
-  {
-    title: "地址",
-    dataIndex: "address",
-    render: (text: string, row: ITeacher) => {
-      const { province, city, region } = row;
-      const adress = `${province}${city}${region}${text}`;
-      return <span>{adress}</span>;
-    }
-  },
-  {
-    title: "创建时间",
-    dataIndex: "createDate",
-    sorter: true,
-    render: (date: string) => <span>{formatDate(new Date(date))}</span>
-  },
+
   {
     title: "状态",
     dataIndex: "status",
@@ -65,21 +43,16 @@ const columns: Array<ColumnProps<ITeacher>> = [
       <span>{enums.TEACHER_STATUS_LABEL[str]}</span>
     )
   },
-  {
-    title: "操作",
-    render: (val: string, row: any) => {
-      return <Link to={`edit/${row._id}`}>编辑</Link>;
-    }
-  }
 ];
 
 const initList: ITeacher[] = [];
-
+const confirm = Modal.confirm;
 
 function List(props: RouteComponentProps): JSX.Element {
 
   const {
     loading,
+    fetchData,
     data,
     pagination,
     handleTableChange,
@@ -110,6 +83,48 @@ function List(props: RouteComponentProps): JSX.Element {
       status: Number(status)
     })
   }
+
+
+  const onDel= (id: string) => {
+    confirm({
+      title: '提示',
+      content: '确定删除该老师,请确保没有学生,或者课程绑定该老师,如果有请先去解绑学生和课程?',
+      onOk: async () => {
+        try {
+          await api.delteacher(id)
+          message.success('删除成功')
+          fetchData(true)
+        } catch (error) {
+          message.error('删除失败')
+        }
+      },
+    });
+
+  }
+
+
+  const operate = [
+    {
+      title: "操作",
+      render: (val: string, row: ITeacher) => {
+        return [
+          (<Link to={`edit/${row._id}`} key='1'>
+            <Icon type="edit" />
+          </Link>),
+          (<Button
+            key="2"
+            className="ml5"
+            type="link"
+            icon="delete"
+            size="small"
+            onClick={() => {
+              onDel(row._id)
+            }} >
+          </Button>)
+        ]
+      }
+    }
+  ]
 
 
   return (
@@ -146,7 +161,7 @@ function List(props: RouteComponentProps): JSX.Element {
 
         <Table<ITeacher>
           bordered={true}
-          columns={columns}
+          columns={columns.concat(operate)}
           rowKey="_id"
           dataSource={data}
           pagination={pagination}
