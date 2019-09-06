@@ -159,12 +159,15 @@ const List: React.FC<IProps> = (props) => {
         })
         try {
             const {data: {data: result}} = await apiPack.sign(params)
-            console.log(result)
-            // let str = (result.student_hour.ok === 1 && result.student_hour.n !== 0) ? '成功扣除课时' : '扣除课时失败'
-            // str += result.templateMsg.errcode === 0 ? ',微信推送成功' : ',微信推送失败,请到课时里面推送'
-            // message.success(str)
+            const {studentPackage, templateMsg} = result
+            const str = (studentPackage.ok === 1 && studentPackage.n !== 0) ? '签到成功,成功扣除课时' : '签到失败,扣除课时失败'
+            const total: number = templateMsg.reduce((tatal: number, item: {
+                errcode: number
+            }) => {
+                return item.errcode === 0 ? tatal + 1 : tatal
+            }, 0)
+            message.success(`${str}, 成功推送微信消息${total}条`)
             props.update()
-            message.success('补签成功')
         } finally {
             handleSupplementCancel();
         }

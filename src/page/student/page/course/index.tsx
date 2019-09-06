@@ -7,7 +7,7 @@ import * as apiPack from '../../../../api/student-operation'
 import fetchApiHook from '../../../../common/hooks/featchApiList'
 import * as enums from "../../../../const/enum";
 import { ICourse } from "../../../../const/type/course";
-import { ISupplement } from '../../../../const/type/student-operation'
+import { ISign, ISupplement } from '../../../../const/type/student-operation'
 import formatDate from "../../../../utils/format-date";
 import SupplementModal from '../../components/common-sign-modal'
 import CourseModal from './course-modal'
@@ -55,15 +55,15 @@ const columns: Array<ColumnProps<ICourse>> = [
       })
     },
   },
-  {
-    title: "一天",
-    dataIndex: "time",
-    filterMultiple: false,
-    filters: Object.keys(enums.DAY_LABEL).map(key => ({ text: enums.DAY_LABEL[key], value: key })),
-    render: (str: enums.DAY) => (
-      <span>{enums.DAY_LABEL[str]}</span>
-    )
-  },
+  // {
+  //   title: "一天",
+  //   dataIndex: "time",
+  //   filterMultiple: false,
+  //   filters: Object.keys(enums.DAY_LABEL).map(key => ({ text: enums.DAY_LABEL[key], value: key })),
+  //   render: (str: enums.DAY) => (
+  //     <span>{enums.DAY_LABEL[str]}</span>
+  //   )
+  // },
   {
     title: "开课时间",
     dataIndex: "startDate",
@@ -79,12 +79,6 @@ const columns: Array<ColumnProps<ICourse>> = [
     })}</span>
   },
   {
-    title: "创建时间",
-    dataIndex: "createDate",
-    sorter: true,
-    render: (date: string) => <span>{formatDate(new Date(date))}</span>
-  },
-  {
     title: "状态",
     dataIndex: "status",
     filterMultiple: false,
@@ -94,6 +88,9 @@ const columns: Array<ColumnProps<ICourse>> = [
     )
   },
 ];
+
+type IType = 'sign' | 'supplement'
+const initType: IType = 'supplement'
 
 const List: React.FC<IProps> = (props) => {
 
@@ -120,6 +117,8 @@ const List: React.FC<IProps> = (props) => {
 
   // 模态框
   const [modalState, setModalState] = useState(initModalState)
+
+  const [type, setType] = useState<IType>(initType)
 
   /**
    * 打开模态框
@@ -220,26 +219,63 @@ const List: React.FC<IProps> = (props) => {
       name
     } = courseRow
 
-    const params: ISupplement = {
-      desc,
-      num,
-      course: [
-        {
-          id: _id,
-          name,
-          count: num
-        }
-      ],
-      studentId: props.id
-    }
+
 
     setSupplementState({
       ...supplementState,
       confirmLoading: true,
     })
     try {
-      await apiPack.supplement(params)
-      message.success('补签成功')
+      if (type === 'supplement') {
+        const params: ISupplement = {
+          desc,
+          num,
+          course: [
+            {
+              id: _id,
+              name,
+              count: num
+            }
+          ],
+          studentId: props.id
+        }
+        const {data: {data: result}} = await apiPack.supplement(params)
+        console.log(result)
+        const {studentPackage, templateMsg} = result
+        const str = (studentPackage.ok === 1 && studentPackage.n !== 0) ? '补签成功,成功扣除课时' : '补签失败, 扣除课时失败'
+        const total: number = templateMsg.reduce((tatal: number, item: {
+          errcode: number
+        }) => {
+          return item.errcode === 0 ? tatal + 1 : tatal
+        }, 0)
+        message.success(`${str}, 成功推送微信消息${total}条`)
+      } else if (type === 'sign') {
+        const params: ISign = {
+          desc,
+          num,
+          course: [
+            {
+              id: _id,
+              name,
+              count: num
+            }
+          ],
+          studentId: props.id,
+          courseName: name,
+        }
+        const {data: {data: result}} = await apiPack.sign(params)
+        const {studentPackage, templateMsg} = result
+        const str = (studentPackage.ok === 1 && studentPackage.n !== 0) ? '签到成功,成功扣除课时' : '签到失败,扣除课时失败'
+        const total: number = templateMsg.reduce((tatal: number, item: {
+          errcode: number
+        }) => {
+          return item.errcode === 0 ? tatal + 1 : tatal
+        }, 0)
+        message.success(`${str}, 成功推送微信消息${total}条`)
+      } else {
+        message.error('找不到当前的类型')
+      }
+
       props.update()
     } finally {
       handleSupplementCancel();
@@ -257,6 +293,8 @@ const List: React.FC<IProps> = (props) => {
               key="1"
               className="mr5"
               type="primary"
+              icon="delete"
+              size="small"
               onClick={() => {
               onDelCourse(row._id)
             }} >
@@ -264,11 +302,29 @@ const List: React.FC<IProps> = (props) => {
           </Button>),
           (<Button
             key="2"
+            type="primary"
+            icon="form"
+            className="mr5"
+            size="small"
             onClick={() => {
+              setType('supplement')
               showSupplementModal(row)
             }} >
             补签
-          </Button>)
+          </Button>),
+          (
+            <Button
+              key="3"
+              type="primary"
+              icon="edit"
+              size="small"
+              onClick={() => {
+                setType('sign')
+                showSupplementModal(row)
+              }}>
+              签到
+            </Button>
+          )
         ]
       }
     }
@@ -281,7 +337,7 @@ const List: React.FC<IProps> = (props) => {
 
       {/*补签模块*/}
       <SupplementModal
-        title="补签"
+        title={type === 'supplement' ? '补签' : '签到'}
         onCreate={handleSupplementSumbit}
         onCancel={handleSupplementCancel}
         { ...supplementState}/>
