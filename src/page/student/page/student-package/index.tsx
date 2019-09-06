@@ -10,7 +10,9 @@ import formatDate from "../../../../utils/format-date";
 
 import BuyCourse from './buy-course-modal'
 import ShareStudentPackage from './share-student-package-modal'
+import  DrawForm from './form'
 import { connect } from 'react-redux'
+const confirm = Modal.confirm;
 
 const moment = require('moment')
 
@@ -66,6 +68,10 @@ function List(props: IProps): JSX.Element {
   const [activiteTime, setActiviteTime] = useState(moment())
   const [isPuseMsg, setIsPuseMsg] = useState(true)
   const [row, setRow] = useState(null)
+
+  // 更改课程包
+  const [id, setId] = useState('')
+  const [visible, setVisible] = useState(false)
 
 
   /**
@@ -175,7 +181,7 @@ function List(props: IProps): JSX.Element {
       dataIndex: "isPush",
       render: (val: boolean) => {
         if (val) { // 如果已经推送了可以再开启
-          return '1'
+          return <Tag color='blue'>是</Tag>
         }
         return <Tag color='blue'>否</Tag>
       }
@@ -203,6 +209,31 @@ function List(props: IProps): JSX.Element {
             激活
           </Button>
         )
+      }
+    },
+    {
+      title: "操作",
+      render: (val: string, row: IStudentPackage) => {
+        return [(<Button
+          key="1"
+          type="link"
+          icon="delete"
+          size="small"
+          onClick={() => {
+            onDel(row._id)
+          }} >
+        </Button>),
+          (<Button
+            key="2"
+            className="ml5"
+            type="link"
+            icon="edit"
+            size="small"
+            onClick={() => {
+              setId(row._id)
+              setVisible(true)
+            }} >
+          </Button>)]
       }
     }
   ];
@@ -307,6 +338,30 @@ function List(props: IProps): JSX.Element {
   }, [])
 
 
+  // 删除课程包
+  const onDel= (id: string) => {
+    confirm({
+      title: '警告',
+      content: '确定删除该课程包,请确保没有课时操作记录,如果有请先去对应课时流水,以免引起数据的错乱?',
+      onOk: async () => {
+        try {
+          await apiPack.delStudentPackage(id)
+          message.success('删除成功')
+          fetchData(true)
+        } catch (error) {
+          message.error('删除失败')
+        }
+      },
+    });
+  }
+
+
+  const onFormCancel = () => {
+    setVisible(false)
+    setId('')
+  }
+
+
 
 
   return (
@@ -326,6 +381,12 @@ function List(props: IProps): JSX.Element {
           onCancel={handleFormCancel}
           { ...formState}/>
 
+
+      <DrawForm
+        id={id}
+        title="编辑课程包"
+        visible={visible}
+        onCancel= {onFormCancel} />
 
       <Modal
         title="选择激活时间"
@@ -394,6 +455,7 @@ function List(props: IProps): JSX.Element {
     </React.Fragment>
   );
 }
+
 export default connect((state: any) => {
   // console.log(state)
   return {
