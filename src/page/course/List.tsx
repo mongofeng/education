@@ -9,7 +9,7 @@ import { ICourse } from "../../const/type/course";
 import formatDate from "../../utils/format-date";
 
 import fetchApiHook from '../../common/hooks/featchApiList'
-import { IStudent } from '../../const/type/student'
+import {isDev} from '../../config/index'
 const { TabPane } = Tabs;
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
@@ -131,21 +131,26 @@ function List(props: RouteComponentProps): JSX.Element {
     {
       title: "操作",
       render: (val: string, row: ICourse) => {
-        return [
-          (<Link to={`edit/${row._id}`} key='1'>
-            <Icon type="edit" />
-          </Link>),
-          (<Button
-            key="2"
-            className="ml5"
-            type="link"
-            icon="delete"
-            size="small"
-            onClick={() => {
-              onDel(row._id)
-            }} >
-          </Button>)
-        ]
+        if (isDev) {
+          return [
+            (<Link to={`edit/${row._id}`} key='1'>
+              <Icon type="edit" />
+            </Link>),
+            (<Button
+              key="2"
+              className="ml5"
+              type="link"
+              icon="delete"
+              size="small"
+              onClick={() => {
+                onDel(row._id)
+              }} >
+            </Button>)
+          ]
+        }
+        return (<Link to={`edit/${row._id}`} key='1'>
+                  <Icon type="edit" />
+                </Link>)
       }
     }
   ]

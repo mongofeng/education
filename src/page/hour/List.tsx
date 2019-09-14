@@ -9,6 +9,7 @@ import { IHour } from "../../const/type/hour";
 import { ICourse } from '../../const/type/student-operation'
 import formatDate from "../../utils/format-date";
 import { connect } from 'react-redux'
+import {isDev} from '../../config/index'
 const confirm = Modal.confirm;
 
 const Search = Input.Search;
@@ -96,21 +97,26 @@ function List(props: IProps): JSX.Element {
     {
       title: "操作",
       render: (val: string, row: any) => {
-        return [
-          (<Link to={`detail/${row._id}`} key='1'>
-            <Icon type="codepen" />
-          </Link>),
-          (<Button
-            key="2"
-            className="ml5"
-            type="link"
-            icon="delete"
-            size="small"
-            onClick={() => {
-              onDel(row._id)
-            }} >
-          </Button>)
-        ]
+        if (isDev) {
+          return [
+            (<Link to={`detail/${row._id}`} key='1'>
+              <Icon type="codepen" />
+            </Link>),
+            (<Button
+              key="2"
+              className="ml5"
+              type="link"
+              icon="delete"
+              size="small"
+              onClick={() => {
+                onDel(row._id)
+              }} >
+            </Button>)
+          ]
+        }
+        return (<Link to={`detail/${row._id}`} key='1'>
+        <Icon type="codepen" />
+      </Link>)
       }
     }
   ];

@@ -7,7 +7,7 @@ import * as api from "../../api/teacher";
 import fetchApiHook from '../../common/hooks/featchApiList'
 import * as enums from "../../const/enum";
 import { ITeacher } from "../../const/type/teacher";
-import getAge from '../../utils/getAge'
+import {isDev} from '../../config/index'
 
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
@@ -107,20 +107,28 @@ function List(props: RouteComponentProps): JSX.Element {
     {
       title: "操作",
       render: (val: string, row: ITeacher) => {
+        if (isDev) {
+          return [
+            (<Link to={`edit/${row._id}`} key='1'>
+              <Icon type="edit" />
+            </Link>),
+            (<Button
+              key="2"
+              className="ml5"
+              type="link"
+              icon="delete"
+              size="small"
+              onClick={() => {
+                onDel(row._id)
+              }} >
+            </Button>)
+          ]
+        }
         return [
           (<Link to={`edit/${row._id}`} key='1'>
             <Icon type="edit" />
           </Link>),
-          (<Button
-            key="2"
-            className="ml5"
-            type="link"
-            icon="delete"
-            size="small"
-            onClick={() => {
-              onDel(row._id)
-            }} >
-          </Button>)
+  
         ]
       }
     }

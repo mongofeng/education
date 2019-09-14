@@ -7,7 +7,7 @@ import * as apiPack from '../../../../api/student-package'
 import fetchApiHook from '../../../../common/hooks/featchApiList'
 import { IStudentPackage } from "../../../../const/type/student-package";
 import formatDate from "../../../../utils/format-date";
-
+import {isDev} from '../../../../config/index'
 import BuyCourse from './buy-course-modal'
 import ShareStudentPackage from './share-student-package-modal'
 import  DrawForm from './form'
@@ -362,6 +362,9 @@ function List(props: IProps): JSX.Element {
   }
 
 
+  const Cols = isDev ? columns : columns.slice(0, columns.length - 1)
+
+
 
 
   return (
@@ -445,7 +448,7 @@ function List(props: IProps): JSX.Element {
 
       <Table<IStudentPackage>
         bordered={true}
-        columns={columns}
+        columns={Cols}
         rowKey="_id"
         dataSource={data}
         pagination={pagination}

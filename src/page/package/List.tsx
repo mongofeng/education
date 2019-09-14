@@ -7,7 +7,7 @@ import * as api from "../../api/package";
 import { IPackage } from "../../const/type/package";
 import formatDate from "../../utils/format-date";
 import fetchApiHook from '../../common/hooks/featchApiList'
-
+import {isDev} from '../../config/index'
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
 const confirm = Modal.confirm;
@@ -103,6 +103,9 @@ function List(props: RouteComponentProps): JSX.Element {
   ]
 
 
+  const Cols = isDev ? columns.concat(operate) : columns
+
+
   return (
     <div>
       <div className="main-title clearfix">
@@ -130,7 +133,7 @@ function List(props: RouteComponentProps): JSX.Element {
 
         <Table<IPackage>
           bordered={true}
-          columns={columns.concat(operate)}
+          columns={Cols}
           rowKey="_id"
           dataSource={data}
           pagination={pagination}
