@@ -6,7 +6,7 @@ import * as api from "../../../api/hour";
 import * as enums from "../../../const/enum";
 import { IHour } from "../../../const/type/hour";
 import formatDate from "../../../utils/format-date";
-
+import { connect } from 'react-redux'
 import fetchApiHook from '../../../common/hooks/featchApiList'
 import { ICourse } from '../../../const/type/student-operation'
 
@@ -14,63 +14,14 @@ const Search = Input.Search;
 const { RangePicker } = DatePicker;
 
 
-const columns: Array<ColumnProps<IHour>> = [
-  {
-    title: "课时数量",
-    dataIndex: "num",
-  },
-  {
-    title: "操作类型",
-    dataIndex: "type",
-    filterMultiple: false,
-    filters: Object.keys(enums.COURSE_HOUR_ACTION_TYPE_LABEL).map(key => ({text: enums.COURSE_HOUR_ACTION_TYPE_LABEL[key], value: key})),
-    render: (str: enums.COURSE_HOUR_ACTION_TYPE) => {
-      return (
-        <Tag color={enums.COURSE_HOUR_ACTION_TYPE_COLOR[str]}>
-          {enums.COURSE_HOUR_ACTION_TYPE_LABEL[str]}
-        </Tag>
-      )
-    }
-  },
-  {
-    title: "课程",
-    dataIndex: "course",
-    render: (val: ICourse[]) => {
-      if (!val || !val.length) {
-        return  '-'
-      }
-      return val.map((item) => {
-        return [
-          (
-            <div key={item.id}>
-              {`${item.name}:${item.count}课时`}
-            </div>
-          )
-        ]
-      })
-    }
-  },
-  {
-    title: "备注",
-    dataIndex: "desc",
-  },
-  {
-    title: "创建时间",
-    dataIndex: "createDate",
-    sorter: true,
-    render: (date: string) => formatDate(new Date(date))
-  },
-  {
-    title: "操作",
-    render: (val: string, row: any) => {
-      return <Link to={`../../hour/detail/${row._id}`}>查看</Link>;
-    }
-  }
-];
+
 
 const initList: IHour[] = [];
 interface IProps {
-    id: string
+    id: string,
+    student: {
+      [key in string]: string
+    }
   }
 
 function List(props: IProps): JSX.Element {
@@ -86,12 +37,70 @@ function List(props: IProps): JSX.Element {
     page: 1,
     limit: 10,
     query: {
-      'course': props.id,
+      'course.id': props.id,
     },
     sort: {
       createDate: -1
     }
-  })
+  } as any)
+
+
+  const columns: Array<ColumnProps<IHour>> = [
+    {
+      title: "学员",
+      dataIndex: "studentId",
+      render: (val: string) => {
+        return props.student[val]
+      }
+    },
+    {
+      title: "课时数量",
+      dataIndex: "num",
+    },
+    {
+      title: "操作类型",
+      dataIndex: "type",
+      filterMultiple: false,
+      filters: Object.keys(enums.COURSE_HOUR_ACTION_TYPE_LABEL).map(key => ({text: enums.COURSE_HOUR_ACTION_TYPE_LABEL[key], value: key})),
+      render: (str: enums.COURSE_HOUR_ACTION_TYPE) => {
+        return (
+          <Tag color={enums.COURSE_HOUR_ACTION_TYPE_COLOR[str]}>
+            {enums.COURSE_HOUR_ACTION_TYPE_LABEL[str]}
+          </Tag>
+        )
+      }
+    },
+    {
+      title: "课程",
+      dataIndex: "course",
+      render: (val: ICourse[]) => {
+        if (!val || !val.length) {
+          return  '-'
+        }
+        return val.map((item) => {
+          return [
+            (
+              <div key={item.id}>
+                {`${item.name}:${item.count}课时`}
+              </div>
+            )
+          ]
+        })
+      }
+    },
+    {
+      title: "创建时间",
+      dataIndex: "createDate",
+      sorter: true,
+      render: (date: string) => formatDate(new Date(date))
+    },
+    {
+      title: "操作",
+      render: (val: string, row: any) => {
+        return <Link to={`../../hour/detail/${row._id}`}>查看</Link>;
+      }
+    }
+  ];
 
 
 
@@ -120,4 +129,8 @@ function List(props: IProps): JSX.Element {
   );
 }
 
-export default List;
+export default connect((state: any) => {
+  return {
+    student: state.student.labels,
+  }
+})(List);
