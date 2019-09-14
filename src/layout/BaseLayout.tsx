@@ -24,9 +24,12 @@ const Hour = React.lazy(() => import(/* webpackChunkName: 'hour'*/ '../page/hour
 const Student = React.lazy(() => import(/* webpackChunkName: 'student'*/ '../page/student'));
 const Teacher = React.lazy(() => import(/* webpackChunkName: 'teacher'*/ '../page/teacher'));
 
-const Template = React.lazy(() => import(/* webpackChunkName: 'template'*/ '../page/template'));
+// const Template = React.lazy(() => import(/* webpackChunkName: 'template'*/ '../page/template'));
 
 const Package = React.lazy(() => import(/* webpackChunkName: 'package'*/ '../page/package'));
+
+
+const CourseList = React.lazy(() => import(/* webpackChunkName: 'course-list'*/ '../page/course-list'));
 interface IProps extends RouteComponentProps {
   dispatch: Dispatch
   user: IUser
@@ -60,8 +63,8 @@ const routes: IRoutes[] = [
     component: Hour
   },
   {
-    path: "template",
-    component: Template
+    path: "course-list",
+    component: CourseList
   },
   {
     path: "package",

@@ -39,8 +39,8 @@ export const Navs: INavs[] = [
     value: 'teacher'
   },
   {
-    label: '消息管理',
-    value: 'template'
+    label: '本周课程表',
+    value: 'course-list'
   },
   {
     label: '课程包',
