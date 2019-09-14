@@ -17,12 +17,16 @@ const cols = Reflect.ownKeys(enums.WEEK_LABEL).map(key => {
         dataIndex,
         render: (tags: Array<{id: string; name: string}>) => {
             return (
-                <div>
+                <div className="point">
                     {tags && tags.map(tag => {
                         const color = tag.name.length > 5 ? 'geekblue' : 'green';
-                        return (<Link to={`../course/detail/${tag.id}`} key={tag.id} >
-                          <Tag color={color} key={tag.id}>{tag.name}</Tag>
-                        </Link>)
+                        return (
+                        <div key={tag.id} className="mb10">
+                          <Link to={`../course/detail/${tag.id}`}  >
+                            <Tag color={color} >{tag.name}</Tag>
+                          </Link>
+                        </div>
+                        )
                     })}
                 </div>
             )
