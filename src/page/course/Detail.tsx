@@ -118,6 +118,8 @@ const  Detail: React.FC<RouteComponentProps<IParams>>  = (props) => {
   }, []);
 
 
+
+
   return (
     <div>
       <div className="main-title">
@@ -152,14 +154,24 @@ const  Detail: React.FC<RouteComponentProps<IParams>>  = (props) => {
               }/>
           </Col>
         </Row>
+        
+        
+          
+          {info && info.studentIds && info.studentIds.length && 
+          <Tabs defaultActiveKey='1'  className="mt10">
+            <TabPane tab="课程的学员列表" key="1">
+              <Student 
+                ids={info.studentIds}
+                course={info}/>
+            </TabPane> 
 
-        <Tabs defaultActiveKey="1"  className="mt10">
-          <TabPane tab="签到流水" key="1">
+            <TabPane tab="签到流水" key="2">
               <Hour id={id} />
-          </TabPane>
-          {info && info.studentIds && info.studentIds && <TabPane tab="课程的学员列表" key="2">
-            <Student ids={info.studentIds}/></TabPane> }
-        </Tabs>
+            </TabPane>
+          </Tabs>
+          }
+
+          
       </div>
     </div>
   );
