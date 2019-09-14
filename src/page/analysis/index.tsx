@@ -26,12 +26,12 @@ const Analysis: React.FC<IList> = props => {
     page: 1,
   })
 
-  useEffect(() => {
-    props.onGetList({
-      limit: 1,
-      page: 1,
-    });
-  }, []);
+  // useEffect(() => {
+  //   props.onGetList({
+  //     limit: 1,
+  //     page: 1,
+  //   });
+  // }, []);
 
   return (
     <div>
