@@ -150,7 +150,7 @@ const FormCompent: React.FC<IFormProps> = (props)=> {
                initialValue: form ? form.amount : '',
                rules: [{ required: true, message: '请输入课程包的价格', type: 'number' }],
              })(
-               <InputNumber min={1} max={100000}  />
+               <InputNumber min={0} max={100000}  />
              )}
              
            </Form.Item>
