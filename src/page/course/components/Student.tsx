@@ -73,11 +73,11 @@ interface IProps {
 const List: React.FC<IProps> =  (props) => {
 
   const {
-    loading, 
-    data, 
-    pagination, 
-    handleTableChange, 
-    onDateChange, 
+    loading,
+    data,
+    pagination,
+    handleTableChange,
+    onDateChange,
     onSearch,
   } = fetchApiHook(initList, api.getStudentList, {
     page: 1,
@@ -93,31 +93,8 @@ const List: React.FC<IProps> =  (props) => {
   })
 
 
-  // 模态框
-  const [modalState, setModalState] = useState(initModalState)
-
   const [type, setType] = useState<IType>(initType)
 
-  /**
-   * 打开模态框
-   */
-  const showModal = () => {
-    setModalState({
-      ...modalState,
-      visible: true
-    })
-  }
-
-
-  /**
-   * 取消模态框
-   */
-  const handleCancel = () => {
-    setModalState({
-      ...modalState,
-      visible: false
-    })
-  }
 
 
   /**
