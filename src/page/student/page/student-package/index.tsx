@@ -332,10 +332,6 @@ function List(props: IProps): JSX.Element {
 
   }
 
-  useEffect(() => {
-    console.log('package')
-    console.log(props.package)
-  }, [])
 
 
   // 删除课程包
@@ -356,10 +352,15 @@ function List(props: IProps): JSX.Element {
   }
 
 
-  const onFormCancel = () => {
+  const onFormCancel = (value: boolean) => {
+    if (value) {
+      fetchData()
+    }
     setVisible(false)
     setId('')
   }
+
+
 
 
   const Cols = isDev ? columns : columns.slice(0, columns.length - 1)

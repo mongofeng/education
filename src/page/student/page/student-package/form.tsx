@@ -1,16 +1,16 @@
-import { Button, Col, Drawer, Form, Input, InputNumber, Row, Switch } from 'antd'
+import { Button, Col, Drawer, Form, InputNumber, message, Modal, Row, Switch } from 'antd'
 import { FormComponentProps } from "antd/lib/form";
 import * as React from "react";
 import * as api from '../../../../api/student-package'
 import { IStudentPackage } from '../../../../const/type/student-package'
 import { useEffect, useState } from 'react'
-const { TextArea } = Input;
+const confirm = Modal.confirm;
 
 type IProps = FormComponentProps & {
   id: string
   title: string
   visible: boolean;
-  onCancel: () => void;
+  onCancel: (value: boolean) => void;
 }
 
 const initForm = {} as IStudentPackage
@@ -37,7 +37,6 @@ const FormList: React.FC<IProps> = (props) => {
     if (visible) {
       fetchDetail();
     }
-    // console.log('useEffect详情钩子')
   }, [visible]);
 
 
@@ -63,21 +62,43 @@ const FormList: React.FC<IProps> = (props) => {
         return;
       }
 
+      if (!props.id) {
+        message.error('没有课程包的id，不能更改');
+        return
+      }
 
-      setLoading(true)
+      confirm({
+        title: '警告',
+        content: '是否更改学时包?',
+        onOk: async () => {
+          setLoading(true)
+          try {
+            await api.updateStudentPackage(props.id, values)
+            setLoading(false)
+            message.success('更新成功');
+            handleFormCancel(true)
+          } catch (e) {
+            message.error('更新失败');
+            setLoading(false)
+          }
+        },
+      });
 
-      console.log(values)
 
-      handleFormCancel()
+
 
     });
   };
 
 
-  const handleFormCancel = () => {
+  const handleFormCancel = (value: boolean) => {
     props.form.resetFields();
     setInfo(initForm)
-    onCancel()
+    onCancel(value)
+  }
+
+  const onCanceled = () => {
+    handleFormCancel(false)
   }
 
 
@@ -87,10 +108,11 @@ const FormList: React.FC<IProps> = (props) => {
     title,
   }
 
+
   return (
     <Drawer
       {...modalProps}
-      onClose={handleFormCancel}>
+      onClose={onCanceled }>
 
       <Form layout="vertical">
 
@@ -98,7 +120,7 @@ const FormList: React.FC<IProps> = (props) => {
           <Col span={12}>
             <Form.Item label="总课时">
               {getFieldDecorator('count', {
-                initialValue: (info && info.count) ? info.count : '',
+                initialValue: (info && typeof info.count === 'number') ? info.count : '',
                 rules: [{ required: true, message: '请输入总课时的数量', type: 'number' }],
               })(
                 <InputNumber
@@ -112,12 +134,12 @@ const FormList: React.FC<IProps> = (props) => {
           <Col span={12}>
             <Form.Item label="剩余课时">
               {getFieldDecorator('surplus', {
-                initialValue: (info && info.surplus) ? info.surplus : '',
+                initialValue: (info && typeof info.surplus === 'number') ? info.surplus : '',
                 rules: [{ required: true, message: '请输入剩余课时的数量', type: 'number' }],
               })(
                 <InputNumber
                   style={{ width: '100%' }}
-                  min={1}
+                  min={0}
                   max={100000} />
               )}
 
@@ -130,12 +152,12 @@ const FormList: React.FC<IProps> = (props) => {
           <Col span={12}>
             <Form.Item label="使用课时">
               {getFieldDecorator('used', {
-                initialValue: (info && info.used) ? info.used : '',
+                initialValue: (info && typeof info.used === 'number') ? info.used : '',
                 rules: [{ required: true, message: '请输入使用课时的数量', type: 'number' }],
               })(
                 <InputNumber
                   style={{ width: '100%' }}
-                  min={1}
+                  min={0}
                   max={100000} />
               )}
 
@@ -144,12 +166,12 @@ const FormList: React.FC<IProps> = (props) => {
           <Col span={12}>
             <Form.Item label="价格">
               {getFieldDecorator('amount', {
-                initialValue: (info && info.amount) ? info.amount : '',
+                initialValue: (info && typeof info.amount === 'number') ? info.amount : '',
                 rules: [{ required: true, message: '请输入价格', type: 'number' }],
               })(
                 <InputNumber
                   style={{ width: '100%' }}
-                  min={1}
+                  min={0}
                   max={100000} />
               )}
 
@@ -162,6 +184,7 @@ const FormList: React.FC<IProps> = (props) => {
           <Col span={12}>
             <Form.Item label="过期推送">
               {getFieldDecorator('isPush', {
+                valuePropName: 'checked',
                 initialValue: (info && typeof info.isPush !== 'undefined') ? info.isPush : false,
               })(
                 <Switch  />
@@ -172,7 +195,8 @@ const FormList: React.FC<IProps> = (props) => {
           <Col span={12}>
             <Form.Item label="激活">
               {getFieldDecorator('isActive', {
-                initialValue: (info && typeof info.isActive !== 'undefined') ? info.isActive : false,
+                valuePropName: 'checked',
+                initialValue: (info && typeof info.isActive !== 'undefined') ? info.isActive : true,
               })(
                 <Switch  />
               )}
@@ -206,7 +230,7 @@ const FormList: React.FC<IProps> = (props) => {
           textAlign: 'right',
         }}
       >
-        <Button onClick={handleFormCancel} style={{ marginRight: 8 }}>
+        <Button onClick={onCanceled} style={{ marginRight: 8 }}>
           取消
         </Button>
         <Button onClick={handleSubmit} type="primary">
