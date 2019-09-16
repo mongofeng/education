@@ -1,11 +1,13 @@
 
 import * as studentAction from '../actions/student'
+import { IStudent } from '../../const/type/student'
 
 const studentStatus = {
   loading: false,
   data: [],
   total: 0,
-  labels: {}
+  labels: {},
+  openIds: new Map<string, string[]>()
 }
 
 /**
@@ -13,7 +15,12 @@ const studentStatus = {
  * @param state
  * @param action
  */
-function studentModel (state = studentStatus, action: any) {
+function studentModel (state = studentStatus, action: {
+  type: string;
+  data: IStudent[];
+  loading: boolean;
+  count: number;
+}) {
   switch (action.type) {
     case studentAction.FETCH_STUDENT_STATUS:
       return {
@@ -25,6 +32,9 @@ function studentModel (state = studentStatus, action: any) {
         ...state,
         data: action.data,
         total: action.count,
+        openIds: new Map(action.data.map(item => {
+          return [item._id, item.openId]
+        })),
         labels: action.data.reduce((initVal, item) => {
           return {
             ...initVal,
