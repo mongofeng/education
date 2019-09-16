@@ -6,8 +6,8 @@ import FieldInfo, { IField} from '../../components/Fields-info'
 import * as enums from '../../const/enum'
 import {ICourse} from '../../const/type/course'
 import formatDate from "../../utils/format-date";
-import Hour from './components/Hour'
-import Student from './components/Student'
+import Hour from './views/Hour'
+import Student from './views/Student'
 const { useState, useEffect } = React;
 const TabPane = Tabs.TabPane;
 
@@ -136,7 +136,7 @@ const  Detail: React.FC<RouteComponentProps<IParams>>  = (props) => {
         <Popover content="点击编辑课程信息"  trigger="hover" placement="left">
           <Button icon="edit" className="fr" onClick={handleClick}/>
         </Popover>
-        
+
       </div>
       <div className="content-wrap">
         <Divider orientation="left">基本信息</Divider>
@@ -145,25 +145,25 @@ const  Detail: React.FC<RouteComponentProps<IParams>>  = (props) => {
             <FieldInfo fields={columns} data={info || {}}/>
           </Col>
           <Col span={8} >
-            <Statistic 
-              title={<div style={{textAlign: 'center'}}>当前学生数量</div>} 
+            <Statistic
+              title={<div style={{textAlign: 'center'}}>当前学生数量</div>}
               value={(info && info.studentIds) ? info.studentIds.length : 0}
-              suffix="人" 
+              suffix="人"
               valueStyle={
                 {fontSize: '42px', color: 'red', textAlign: 'center'}
               }/>
           </Col>
         </Row>
-        
-        
-          
-          {info && info.studentIds && info.studentIds.length && 
+
+
+
+          {info && info.studentIds && info.studentIds.length &&
           <Tabs defaultActiveKey='1'  className="mt10">
             <TabPane tab="课程的学员列表" key="1">
-              <Student 
+              <Student
                 ids={info.studentIds}
                 course={info}/>
-            </TabPane> 
+            </TabPane>
 
             <TabPane tab="签到流水" key="2">
               <Hour id={id} />
@@ -171,7 +171,7 @@ const  Detail: React.FC<RouteComponentProps<IParams>>  = (props) => {
           </Tabs>
           }
 
-          
+
       </div>
     </div>
   );
