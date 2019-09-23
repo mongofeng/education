@@ -12,7 +12,7 @@ script:
 after_script:
 - ls
 after_success:
-- ssh $deloy_server "rm -rf $dir"
-- scp -o stricthostkeychecking=no -r $build_path $target
+- ssh $deloy_server "rm -rf ${deloy_root_path}${deloy_path}"
+- scp -o stricthostkeychecking=no -r $build_path  "${deloy_server}:${deloy_root_path}${deloy_path}"
 
 
