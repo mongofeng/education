@@ -1,5 +1,14 @@
 language: node_js
-node_js:
-  - "12"
+node_js: stable
+install:
+- yarn install
 script:
-  - npm run build
+- yarn build
+before_install:
+- openssl aes-256-cbc -K $encrypted_65b7445359ce_key -iv $encrypted_65b7445359ce_iv
+- in id_rsa.enc -out /opt/code/id_rsa -d
+- chmod 600 ~/.ssh/id_rsa
+- echo -e "Host ${host}\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+after_success:
+- ssh $deloy_server "rm -rf $dir"
+- scp -o stricthostkeychecking=no -r $build_path $target
