@@ -8,7 +8,7 @@ const initPagination: PaginationProps = {
   current: 1,
   pageSize: 10,
   showSizeChanger: true,
-  pageSizeOptions: ["5", "10", "20", "100"]
+  pageSizeOptions: ["5", "10", "20", "100", "200", "500", "2000"]
 }
 
 export type IFilter<T extends object> =  Partial<Record<keyof T, string[]>>

@@ -24,7 +24,7 @@ const Hour = React.lazy(() => import(/* webpackChunkName: 'hour'*/ '../page/hour
 const Student = React.lazy(() => import(/* webpackChunkName: 'student'*/ '../page/student'));
 const Teacher = React.lazy(() => import(/* webpackChunkName: 'teacher'*/ '../page/teacher'));
 
-// const Template = React.lazy(() => import(/* webpackChunkName: 'template'*/ '../page/template'));
+const StudentHour = React.lazy(() => import(/* webpackChunkName: 'student-hour'*/ '../page/student-hour'));
 
 const Package = React.lazy(() => import(/* webpackChunkName: 'package'*/ '../page/package'));
 
@@ -69,6 +69,10 @@ const routes: IRoutes[] = [
   {
     path: "package",
     component: Package
+  },
+  {
+    path: 'student-hour',
+    component: StudentHour,
   }
 ];
 
