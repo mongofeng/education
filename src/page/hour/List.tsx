@@ -1,19 +1,19 @@
 import { Button, DatePicker, Icon, Input, message, Modal, Table, Tag } from 'antd'
 import { ColumnProps } from 'antd/lib/table'
 import * as React from 'react'
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import * as api from '../../api/hour'
+import { caculatePackage } from '../../api/statistics'
+import { sendTemplate } from '../../api/template'
 import fetchApiHook from '../../common/hooks/featchApiList'
+import { isDev, templateIds } from '../../config/index'
 import * as enums from '../../const/enum'
 import { COURSE_HOUR_ACTION_TYPE } from '../../const/enum'
 import { IHour } from '../../const/type/hour'
 import { ICourse } from '../../const/type/student-operation'
 import formatDate from '../../utils/format-date'
-import { connect } from 'react-redux'
-import { isDev, templateIds } from '../../config/index'
-import { sendTemplate } from '../../api/template'
 import { formateTemplate } from '../../utils/template'
-import { caculatePackage } from '../../api/statistics'
 
 const confirm = Modal.confirm;
 
@@ -210,8 +210,7 @@ function List(props: IProps): JSX.Element {
             size="small"
             onClick={() => {
               onPushMessage(row)
-            }} >
-          </Button>),
+            }} />),
           (<Button
             key="3"
             className="ml5"
@@ -220,8 +219,7 @@ function List(props: IProps): JSX.Element {
             size="small"
             onClick={() => {
               onDel(row._id)
-            }} >
-          </Button>)
+            }} />)
         ]
         if (isDev) {
           return result
@@ -255,6 +253,8 @@ function List(props: IProps): JSX.Element {
       </div>
 
       <div className="content-wrap">
+
+        
         <div className="mb10">
           <RangePicker onChange={onDateChange} />
 

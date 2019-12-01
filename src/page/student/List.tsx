@@ -7,10 +7,10 @@ import { Link } from "react-router-dom";
 import { RouteComponentProps } from 'react-router-dom';
 import * as api from '../../api/student'
 import fetchApiHook from '../../common/hooks/featchApiList'
+import {isDev} from '../../config/index'
 import * as enums from '../../const/enum'
 import {IStudent} from '../../const/type/student'
 import formatDate from "../../utils/format-date";
-import {isDev} from '../../config/index'
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
@@ -181,8 +181,7 @@ function List(props: RouteComponentProps & IProps): JSX.Element {
               size="small"
               onClick={() => {
                 onDel(row._id)
-              }} >
-            </Button>)
+              }} />)
           ]
         }
         return [
