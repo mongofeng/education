@@ -35,7 +35,7 @@ const FormList: React.FC<IProps> =  (props) => {
     const { data: { data } } = await api.getStudentList({
       query: {
         _id: {
-          $nin: props.id
+          $nin: [props.id]
         }
       },
       limit: 1000,
