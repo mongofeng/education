@@ -14,9 +14,12 @@
     "ant-design-pro": "^2.3.1",
     "antd": "^3.15.0",
     "axios": "^0.18.0",
+    "babel-plugin-import": "^1.11.0",
     "canvas-nest.js": "^2.0.4",
     "customize-cra": "^0.2.12",
     "history": "^4.9.0",
+    "less": "^3.9.0",
+    "less-loader": "^4.1.0",
     "moment": "^2.24.0",
     "node-sass": "^4.12.0",
     "react": "^16.8.4",
@@ -32,10 +35,7 @@
     "redux-saga": "^1.0.2",
     "sass": "^1.20.1",
     "sass-loader": "^7.1.0",
-    "typescript": "^3.3.3333",
-    "babel-plugin-import": "^1.11.0",
-    "less": "^3.9.0",
-    "less-loader": "^4.1.0"
+    "typescript": "^3.3.3333"
   },
   "scripts": {
     "start": "react-app-rewired start",
@@ -45,7 +45,6 @@
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "deloy": "bash deloy.sh"
   },
-  "proxy": "http://127.0.0.1:7777",
   "eslintConfig": {
     "extends": "react-app"
   },
@@ -56,6 +55,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "http-proxy-middleware": "^1.0.1",
     "redux-devtools-extension": "^2.13.8",
     "tslint": "^5.16.0",
     "tslint-config-prettier": "^1.18.0",

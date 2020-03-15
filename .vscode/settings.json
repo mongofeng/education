@@ -55,5 +55,8 @@
   "tslint.autoFixOnSave": true,
   "typescript.updateImportsOnFileMove.enabled": "always",
   "tslint.alwaysShowRuleFailuresAsWarnings": true,
-  "tslint.alwaysShowStatus": true
+  "tslint.alwaysShowStatus": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
 }
