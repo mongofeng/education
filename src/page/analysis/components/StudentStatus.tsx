@@ -29,7 +29,7 @@ const BarCharts: React.FC = props => {
       setLoading(true);
       const {
         data: { data: apiData }
-      } = await api.stuCountByStatus();
+      } = await api.stuCountByStatus({});
       setData(apiData);
       setLoading(false);
     } catch (error) {

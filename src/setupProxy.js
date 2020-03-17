@@ -7,4 +7,12 @@ module.exports = function (app) {
             "^/v1": "/"
         }
     }));
+
+
+    app.use(createProxyMiddleware('/wechatServer', {
+        target: 'http://127.0.0.1:8110/',
+        pathRewrite: {
+            "^/wechatServer": "/wechat"
+        }
+    }));
 };
