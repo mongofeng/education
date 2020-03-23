@@ -11,6 +11,7 @@ import formatDate from "../../utils/format-date";
 import Course from './page/course'
 import Hours from './page/hour'
 
+import { IUserInfo } from "../../const/type/wechat";
 import getAge from '../../utils/getAge'
 import Schedule from './page/shchedule'
 import SignIn from './page/sign'
@@ -121,9 +122,16 @@ function Detail(props: RouteComponentProps<IParams>): JSX.Element {
     const result = res.reduce((initVal: {[key in string]: string}, item, index) => {
       if (item.data && item.data.nickname) {
         initVal[item.data.openid] = item.data.nickname
+      } else if (item.data) { // 兼容java的接口
+         const data: IUserInfo =  (item.data as any).data 
+         console.error(data)
+         if (data.nickname && data.openid) {
+           initVal[data.openid] = data.nickname
+         }
       }
       return initVal
     }, {})
+
     setWechat(result)
   }
 
