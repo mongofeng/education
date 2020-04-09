@@ -9,10 +9,10 @@ module.exports = function (app) {
     }));
 
 
-    // app.use(createProxyMiddleware('/wechatServer', {
-    //     target: 'http://127.0.0.1:8110/',
-    //     pathRewrite: {
-    //         "^/wechatServer": "/wechat"
-    //     }
-    // }));
+    app.use(createProxyMiddleware('/wechatV2', {
+        target: 'http://127.0.0.1:8110/',
+        pathRewrite: {
+            "^/wechatV2": "/wechat"
+        }
+    }));
 };
