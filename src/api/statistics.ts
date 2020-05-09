@@ -11,6 +11,16 @@ export function stuCountByTime (params: QueryCondition<IStuCountByTime>): ApiRes
   return http.post(`statistics/stuCountByTime`, params)
 }
 
+
+/**
+ * 获取每月学生的课时增长
+ * @param params 
+ */
+export function hourCountByTime (params: QueryCondition<IStuCountByTime>): ApiResponse<IStuCountByTime[]> {
+  return http.post(`statistics/hourCountByTime`, params)
+}
+
+
 /**
  * 学生毕业和在读的统计
  * @param params 

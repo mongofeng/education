@@ -6,6 +6,7 @@ import { Dispatch } from "redux";
 import * as api from "../../api/teacher";
 import fetchApiHook from '../../common/hooks/featchApiList'
 import * as action from "../../store/actions/student";
+import HourBar from './components/Hour'
 import StudentBar from "./components/Student";
 import StudentStatus from "./components/StudentStatus";
 import "./index.css";
@@ -71,6 +72,11 @@ const Analysis: React.FC<IList> = props => {
         <Row gutter={24}>
           <Col md={24} sm={24} xs={24}>
             <StudentBar />
+          </Col>
+
+
+          <Col md={24} sm={24} xs={24}>
+            <HourBar />
           </Col>
         </Row>
       </div>
