@@ -102,6 +102,7 @@ function List(props: RouteComponentProps & IProps): JSX.Element {
     setQuery
   } = fetchApiHook(initList, api.getStudentList, {
     limit: 10,
+    size: 10,
     page: 1,
     query: {
       status: 1

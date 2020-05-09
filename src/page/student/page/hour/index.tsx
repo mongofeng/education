@@ -78,6 +78,7 @@ function List(props: IProps): JSX.Element {
   } = fetchApiHook(initList, api.getHourrList, {
     page: 1,
     limit: 10,
+    size: 10,
     query: {
       studentId: props.id
     },

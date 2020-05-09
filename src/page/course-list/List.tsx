@@ -103,6 +103,7 @@ const {
 export default function () {
     const initCondition: any = {
         limit: 1000,
+        size: 1000,
         page: 1,
         query: {
             startDate: {

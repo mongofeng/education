@@ -61,6 +61,7 @@ function List(props: RouteComponentProps): JSX.Element {
     setQuery
   } = fetchApiHook(initList, api.getteacherList, {
     limit: 10,
+    size: 10,
     page: 1,
     query: {
       status: 1

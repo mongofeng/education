@@ -108,6 +108,7 @@ function BaseLayout (props: IProps): JSX.Element {
   const fetchAllStudent  = () => {
     props.dispatch(studentAction.FetchList({
       limit: 10000,
+      size: 10000,
       page: 1,
       sort: { createDate: -1 }
     }))
@@ -116,6 +117,7 @@ function BaseLayout (props: IProps): JSX.Element {
   const fetchAllPackage = () => {
     props.dispatch(packageAction.FetchList({
       limit: 10000,
+      size: 10000,
       page: 1,
       sort: { createDate: -1 }
     }))

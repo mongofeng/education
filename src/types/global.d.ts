@@ -27,6 +27,7 @@ declare interface QueryCondition<T> {
   filter?: Array<keyof T>
   page?: number
   limit?: number
+  size?: number
   query?: Partial<Record<keyof T, Partial<QueryValue> | string | boolean | number>>
   sort?: Partial<Record<keyof T, 'asc' | 'desc' | 1 | -1>>
   like?: Partial<Record<keyof T, string>>

@@ -90,6 +90,7 @@ const List: React.FC<IProps> = (props) => {
     } = fetchApiHook(initList, api.getCourserList, {
         page: 1,
         limit: 10,
+        size: 10,
         query: {
             studentIds: {
                 $in: [props.id]

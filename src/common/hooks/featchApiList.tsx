@@ -23,6 +23,7 @@ export interface IParmas<T extends object> {
 
 const initCondition: any = {
   limit: 10,
+  size: 10,
   page: 1, 
   sort: { createDate: -1 }
 }
@@ -92,6 +93,7 @@ export default function <T extends object>(initList: T[], fetchApi: IApiList<T>,
     const page = pager ? pager.current : pagination.current
 
     return {
+      size: limit,
       limit ,
       page,
       like,

@@ -39,6 +39,7 @@ const FormList: React.FC<IProps> =  (props) => {
         }
       },
       limit: 1000,
+      size: 1000,
       page: 1,
       sort: { createDate: -1 }
     })
@@ -65,6 +66,7 @@ const FormList: React.FC<IProps> =  (props) => {
         isActive: true
       },
       limit: 1000,
+      size: 1000,
       page: 1,
       sort: { activeTime: 1 }
     }

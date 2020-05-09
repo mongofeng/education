@@ -23,6 +23,7 @@ const Analysis: React.FC<IList> = props => {
     pagination, 
   } = fetchApiHook([], api.getteacherList, {
     limit: 1,
+    size: 1,
     page: 1,
   })
 

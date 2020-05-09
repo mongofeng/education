@@ -87,6 +87,7 @@ function List(props: RouteComponentProps): JSX.Element {
   } = fetchApiHook(initList, api.getCourserList, {
     limit: 10,
     page: 1,
+    size: 10,
     query: {
       status: enums.COURSE_STATUS.open
     },

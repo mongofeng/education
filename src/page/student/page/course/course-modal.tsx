@@ -153,6 +153,7 @@ const List: React.FC<IProps> =  (props) => {
     const page = pager ? pager.current : modalPagination.current
 
     return {
+      size: limit,
       limit ,
       page,
       like,
