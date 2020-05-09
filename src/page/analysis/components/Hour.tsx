@@ -21,9 +21,7 @@ const initList: type.IStuCountByTime[] = [];
 
 const BarCharts: React.FC = props => {
   const initCondition: any = {
-    query: {
-      createDate: new Date().getFullYear()
-    }
+    createDate: new Date().getFullYear()
   };
 
   const [data, setData] = useState(initList);
@@ -33,10 +31,8 @@ const BarCharts: React.FC = props => {
 
   const onDateChange = (date: any, dateString: string) => {
     setParams({
-      query: {
-        ...initCondition.query,
-        createDate: Number(dateString)
-      }
+      ...initCondition,
+      createDate: Number(dateString)
     });
   };
 
@@ -76,7 +72,7 @@ const BarCharts: React.FC = props => {
     };
   });
 
-  const title = `${params.query.createDate}年学时统计`;
+  const title = `${params.createDate}年学时统计`;
 
   return (
     <div className="analysis-card">
