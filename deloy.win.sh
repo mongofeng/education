@@ -26,7 +26,7 @@ echo 部署执行后的文件
 echo 登录操作服务器
 dir=${deloy_root_path}${deloy_path}
 echo "删除目标文件夹下的所有文件:$dir"
-ssh ali "rm -rf $dir"
+ssh -i ~/.ssh/pub_rsa.pem  ${deloy_server} "rm -rf $dir"
 
 echo 拷贝文件夹
 target=${deloy_server}:${dir}
