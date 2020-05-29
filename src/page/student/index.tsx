@@ -5,6 +5,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import Detail from './Detail'
 import Form from './Form'
 import List from './List'
+import Comment from './page/course/comment'
 
 
 class Student extends React.PureComponent<RouteComponentProps> {
@@ -14,7 +15,8 @@ class Student extends React.PureComponent<RouteComponentProps> {
         <Route path={`${this.props.match.path}/add`}  component={Form} />
         <Route path={`${this.props.match.path}/detail/:id`}  component={Detail} />
         <Route path={`${this.props.match.path}/edit/:id`}  component={Form} />
-        <Redirect to={`${this.props.match.path}/list`} />
+        <Route path={`${this.props.match.path}/comment/:id/:courseId`}  component={Comment} />
+        {/* <Redirect to={`${this.props.match.path}/list`} /> */}
       </Switch>)
     }
 }

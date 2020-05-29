@@ -6,15 +6,14 @@ import { accessTokenName } from "../../../../utils/http";
 
 
 const { useState } = React;
-const Search = Input.Search;
-const { RangePicker } = DatePicker;
+const { TextArea } = Input;
 
 const confirm = Modal.confirm;
 
 
 const uploadButton = (
   <div>
-    <div className="ant-upload-text">Upload</div>
+    <div className="ant-upload-text">上传</div>
   </div>
 );
 
@@ -37,59 +36,63 @@ interface IProps {
 
 const List: React.FC<IProps> = (props) => {
 
-    const [
-      fileList,
-      setFileList
-    ] = useState([
-      // {
-      //   uid: '-2',
-      //   name: 'image.png',
-      //   status: 'done',
-      //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      // },
-      // {
-      //   uid: '-3',
-      //   name: 'image.png',
-      //   status: 'done',
-      //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      // },
-      // {
-      //   uid: '-4',
-      //   name: 'image.png',
-      //   status: 'done',
-      //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      // },
-      // {
-      //   uid: '-5',
-      //   name: 'image.png',
-      //   status: 'error',
-      // },
-    ] as UploadFile[])
+  const [
+    fileList,
+    setFileList
+  ] = useState([
+    // {
+    //   uid: '-2',
+    //   name: 'image.png',
+    //   status: 'done',
+    //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    // },
+    // {
+    //   uid: '-3',
+    //   name: 'image.png',
+    //   status: 'done',
+    //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    // },
+    // {
+    //   uid: '-4',
+    //   name: 'image.png',
+    //   status: 'done',
+    //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    // },
+    // {
+    //   uid: '-5',
+    //   name: 'image.png',
+    //   status: 'error',
+    // },
+  ] as UploadFile[])
 
 
-    const [
-      previewVisible,
-      setPreviewVisible
-    ] = useState(false)
-
-
-
-    const [
-      previewTitle,
-      setPreviewTitle
-    ] = useState('')
-
-
-    const [
-      previewImage,
-      setPreviewImage
-    ] = useState('')
+  const [
+    previewVisible,
+    setPreviewVisible
+  ] = useState(false)
 
 
 
-    
+  const [
+    previewTitle,
+    setPreviewTitle
+  ] = useState('')
+
+
+  const [
+    previewImage,
+    setPreviewImage
+  ] = useState('')
+
+
+  const [
+    value,
+    setValue
+  ] = useState('')
+
+
   const handleCancel = () => setPreviewVisible(false);
-// 点击预览时候
+  // 点击预览时候
   const handlePreview = async (file: any) => {
 
     console.log(file, 'test')
@@ -103,13 +106,18 @@ const List: React.FC<IProps> = (props) => {
 
     setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1))
 
- 
+
   };
 
   // 上传后的图片
   const handleChange = ({ fileList }) => {
     console.log('filtList', fileList)
     setFileList([...fileList])
+  };
+
+
+  const onChange = ({ target: { value } }) => {
+    setValue(value)
   };
 
 
@@ -123,7 +131,13 @@ const List: React.FC<IProps> = (props) => {
 
 
   return (
-    <div className="clearfix">
+
+    <div>
+      <div className="main-title clearfix">
+        <h2>课程评论列表</h2>
+      </div>
+      <div className="content-wrap">
+        
       <Upload
         action="/v2/upload/image"
         listType="picture-card"
@@ -142,6 +156,19 @@ const List: React.FC<IProps> = (props) => {
       >
         <img alt="example" style={{ width: '100%' }} src={previewImage} />
       </Modal>
+
+
+      <TextArea
+        value={value}
+        onChange={onChange}
+        placeholder="课程的评论"
+        autosize={{ minRows: 15 }}
+      />
+
+
+      <Button type="primary">提交</Button>
+    </div>
+
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import { Button, DatePicker, Input, message, Modal, Table, Tag } from "antd";
 import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import * as api from "../../../../api/course";
 import * as apiPack from '../../../../api/student-operation'
 import fetchApiHook from '../../../../common/hooks/featchApiList'
@@ -12,7 +12,6 @@ import formatDate from "../../../../utils/format-date";
 import SupplementModal from '../../components/common-sign-modal'
 import CourseModal from './course-modal'
 
-import Comment from './comment'
 
 const { useState } = React;
 const Search = Input.Search;
@@ -95,6 +94,8 @@ type IType = 'sign' | 'supplement'
 const initType: IType = 'supplement'
 
 const List: React.FC<IProps> = (props) => {
+
+  console.log(props, '1111111111')
 
   const {
     loading,
@@ -327,6 +328,16 @@ const List: React.FC<IProps> = (props) => {
               }}>
               签到
             </Button>
+          ),
+          (
+            <Link to={`../comment/${props.id}/${row._id}`} key="4" >       
+              <Button
+              type="primary"
+              icon="edit"
+              size="small">
+              课程评价
+            </Button>
+            </Link>
           )
         ]
       }
@@ -339,7 +350,6 @@ const List: React.FC<IProps> = (props) => {
     <React.Fragment>
 
 
-      <Comment id="1"/>
 
       {/*补签模块*/}
       <SupplementModal
@@ -389,4 +399,4 @@ const List: React.FC<IProps> = (props) => {
   );
 }
 
-export default List;
+export default withRouter(List as any);
