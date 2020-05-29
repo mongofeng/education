@@ -3,7 +3,7 @@ import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } f
 import history from './histroy'
 import {throttle} from './util'
 
-const accessTokenName = "Authorization";
+export const accessTokenName = "Authorization";
 
 // const codeMessage = {
 //   200: '服务器成功返回请求的数据。',

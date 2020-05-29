@@ -12,6 +12,8 @@ import formatDate from "../../../../utils/format-date";
 import SupplementModal from '../../components/common-sign-modal'
 import CourseModal from './course-modal'
 
+import Comment from './comment'
+
 const { useState } = React;
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
@@ -335,6 +337,9 @@ const List: React.FC<IProps> = (props) => {
 
   return (
     <React.Fragment>
+
+
+      <Comment id="1"/>
 
       {/*补签模块*/}
       <SupplementModal
