@@ -1,9 +1,10 @@
-import { Bar } from "ant-design-pro/lib/Charts";
+import { TimelineChart  } from "ant-design-pro/lib/Charts";
 import { DatePicker } from "antd";
 import * as React from "react";
 import * as apiStatics from "../../../api/statistics"
 import * as type from "../../../const/type/student";
 import { find } from "../../../utils/util";
+import Chart from '../../../components/Chart'
 const { useState, useEffect } = React;
 
 const { MonthPicker } = DatePicker;
@@ -67,12 +68,34 @@ const BarCharts: React.FC = props => {
     });
 
     return {
-      ...item,
-      y: val ? val.count : 0
+      x: item.x,
+      y1: val ? val.count : 0
     };
   });
 
   const title = `${params.createDate}年学时统计`;
+
+  // console.log(YearData)
+
+  // 指定图表的配置项和数据
+  var option = {
+    title: {
+        text: 'ECharts 入门示例'
+    },
+    tooltip: {},
+    legend: {
+        data:['销量']
+    },
+    xAxis: {
+        data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+    },
+    yAxis: {},
+    series: [{
+        name: '销量',
+        type: 'bar',
+        data: [5, 20, 36, 10, 10, 20]
+    }]
+};
 
   return (
     <div className="analysis-card">
@@ -80,7 +103,12 @@ const BarCharts: React.FC = props => {
         <MonthPicker onChange={onDateChange} format="YYYY" />
       </div>
 
-      <Bar height={200} title={title} data={YearData} />
+      <div>{title}</div>
+
+      {/* <TimelineChart  height={200} titleMap={{ y1: '学时数量'}} data={YearData} /> */}
+
+      <Chart option={option} height="500px"/>
+
     </div>
   );
 };
