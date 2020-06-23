@@ -1,4 +1,4 @@
-import { TimelineChart  } from "ant-design-pro/lib/Charts";
+import { TimelineChart } from "ant-design-pro/lib/Charts";
 import { DatePicker } from "antd";
 import * as React from "react";
 import * as apiStatics from "../../../api/statistics"
@@ -60,18 +60,6 @@ const BarCharts: React.FC = props => {
     fetchData();
   }, [params]);
 
-  const YearData: any[] = oneYear.map(item => {
-    const { key } = item;
-    const val = find(data, {
-      props: "key",
-      value: key
-    });
-
-    return {
-      x: item.x,
-      y1: val ? val.count : 0
-    };
-  });
 
   const title = `${params.createDate}年学时统计`;
 
@@ -79,23 +67,39 @@ const BarCharts: React.FC = props => {
 
   // 指定图表的配置项和数据
   var option = {
-    title: {
-        text: 'ECharts 入门示例'
-    },
-    tooltip: {},
-    legend: {
-        data:['销量']
+    grid: {
+      left: 20,
+      right: 20,
+      top: 50,
+      bottom: 60,
     },
     xAxis: {
-        data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+      type: 'category',
+      data: oneYear.map(i =>i.x)
     },
-    yAxis: {},
+    tooltip: {
+      show: true,
+      triggerOn: 'mousemove',
+      formatter: '{b}: {c}个课时'
+  },
+    yAxis: {
+      type: 'value'
+    },
     series: [{
-        name: '销量',
-        type: 'bar',
-        data: [5, 20, 36, 10, 10, 20]
+      color: '#1890ff',
+      data: oneYear.map(item => {
+        const { key } = item;
+        const val = find(data, {
+          props: "key",
+          value: key
+        });
+
+        return val ? val.count : 0
+      }
+      ),
+      type: 'line'
     }]
-};
+  };
 
   return (
     <div className="analysis-card">
@@ -105,9 +109,7 @@ const BarCharts: React.FC = props => {
 
       <div>{title}</div>
 
-      {/* <TimelineChart  height={200} titleMap={{ y1: '学时数量'}} data={YearData} /> */}
-
-      <Chart option={option} height="500px"/>
+      <Chart option={option} height="400px" />
 
     </div>
   );
