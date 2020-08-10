@@ -16,8 +16,7 @@ export default function Chart(props) {
   const [echartsInstance, setechartsInstance] = useState(null)
 
   useEffect(() => {
-    console.log('init2')
-    console.log(containerRef.current)
+    console.log(echartsInstance)
     if (echartsInstance && props.option) {
       echartsInstance.setOption(props.option); 
     }
@@ -29,9 +28,6 @@ export default function Chart(props) {
 
 
   useEffect(() => {
-    console.log('init1')
-    console.log(containerRef.current)
-
     // 基于准备好的dom，初始化echarts实例
     const myChart = echarts.init(containerRef.current);
     // // 使用刚指定的配置项和数据显示图表。
@@ -45,10 +41,13 @@ export default function Chart(props) {
       myChart.resize()
     }, 300)
 
+    
+
     window.addEventListener('resize', func, false)
     return () => {
+      console.log(echartsInstance)
       window.removeEventListener('resize', func, false)
-      echartsInstance.dispose()
+      myChart.dispose()
 
     }
   }, [])
