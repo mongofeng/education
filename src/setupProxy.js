@@ -3,7 +3,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 module.exports = function (app) {
     console.log(process.env)
     app.use(createProxyMiddleware('/v2', {
-        target: 'http://yangjin-art.top/v2/',
+        target: 'http://localhost:8110/',
         pathRewrite: {
             "^/v2": "/"
         }
@@ -11,7 +11,7 @@ module.exports = function (app) {
 
 
     app.use(createProxyMiddleware('/wechatV2', {
-        target: 'http://yangjin-art.top/wechat/',
+        target: 'http://localhost:8110/',
         pathRewrite: {
             "^/wechatV2": "/wechat"
         }
