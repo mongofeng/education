@@ -5,7 +5,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import Detail from './Detail'
 import Form from './Form'
 import List from './List'
-import Comment from './page/course/comment'
+import Comment from './page/comment/comment'
 
 
 class Student extends React.PureComponent<RouteComponentProps> {
