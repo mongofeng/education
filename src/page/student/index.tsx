@@ -16,7 +16,7 @@ class Student extends React.PureComponent<RouteComponentProps> {
         <Route path={`${this.props.match.path}/detail/:id`}  component={Detail} />
         <Route path={`${this.props.match.path}/edit/:id`}  component={Form} />
         <Route path={`${this.props.match.path}/comment/:id/:courseId`}  component={Comment} />
-        {/* <Redirect to={`${this.props.match.path}/list`} /> */}
+        <Redirect to={`${this.props.match.path}/list`} />
       </Switch>)
     }
 }
