@@ -1649,26 +1649,6 @@ ansi-styles@^3.2.0, ansi-styles@^3.2.1:
   dependencies:
     color-convert "^1.9.0"
 
-ant-design-pro@^2.3.1:
-  version "2.3.2"
-  resolved "https://registry.npm.taobao.org/ant-design-pro/download/ant-design-pro-2.3.2.tgz#b034d73bac8834792b6d6b74e82ca0a929e515ff"
-  integrity sha1-sDTXO6yINHkrbWt06CygqSnlFf8=
-  dependencies:
-    "@antv/data-set" "^0.10.1"
-    "@babel/runtime" "^7.3.1"
-    bizcharts "^3.4.3"
-    bizcharts-plugin-slider "^2.1.1-beta.1"
-    classnames "^2.2.6"
-    lodash "^4.17.11"
-    lodash-decorators "^6.0.1"
-    memoize-one "^5.0.0"
-    moment "^2.24.0"
-    numeral "^2.0.6"
-    nzh "^1.0.4"
-    omit.js "^1.0.0"
-    path-to-regexp "^3.0.0"
-    prop-types "^15.6.2"
-    react-fittext "^1.0.0"
 
 antd@^3.15.0:
   version "3.23.4"

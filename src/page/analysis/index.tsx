@@ -28,12 +28,6 @@ const Analysis: React.FC<IList> = props => {
     page: 1,
   })
 
-  // useEffect(() => {
-  //   props.onGetList({
-  //     limit: 1,
-  //     page: 1,
-  //   });
-  // }, []);
 
   return (
     <div>
@@ -43,7 +37,7 @@ const Analysis: React.FC<IList> = props => {
 
       <div className="analysis-body">
         <Row gutter={24}>
-          <Col xl={12} lg={12} md={12} sm={24} xs={24}>
+          <Col xl={8} lg={8} md={24} sm={24} xs={24}>
             <div className="analysis-card">
               <div className="fr">
                 <Tooltip title="指标说明">
@@ -64,7 +58,7 @@ const Analysis: React.FC<IList> = props => {
             </div>
           </Col>
 
-          <Col xl={12} lg={12} md={24} sm={24} xs={24}>
+          <Col xl={16} lg={16} md={24} sm={24} xs={24}>
             <StudentStatus />
           </Col>
         </Row>

@@ -16,11 +16,7 @@ module.exports = override(
     libraryDirectory: "es",
     style: true
   }),
-  // fixBabelImports("ant-design-pro", {
-  //   libraryName: "ant-design-pro",
-  //   libraryDirectory: "lib",
-  //   style: true,
-  // }),
+
   addLessLoader({
     javascriptEnabled: true,
     // modifyVars: { "@primary-color": "red" }

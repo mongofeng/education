@@ -1,4 +1,3 @@
-import { TimelineChart } from "ant-design-pro/lib/Charts";
 import { DatePicker } from "antd";
 import * as React from "react";
 import * as apiStatics from "../../../api/statistics"
@@ -67,10 +66,15 @@ const BarCharts: React.FC = props => {
 
   // 指定图表的配置项和数据
   var option = {
+    title: {
+      show: true,
+      text: title,
+    },
+
     grid: {
-      left: 20,
-      right: 20,
+      left: 50,
       top: 50,
+      right: 20,
       bottom: 60,
     },
     xAxis: {
@@ -107,9 +111,7 @@ const BarCharts: React.FC = props => {
         <MonthPicker onChange={onDateChange} format="YYYY" />
       </div>
 
-      <div>{title}</div>
-
-      <Chart option={option} height="400px" />
+      <Chart option={option} height="500px" />
 
     </div>
   );
