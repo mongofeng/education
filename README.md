@@ -80,8 +80,7 @@ const Layout = ({ route }) => (<> {renderRoutes(route.routes)} </>)
 ```
 
 ### 路由懒加载
-为了美妙的用户体验，我们可以使用React.lazy和Suspense组合实现路由懒加载进行优化，以提高首屏加载速度，这样第一次打开的小伙伴就可以减少等待时间啦。
-​	思想是，当我们使用某个组件时，需要一个Suspense来包裹。而React.lazy接受一个函数作为参数，表明我们是动态引入了某个组件
+使用React.lazy和Suspense组合实现路由懒加载进行优化，以提高首屏加载速度，当我们使用某个组件时，需要一个Suspense来包裹。而React.lazy接受一个函数作为参数，表明我们是动态引入了某个组件
 
 ```tsx
 const SuspenseComponent = (Component: React.FC | any) => props => {
@@ -113,3 +112,4 @@ docker-compose up -d
 ```
 ## 参考文档
 - [5858快到家 React+hooks+redux项目实战](https://juejin.im/post/6865495375382806535)
+- [一次react-router + react-transition-group实现转场动画的探索](https://juejin.im/post/6844903818073899022)

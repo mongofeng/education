@@ -11,6 +11,7 @@ import {IUser} from '../const/type/user'
 import * as packageAction from '../store/actions/package'
 import * as studentAction from '../store/actions/student'
 import * as action from "../store/actions/user";
+// import {CSSTransition , TransitionGroup} from 'react-transition-group'
 import "./BaseLayout.scss";
 
 const { Header, Content, Sider } = Layout;
@@ -134,7 +135,20 @@ function BaseLayout (props: IProps): JSX.Element {
           }}>
 
 
-          {renderRoutes(route.routes)}
+        {/* <TransitionGroup className={'router-wrapper'}>
+          <CSSTransition
+            timeout={500}
+            classNames={'fade'}
+            key={props.location.pathname}
+          >
+            {renderRoutes(route.routes)}
+          </CSSTransition>
+        </TransitionGroup> */}
+
+
+
+{renderRoutes(route.routes)}
+          
 
 
 
