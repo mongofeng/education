@@ -111,7 +111,8 @@ export default function () {
             },
             endDate: {
                 $gte: monday,
-            }
+            },
+            status: 1
         },
         sort: { createDate: -1 }
     }
