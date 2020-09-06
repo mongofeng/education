@@ -1,9 +1,9 @@
-import Form, { Avatar, Dropdown, Icon, Layout, Menu, Spin } from "antd";
+import { Avatar, Dropdown, Icon, Layout, Menu } from "antd";
 import { useEffect, useState } from 'react'
 import * as React from "react";
 import { connect } from 'react-redux';
-import { NavLink, Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
-// import { CSSTransition, TransitionGroup } from "react-transition-group";
+import { NavLink, RouteComponentProps } from 'react-router-dom';
+import { renderRoutes } from "react-router-config";
 import { Dispatch } from "redux";
 import SiderMenu from '../components/Sider-Menu'
 import { Navs} from '../config/nav'
@@ -16,22 +16,9 @@ import "./BaseLayout.scss";
 const { Header, Content, Sider } = Layout;
 
 
-const Analysis = React.lazy(() => import(/* webpackChunkName: 'analysis'*/ '../page/analysis'));
-const Course = React.lazy(() => import(/* webpackChunkName: 'course'*/ '../page/course'));
-
-const Hour = React.lazy(() => import(/* webpackChunkName: 'hour'*/ '../page/hour'));
-
-const Student = React.lazy(() => import(/* webpackChunkName: 'student'*/ '../page/student'));
-const Teacher = React.lazy(() => import(/* webpackChunkName: 'teacher'*/ '../page/teacher'));
-
-const StudentHour = React.lazy(() => import(/* webpackChunkName: 'student-hour'*/ '../page/student-hour'));
-
-const Package = React.lazy(() => import(/* webpackChunkName: 'package'*/ '../page/package'));
-
-
-const CourseList = React.lazy(() => import(/* webpackChunkName: 'course-list'*/ '../page/course-list'));
 interface IProps extends RouteComponentProps {
   dispatch: Dispatch
+  route : any
   user: IUser
 }
 
@@ -41,40 +28,6 @@ interface IRoutes {
   routes?: IRoutes[];
 }
 
-const routes: IRoutes[] = [
-  {
-    path: "student",
-    component: Student
-  },
-  {
-    path: "teacher",
-    component: Teacher
-  },
-  {
-    path: "course",
-    component: Course
-  },
-  {
-    path: "analysis",
-    component: Analysis
-  },
-  {
-    path: "hour",
-    component: Hour
-  },
-  {
-    path: "course-list",
-    component: CourseList
-  },
-  {
-    path: "package",
-    component: Package
-  },
-  {
-    path: 'student-hour',
-    component: StudentHour,
-  }
-];
 
 const menu = (
   <Menu className="menu">
@@ -131,6 +84,12 @@ function BaseLayout (props: IProps): JSX.Element {
 
     fetchAllPackage()
   }, [])
+
+
+  const  {route} = props  
+  console.log(route)
+
+
   return (
     <Layout className="base-layout">
       <Sider
@@ -175,20 +134,7 @@ function BaseLayout (props: IProps): JSX.Element {
           }}>
 
 
-          <React.Suspense
-            fallback={<Spin />}>
-            <Switch>
-              {routes && routes.map(item => {
-                return (
-                  <Route
-                    path={`${props.match.path}/${item.path}`}
-                    component={item.component}
-                    key={`${props.match.path}/${item.path}`}/>
-                )
-              })}
-              <Redirect from={props.match.path} to={`${props.match.path}/${routes[0].path}`} />
-            </Switch>
-          </React.Suspense>
+          {renderRoutes(route.routes)}
 
 
 

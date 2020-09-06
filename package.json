@@ -28,6 +28,7 @@
     "react-dom": "^16.8.4",
     "react-hot-loader": "^4.12.1",
     "react-redux": "^7.0.2",
+    "react-router-config": "^5.1.1",
     "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.8",
     "react-transition-group": "^4.0.0",
