@@ -13,7 +13,7 @@ import { ICourse } from "../../../const/type/course";
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
 
-const { useState } = React;
+const { useState, useEffect } = React;
 
 
 const columns: Array<ColumnProps<IStudent>> = [
@@ -76,6 +76,7 @@ const List: React.FC<IProps> =  (props) => {
     loading,
     data,
     pagination,
+    fetchData,
     handleTableChange,
     onDateChange,
     onSearch,
@@ -95,6 +96,11 @@ const List: React.FC<IProps> =  (props) => {
 
 
   const [type, setType] = useState<IType>(initType)
+
+
+  useEffect(() => {
+    fetchData(true)
+  }, [props.ids])
 
 
 

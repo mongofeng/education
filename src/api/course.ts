@@ -66,3 +66,33 @@ export function batchCourse (params: {
 }) {
     return http.post(`course/batchCourse`, params)
 }
+
+
+
+
+/**
+ * 批量添加学生到课程
+ * @param params ids: 学生的id集合， id： 课程的id
+ */
+export function batchCourseByStudent (id, params: {
+    ids: string[]
+}) {
+    return http.post(`/course/batchCourse/${id}`, params)
+}
+
+
+
+
+
+/**
+ * 批量删除课程下的学生
+ * @param params ids: 学生的id集合， id： 课程的id
+ */
+export function delAllCourseStudent (id, params: {
+    ids: string[]
+}) {
+    return http.post(`/course/delAllCourseStudent/${id}`, params)
+}
+
+
+

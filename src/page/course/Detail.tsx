@@ -8,6 +8,7 @@ import {ICourse} from '../../const/type/course'
 import formatDate from "../../utils/format-date";
 import Hour from './views/Hour'
 import Student from './views/Student'
+import StudentList from './views/StudentList'
 const { useState, useEffect } = React;
 const TabPane = Tabs.TabPane;
 
@@ -157,7 +158,7 @@ const  Detail: React.FC<RouteComponentProps<IParams>>  = (props) => {
 
 
 
-          {info && info.studentIds && info.studentIds.length &&
+          {info && info.studentIds  &&
           <Tabs defaultActiveKey='1'  className="mt10">
             <TabPane tab="课程的学员列表" key="1">
               <Student
@@ -165,7 +166,12 @@ const  Detail: React.FC<RouteComponentProps<IParams>>  = (props) => {
                 course={info}/>
             </TabPane>
 
-            <TabPane tab="签到流水" key="2">
+
+            <TabPane tab="添加学生" key="2">
+              <StudentList courseId={id} studentIds={info.studentIds} update={fetchDetail}/>
+            </TabPane>
+
+            <TabPane tab="签到流水" key="3">
               <Hour id={id} />
             </TabPane>
           </Tabs>
