@@ -1,6 +1,5 @@
 import { all, call, fork, put, takeLatest } from 'redux-saga/effects'
 import * as api from '../../api/auth'
-import history from '../../utils/histroy'
 import * as AuthAction from '../actions/auth'
 
 
@@ -10,7 +9,6 @@ export function* Login (action: any) {
     const {data: {data: {token}}} = yield call(api.login, action.params)
     window.localStorage.setItem('Authorization', token)
     yield put(AuthAction.LoginStatus(true))
-    history.push('/base')
   } catch (error) {
     yield put(AuthAction.LoginStatus(false))
   }

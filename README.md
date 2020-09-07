@@ -112,4 +112,5 @@ docker-compose up -d
 ```
 ## 参考文档
 - [5858快到家 React+hooks+redux项目实战](https://juejin.im/post/6865495375382806535)
+- [react + typescript 集成mobx和设置别名alias最新解决方案](https://blog.csdn.net/chrislincp/article/details/97312235)
 - [一次react-router + react-transition-group实现转场动画的探索](https://juejin.im/post/6844903818073899022)

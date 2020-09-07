@@ -1,6 +1,5 @@
 import { notification } from "antd";
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
-import history from './histroy'
 import {throttle} from './util'
 
 export const accessTokenName = "Authorization";
@@ -30,7 +29,7 @@ const notice = throttle(() => {
     message: `token失效`,
     description: "请重新登录页面"
   });
-  history.push('/')
+  window.location.href = process.env.REACT_APP_PUBLIC_UR
 }, 10000)
 
 function interceptors (http: AxiosInstance) {

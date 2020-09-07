@@ -7,8 +7,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from "react-router-dom";
 import { compose, Dispatch } from "redux";
-import * as action from '../../store/actions/auth'
-import style from './Login.module.less'
+import * as api from  '@/api/auth'
+import style from './Login.module.scss'
 
 interface ILoginProps extends FormComponentProps, RouteComponentProps {
   dispatch: Dispatch
@@ -20,10 +20,13 @@ function LoginPage (props: ILoginProps): JSX.Element {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    props.form.validateFields((err: Error, values: any) => {
+    props.form.validateFields(async (err: Error, values: any) => {
       if (!err) {
         console.log('Received values of form: ', values);
-        props.dispatch(action.Loginrequest(values))
+        
+        const {data: {data: {token}}} = await api.login(values)
+          window.localStorage.setItem('Authorization', token)
+          props.history.push('/base/student/list')
       }
     });
   }

@@ -8,7 +8,7 @@ import { Link, RouteComponentProps } from "react-router-dom";
 import { compose, Dispatch } from "redux";
 import * as action from '../../store/actions/auth'
 import * as validator from '../../utils/validator'
-import style from './Register.module.less'
+import style from './Register.module.scss'
 
 interface IRegisterProps extends FormComponentProps,RouteComponentProps  {
   dispatch: Dispatch
