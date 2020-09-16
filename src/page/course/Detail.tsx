@@ -1,3 +1,4 @@
+import fetchTeacherHook from '@/common/hooks/teacher'
 import { Breadcrumb, Button, Col, Divider, Popover, Row, Statistic, Tabs, Tag } from "antd";
 import * as React from "react";
 import { RouteComponentProps } from "react-router-dom";
@@ -13,82 +14,7 @@ const { useState, useEffect } = React;
 const TabPane = Tabs.TabPane;
 
 
-const columns: IField[] = [
-  {
-    label: "课程名称",
-    prop: "name"
-  },
-  {
-    label: "所属老师",
-    prop: "teacherId"
-  },
-  {
-    label: "上课时间",
-    prop: "startTime"
-  },
-  {
-    label: "下课时间",
-    prop: "endTime"
-  },
-  {
-    label: "一天",
-    prop: "time",
-    render: ({data, field}: {data: ICourse, field: string}) => {
-      return (
-        <div>{enums.DAY_LABEL[data[field]]}</div>
-      )
-    }
-  },
-  {
-    label: "状态",
-    prop: "status",
-    render: ({data, field}: {data: ICourse, field: string}) => (
-    <Tag color={data[field] === enums.COURSE_STATUS.open ? "blue" : "red"}>
-      {enums.COURSE_STATUS_LABEL[data[field]]}
-    </Tag>)
-  },
-  {
-    label: "开课时间",
-    prop: "startDate",
-    render: ({data}: {data: Required<ICourse>}) => (
-      <span>{formatDate(data.startDate)}</span>)
-  },
-  {
-    label: "结课时间",
-    prop: "endDate",
-    render: ({data}: {data: Required<ICourse>}) => (
-      <span>{formatDate(data.endDate)}</span>)
-  },
-  {
-    label: "创建时间",
-    prop: "createDate",
-    render: ({data}: {data: Required<ICourse>}) => (
-      <span>{formatDate(new Date(data.createDate))}</span>)
-  },
-  {
-    label: "更新时间",
-    prop: "updateDate",
-    render: ({data}: {data: Required<ICourse>}) => (
-      <span>{formatDate(new Date(data.updateDate))}</span>)
-  },
-  {
-    label: "一周",
-    prop: "day",
-    render: ({data, field}: {data: ICourse, field: string}) => {
-      return (data[field] || []).map((key) => {
-        return (
-          <Tag color="blue" key={key}>
-            {enums.WEEK_LABEL[key]}
-          </Tag>
-        )
-      })
-    }
-  },
-  {
-    label: "备注",
-    prop: "desc"
-  },
-];
+
 
 interface IParams {
   id: string;
@@ -97,9 +23,98 @@ interface IParams {
 const initInfo: Partial<ICourse> = {}
 
 const  Detail: React.FC<RouteComponentProps<IParams>>  = (props) => {
+  const columns: IField[] = [
+    {
+      label: "课程名称",
+      prop: "name"
+    },
+    {
+      label: "所属老师",
+      prop: "teacherId",
+      render: ({data}: {data: Required<ICourse>}) => {
+        if (data.teacherId && teacherObj[data.teacherId]) {
+          return teacherObj[data.teacherId]
+        }
+        return '-'
+      }
+    },
+    {
+      label: "上课时间",
+      prop: "startTime"
+    },
+    {
+      label: "下课时间",
+      prop: "endTime"
+    },
+    {
+      label: "一天",
+      prop: "time",
+      render: ({data, field}: {data: ICourse, field: string}) => {
+        return (
+          <div>{enums.DAY_LABEL[data[field]]}</div>
+        )
+      }
+    },
+    {
+      label: "状态",
+      prop: "status",
+      render: ({data, field}: {data: ICourse, field: string}) => (
+      <Tag color={data[field] === enums.COURSE_STATUS.open ? "blue" : "red"}>
+        {enums.COURSE_STATUS_LABEL[data[field]]}
+      </Tag>)
+    },
+    {
+      label: "开课时间",
+      prop: "startDate",
+      render: ({data}: {data: Required<ICourse>}) => (
+        <span>{formatDate(data.startDate)}</span>)
+    },
+    {
+      label: "结课时间",
+      prop: "endDate",
+      render: ({data}: {data: Required<ICourse>}) => (
+        <span>{formatDate(data.endDate)}</span>)
+    },
+    {
+      label: "创建时间",
+      prop: "createDate",
+      render: ({data}: {data: Required<ICourse>}) => (
+        <span>{formatDate(new Date(data.createDate))}</span>)
+    },
+    {
+      label: "更新时间",
+      prop: "updateDate",
+      render: ({data}: {data: Required<ICourse>}) => (
+        <span>{formatDate(new Date(data.updateDate))}</span>)
+    },
+    {
+      label: "一周",
+      prop: "day",
+      render: ({data, field}: {data: ICourse, field: string}) => {
+        return (data[field] || []).map((key) => {
+          return (
+            <Tag color="blue" key={key}>
+              {enums.WEEK_LABEL[key]}
+            </Tag>
+          )
+        })
+      }
+    },
+    {
+      label: "备注",
+      prop: "desc"
+    },
+  ];
+
+  
   const [info, setInfo] = useState(initInfo);
 
   const id = props.match.params.id
+
+
+  const {
+    teacherObj,
+  } = fetchTeacherHook()
 
 
   const fetchDetail = async () => {
@@ -162,6 +177,7 @@ const  Detail: React.FC<RouteComponentProps<IParams>>  = (props) => {
           <Tabs defaultActiveKey='1'  className="mt10">
             <TabPane tab="课程的学员列表" key="1">
               <Student
+                teacherId={info.teacherId}
                 ids={info.studentIds}
                 course={info}/>
             </TabPane>

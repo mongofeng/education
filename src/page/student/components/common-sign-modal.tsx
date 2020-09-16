@@ -1,10 +1,15 @@
-import { Form, Input, InputNumber, Modal } from 'antd'
+
+import fetchTeacherHook from '@/common/hooks/teacher'
+import { Form, Input, InputNumber, Modal, Select } from 'antd'
 import { FormComponentProps } from "antd/lib/form";
 import * as React from "react";
 const { TextArea } = Input;
+const { Option } = Select;
+
 
 type IProps = FormComponentProps & {
   title: string
+  teacherId: string
   visible: boolean;
   confirmLoading: boolean;
   onCancel: () => void;
@@ -25,6 +30,17 @@ const FormList: React.FC<IProps> = (props) => {
 
 
   const { getFieldDecorator } = form;
+
+
+  const {
+    teacherOptions,
+  } = fetchTeacherHook({
+    query: {status: 1},
+  })
+
+
+
+
 
 
 
@@ -79,6 +95,23 @@ const FormList: React.FC<IProps> = (props) => {
           )}
 
         </Form.Item>
+
+
+        <Form.Item label="所属老师">
+            {getFieldDecorator("teacherId", {
+              initialValue: props.teacherId  ||  '',
+              rules: [{ required: true, message: "请选择所属老师" }]
+            })(
+              <Select>
+                {
+                  teacherOptions.map(item => (
+                    <Option value={item.value} key={item.value}>{item.label}</Option>
+                  ))
+                }
+
+              </Select>
+            )}
+          </Form.Item>
 
 
         <Form.Item label="备注">

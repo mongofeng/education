@@ -1,3 +1,4 @@
+import fetchTeacherHook from '@/common/hooks/teacher'
 import { Breadcrumb, Button, Col, Divider, Icon, message, Modal, Popover, Row, Statistic, Tabs, Tag } from "antd";
 import * as React from "react";
 import { RouteComponentProps } from "react-router-dom";
@@ -26,72 +27,81 @@ interface IParams {
 }
 
 
-const columns: IField[] = [
-  {
-    label: "姓名",
-    prop: "name",
-  },
-  {
-    label: "生日",
-    prop: "birthday",
-  },
-  {
-    label: "联系人",
-    prop: "contacts",
-  },
-  {
-    label: "性别",
-    prop: "sex",
-    render: ({ data, field }: { data: IStudent, field: string }) => <span>{enums.SEX_LABEL[data[field]]}</span>
-  },
-  {
-    label: "年龄",
-    prop: "age",
-    render: ({ data, field }: { data: IStudent, field: string }) => <span>{getAge(data.birthday)}</span>
-  },
-  {
-    label: "手机号码",
-    prop: "phone"
-  },
-  {
-    label: "地址",
-    prop: "address",
-    render: ({ data }: { data: IStudent }) => {
-      const { province, city, region, address } = data
-      const adress = `${province}${city}${region}${address}`
-      return (
-        <span>
-          {adress}
-        </span>
-      )
-    }
-  },
-  {
-    label: "teacherId",
-    prop: "teacherId",
-  },
-  {
-    label: "状态",
-    prop: "status",
-    render: ({ data, field }: { data: IStudent, field: string }) => (
-      <Tag color={data[field] === enums.STUDENT_STATUS.reading ? "blue" : "red"}>
-        {enums.STUDENT_STATUS_LABEL[data[field]]}
-      </Tag>)
-  },
-  {
-    label: "创建时间",
-    prop: "createDate",
-    render: ({ data }: { data: Required<IStudent> }) => <span>{formatDate(new Date(data.createDate))}</span>
-  },
-  {
-    label: "创建时间",
-    prop: "updateDate",
-    render: ({ data }: { data: Required<IStudent> }) => <span>{formatDate(new Date(data.updateDate))}</span>
-  },
-];
+
 
 
 function Detail(props: RouteComponentProps<IParams>): JSX.Element {
+  const columns: IField[] = [
+    {
+      label: "姓名",
+      prop: "name",
+    },
+    {
+      label: "生日",
+      prop: "birthday",
+    },
+    {
+      label: "联系人",
+      prop: "contacts",
+    },
+    {
+      label: "性别",
+      prop: "sex",
+      render: ({ data, field }: { data: IStudent, field: string }) => <span>{enums.SEX_LABEL[data[field]]}</span>
+    },
+    {
+      label: "年龄",
+      prop: "age",
+      render: ({ data, field }: { data: IStudent, field: string }) => <span>{getAge(data.birthday)}</span>
+    },
+    {
+      label: "手机号码",
+      prop: "phone"
+    },
+    {
+      label: "地址",
+      prop: "address",
+      render: ({ data }: { data: IStudent }) => {
+        const { province, city, region, address } = data
+        const adress = `${province}${city}${region}${address}`
+        return (
+          <span>
+            {adress}
+          </span>
+        )
+      }
+    },
+    {
+      label: "所属老师",
+      prop: "teacherId",
+      render: ({ data, field }: { data: IStudent, field: string }) => {
+        if (data.teacherId && teacherObj[data.teacherId]) {
+          return teacherObj[data.teacherId]
+        }
+        return '-'
+      }
+    },
+    {
+      label: "状态",
+      prop: "status",
+      render: ({ data, field }: { data: IStudent, field: string }) => (
+        <Tag color={data[field] === enums.STUDENT_STATUS.reading ? "blue" : "red"}>
+          {enums.STUDENT_STATUS_LABEL[data[field]]}
+        </Tag>)
+    },
+    {
+      label: "创建时间",
+      prop: "createDate",
+      render: ({ data }: { data: Required<IStudent> }) => <span>{formatDate(new Date(data.createDate))}</span>
+    },
+    {
+      label: "创建时间",
+      prop: "updateDate",
+      render: ({ data }: { data: Required<IStudent> }) => <span>{formatDate(new Date(data.updateDate))}</span>
+    },
+  ];
+
+
   const [info, setInfo] = React.useState({} as IStudent);
   const [wechat, setWechat] = React.useState({} as {[key in string]: string});
   const [staticTotal, setStaticTotal] = React.useState({
@@ -103,6 +113,11 @@ function Detail(props: RouteComponentProps<IParams>): JSX.Element {
     activiteCount: 0,
     overdueCount: 0,
   })
+
+
+  const {
+    teacherObj,
+  } = fetchTeacherHook()
 
   const fetchDetail = async () => {
     const { data: { data } } = await api.getStudent(props.match.params.id);

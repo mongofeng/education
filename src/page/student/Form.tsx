@@ -1,3 +1,4 @@
+import fetchTeacherHook from '@/common/hooks/teacher'
 import {
   BackTop,
   Breadcrumb,
@@ -14,12 +15,10 @@ import { FormComponentProps } from "antd/lib/form";
 import * as React from "react";
 import { Link, RouteComponentProps } from 'react-router-dom';
 import * as api from "../../api/student";
-import * as apiTeacher from '../../api/teacher'
+import fetchFormHook from '../../common/hooks/fetchForm'
 import {IStudent} from '../../const/type/student'
 import * as validator from '../../utils/validator'
 import Location from '.././../components/Location'
-import fetchFormHook from '../../common/hooks/fetchForm'
-import { useEffect, useState } from 'react'
 const moment = require('moment')
 const { TextArea } = Input;
 const { Option } = Select;
@@ -41,31 +40,11 @@ const FormCompent: React.FC<IFormProps> = (props)=> {
     setLoading
   } = fetchFormHook(initForm, api.getStudent, props.match.params.id)
 
-  const [options, setOptions] = useState([])
-
-
-  useEffect(() => {
-    fetchTeacher()
-  }, [])
-
-
-  const fetchTeacher = async () => {
-    const condition = {
-      page: 1,
-      offset: 1000
-    }
-    const {
-      data: {
-        data: { list }
-      }
-    } = await apiTeacher.getteacherList(condition)
-    setOptions(list.map(item => {
-      return {
-        label: item.name,
-        value: item._id
-      }
-    }))
-  }
+  const {
+    teacherOptions,
+  } = fetchTeacherHook({
+    query: {status: 1},
+  })
 
 
   /**
@@ -251,7 +230,7 @@ const FormCompent: React.FC<IFormProps> = (props)=> {
             })(
               <Select>
                 {
-                  options.map(item => (
+                  teacherOptions.map(item => (
                     <Option value={item.value} key={item.value}>{item.label}</Option>
                   ))
                 }

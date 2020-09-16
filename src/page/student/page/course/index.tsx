@@ -24,6 +24,7 @@ const initList: ICourse[] = [];
 
 // 模态框的加载
 const initModalState = {
+  teacherId: '',
   visible: false,
   confirmLoading: false,
 }
@@ -203,7 +204,8 @@ const List: React.FC<IProps> = (props) => {
     setcourseRow(row)
     setSupplementState({
       ...supplementState,
-      visible: true
+      visible: true,
+      teacherId: row.teacherId,
     })
   }
 
@@ -220,7 +222,8 @@ const List: React.FC<IProps> = (props) => {
     } = values
     const {
       _id,
-      name
+      name,
+      teacherId,
     } = courseRow
 
 
@@ -232,6 +235,7 @@ const List: React.FC<IProps> = (props) => {
     try {
       if (type === 'supplement') {
         const params: ISupplement = {
+          teacherId,
           desc,
           num,
           course: [
@@ -255,6 +259,7 @@ const List: React.FC<IProps> = (props) => {
         message.success(`${str}, 成功推送微信消息${total}条`)
       } else if (type === 'sign') {
         const params: ISign = {
+          teacherId,
           desc,
           num,
           course: [

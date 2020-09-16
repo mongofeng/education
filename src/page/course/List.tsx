@@ -1,3 +1,4 @@
+import fetchTeacherHook from '@/common/hooks/teacher'
 import { Button, DatePicker, Icon, Input, message, Modal, Table, Tabs, Tag } from 'antd'
 import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
@@ -15,65 +16,77 @@ const Search = Input.Search;
 const { RangePicker } = DatePicker;
 const confirm = Modal.confirm;
 
-const columns: Array<ColumnProps<ICourse>> = [
-  {
-    title: "课程",
-    dataIndex: "name",
-    render: (val: string, row: any) => {
-      return <Link to={`detail/${row._id}`}>{val}</Link>;
-    }
-  },
-  {
-    title: "一周",
-    dataIndex: "day",
-    render: (days: enums.WEEK[]) => {
-      return days.map((key) => {
-        return (
-          <Tag color="blue" key={key}>
-            {enums.WEEK_LABEL[key]}
-          </Tag>
-        )
-      })
-    },
-  },
-  {
-    title: "上课时间",
-    dataIndex: "startTime"
-  },
-  {
-    title: "开课时间",
-    dataIndex: "startDate",
-    render: (date: number) => <span>{formatDate(new Date(date), {
-      format: 'yyyy-MM-dd',
-    })}</span>
-  },
-  {
-    title: "结课时间",
-    dataIndex: "endDate",
-    render: (date: number) => <span>{formatDate(new Date(date), {
-      format: 'yyyy-MM-dd',
-    })}</span>
-  },
 
-  {
-    title: "创建时间",
-    dataIndex: "createDate",
-    sorter: true,
-    render: (date: string) => <span>{formatDate(new Date(date))}</span>
-  },
-  {
-    title: "状态",
-    dataIndex: "status",
-    render: (val: string) => {
-      return enums.COURSE_STATUS_LABEL[val]
-    }
-  },
-];
 
 const initList: ICourse[] = [];
 
 
 function List(props: RouteComponentProps): JSX.Element {
+
+  const columns: Array<ColumnProps<ICourse>> = [
+    {
+      title: "课程",
+      dataIndex: "name",
+      render: (val: string, row: any) => {
+        return <Link to={`detail/${row._id}`}>{val}</Link>;
+      }
+    },
+    {
+      title: "老师",
+      dataIndex: "teacherId",
+      render: (teacherId: string) => {
+        if (teacherId && teacherObj[teacherId]) {
+          return teacherObj[teacherId]
+        }
+        return '-'
+      }
+    },
+    {
+      title: "一周",
+      dataIndex: "day",
+      render: (days: enums.WEEK[]) => {
+        return days.map((key) => {
+          return (
+            <Tag color="blue" key={key}>
+              {enums.WEEK_LABEL[key]}
+            </Tag>
+          )
+        })
+      },
+    },
+    {
+      title: "上课时间",
+      dataIndex: "startTime"
+    },
+    {
+      title: "开课时间",
+      dataIndex: "startDate",
+      render: (date: number) => <span>{formatDate(new Date(date), {
+        format: 'yyyy-MM-dd',
+      })}</span>
+    },
+    {
+      title: "结课时间",
+      dataIndex: "endDate",
+      render: (date: number) => <span>{formatDate(new Date(date), {
+        format: 'yyyy-MM-dd',
+      })}</span>
+    },
+  
+    {
+      title: "创建时间",
+      dataIndex: "createDate",
+      sorter: true,
+      render: (date: string) => <span>{formatDate(new Date(date))}</span>
+    },
+    {
+      title: "状态",
+      dataIndex: "status",
+      render: (val: string) => {
+        return enums.COURSE_STATUS_LABEL[val]
+      }
+    },
+  ];
 
   const {
     loading,
@@ -93,6 +106,11 @@ function List(props: RouteComponentProps): JSX.Element {
     },
     sort: { createDate: -1 }
   })
+
+
+  const {
+    teacherObj,
+  } = fetchTeacherHook()
 
 
 
@@ -145,8 +163,7 @@ function List(props: RouteComponentProps): JSX.Element {
               size="small"
               onClick={() => {
                 onDel(row._id)
-              }} >
-            </Button>)
+              }} />)
           ]
         }
         return (<Link to={`edit/${row._id}`} key='1'>

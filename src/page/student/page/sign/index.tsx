@@ -70,6 +70,7 @@ const initList: ICourse[] = [];
 
 // 模态框的加载
 const initModalState = {
+    teacherId: '',
     visible: false,
     confirmLoading: false,
 }
@@ -119,7 +120,8 @@ const List: React.FC<IProps> = (props) => {
         setcourseRow(row)
         setSupplementState({
             ...supplementState,
-            visible: true
+            visible: true,
+            teacherId: row.teacherId,
         })
     }
 
@@ -137,10 +139,12 @@ const List: React.FC<IProps> = (props) => {
         } = values
         const {
             _id,
-            name
+            name,
+            teacherId
         } = courseRow
 
         const params: ISign = {
+            teacherId,
             desc,
             num,
             course: [

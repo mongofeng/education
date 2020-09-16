@@ -1,3 +1,5 @@
+
+import fetchTeacherHook from '@/common/hooks/teacher'
 import { Button, DatePicker, Icon, Input, message, Modal, Table, Tag } from 'antd'
 import { ColumnProps } from 'antd/lib/table'
 import * as React from 'react'
@@ -19,8 +21,6 @@ const confirm = Modal.confirm;
 
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
-
-
 
 
 const initList: IHour[] = [];
@@ -155,6 +155,17 @@ function List(props: IProps): JSX.Element {
     },
 
     {
+      title: "所属老师",
+      dataIndex: "teacherId",
+      render: (teacherId: string) => {
+        if (teacherId && teacherObj[teacherId]) {
+          return teacherObj[teacherId]
+        }
+        return '-'
+      }
+    },
+
+    {
       title: "课时数量",
       dataIndex: "num",
     },
@@ -195,6 +206,8 @@ function List(props: IProps): JSX.Element {
       sorter: true,
       render: (date: string) => formatDate(new Date(date))
     },
+
+    
     {
       title: "操作",
       render: (val: string, row: any) => {
@@ -240,8 +253,13 @@ function List(props: IProps): JSX.Element {
   } = fetchApiHook(initList, api.getHourrList)
 
 
+  const {
+    teacherObj,
+  } = fetchTeacherHook()
 
 
+
+  
 
 
 

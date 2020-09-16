@@ -11,6 +11,7 @@ export interface ICourse {
 }
 
 export interface ISign {
+  teacherId: string
   studentId: string
   course: ICourse[]
   num: number

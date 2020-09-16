@@ -1,15 +1,15 @@
-import { DatePicker, Input, Table, Button, message } from "antd";
+import { Button, DatePicker, Input, message, Table } from "antd";
 import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
 import { Link } from "react-router-dom";
 import * as api from "../../../api/student";
-import ActionModal from '../../student/components/common-sign-modal'
-import * as enums from "../../../const/enum";
-import { IStudent } from "../../../const/type/student";
 import * as apiPack from '../../../api/student-operation'
-import { ISign, ISupplement } from '../../../const/type/student-operation'
 import fetchApiHook from '../../../common/hooks/featchApiList'
+import * as enums from "../../../const/enum";
 import { ICourse } from "../../../const/type/course";
+import { IStudent } from "../../../const/type/student";
+import { ISign, ISupplement } from '../../../const/type/student-operation'
+import ActionModal from '../../student/components/common-sign-modal'
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
 
@@ -61,12 +61,14 @@ const initType: IType = 'supplement'
 
 // 模态框的加载
 const initModalState = {
+  teacherId: '',
   visible: false,
   confirmLoading: false,
 }
 
 interface IProps {
   ids: string[],
+  teacherId: string
   course: Partial<ICourse>
 }
 
@@ -114,7 +116,8 @@ const List: React.FC<IProps> =  (props) => {
     setStudentId(row._id)
     setSupplementState({
       ...supplementState,
-      visible: true
+      visible: true,
+      teacherId: props.teacherId
     })
   }
 
@@ -127,7 +130,8 @@ const List: React.FC<IProps> =  (props) => {
   const handleSupplementSumbit = async (values) => {
     const {
       num,
-      desc
+      desc,
+      teacherId
     } = values
     const {
       _id,
@@ -143,6 +147,7 @@ const List: React.FC<IProps> =  (props) => {
     try {
       if (type === 'supplement') {
         const params: ISupplement = {
+          teacherId,
           desc,
           num,
           course: [
@@ -152,7 +157,7 @@ const List: React.FC<IProps> =  (props) => {
               count: num
             }
           ],
-          studentId: studentId
+          studentId
         }
         const {data: {data: result}} = await apiPack.supplement(params)
 
@@ -166,6 +171,7 @@ const List: React.FC<IProps> =  (props) => {
         message.success(`${str}, 成功推送微信消息${total}条`)
       } else if (type === 'sign') {
         const params: ISign = {
+          teacherId,
           desc,
           num,
           course: [
@@ -175,7 +181,7 @@ const List: React.FC<IProps> =  (props) => {
               count: num
             }
           ],
-          studentId: studentId,
+          studentId,
           courseName: name,
         }
         const {data: {data: result}} = await apiPack.sign(params)
