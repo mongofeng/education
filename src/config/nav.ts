@@ -59,5 +59,9 @@ export const Navs: INavs[] = [
   {
     label: '课程包',
     value: 'package'
+  },
+  {
+    label: '试课课时',
+    value: 'trial-class-record'
   }
 ]

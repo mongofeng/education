@@ -38,6 +38,10 @@ const Package = React.lazy(() => import(/* webpackChunkName: 'package'*/ '../pag
 const PackageForm = React.lazy(() => import(/* webpackChunkName: 'package'*/ '../page/package/Form'));
 
 
+const TrialClassRecord = React.lazy(() => import(/* webpackChunkName: 'trial-class-record'*/ '../page/trial-class-record/List'));
+const TrialClassRecordForm = React.lazy(() => import(/* webpackChunkName: 'trial-class-record'*/ '../page/trial-class-record/Form'));
+
+
 
 const User = React.lazy(() => import(/* webpackChunkName: 'User'*/ '../layout/UserLayout'));
 import LoginPage from "../page/user/Login";
@@ -182,6 +186,19 @@ const hourRoutes = [
 ]
 
 
+const TrialClassRecordRoutes = [
+  // trial-class-record
+  {
+    path: "list",
+    component:SuspenseComponent( TrialClassRecord)
+  },
+  {
+    path: "add",
+    component:SuspenseComponent( TrialClassRecordForm)
+  },
+]
+
+
 
 
 
@@ -247,7 +264,8 @@ export default [
       ...handlePrefix({routes: hourRoutes, prefix: '/base/hour/'}),
       RedirectRoute({path: '/base/hour', redirect: '/list'}),
 
-      
+      ...handlePrefix({routes: TrialClassRecordRoutes, prefix: '/base/trial-class-record/'}),
+      RedirectRoute({path: '/base/trial-class-record', redirect: '/list'}),
       
 
 
