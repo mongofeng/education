@@ -7,6 +7,7 @@ const BaseLayout = React.lazy(() => import(/* webpackChunkName: 'BaseLayout'*/ '
 
 const Analysis = React.lazy(() => import(/* webpackChunkName: 'analysis'*/ '../page/analysis'));
 const AnalysisTeacher = React.lazy(() => import(/* webpackChunkName: 'analysis'*/ '../page/analysis/teacher'));
+const AnalysisTtrialClassHourCount = React.lazy(() => import(/* webpackChunkName: 'analysis'*/ '../page/analysis/trial-class-hour-count'));
 
 
 const CourseLists = React.lazy(() => import(/* webpackChunkName: 'course'*/ '../page/course/List'));
@@ -199,6 +200,22 @@ const TrialClassRecordRoutes = [
 ]
 
 
+const analysisRoutes = [
+  {
+    path: "total",
+    component: SuspenseComponent(Analysis)
+  },
+  {
+    path: 'v-teacher',
+    component: SuspenseComponent(AnalysisTeacher)
+  },
+  {
+    path: 'trial-class-teacher',
+    component: SuspenseComponent(AnalysisTtrialClassHourCount)
+  },
+]
+
+
 
 
 
@@ -232,15 +249,10 @@ export default [
         exact: true,
         render: () => < Redirect to={"/base/student"} />,
       },
+
+      ...handlePrefix({routes: analysisRoutes, prefix: '/base/analysis/'}),
       
-      {
-        path: "/base/analysis/total",
-        component: SuspenseComponent(Analysis)
-      },
-      {
-        path: '/base/analysis/v-teacher',
-        component: SuspenseComponent(AnalysisTeacher)
-      },
+      
       {
         path: '/base/v-student-hour',
         component:SuspenseComponent(StudentHour),

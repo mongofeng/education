@@ -29,6 +29,10 @@ export const Navs: INavs[] = [
       {
         label: '教师分析',
         value: 'v-teacher',
+      },
+      {
+        label: '试课分析',
+        value: 'trial-class-teacher'
       }
     ],
   },

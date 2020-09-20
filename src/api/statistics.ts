@@ -21,6 +21,17 @@ export function hourCountByTime (params: QueryCondition<IStuCountByTime>): ApiRe
 }
 
 
+
+/**
+ * 获取每月学生的试课课时增长
+ * @param params 
+ */
+export function trialClassHourCount (params: QueryCondition<IStuCountByTime>): ApiResponse<IStuCountByTime[]> {
+  return http.post(`statistics/trial-class-hour-count`, params)
+}
+
+
+
 /**
  * 学生毕业和在读的统计
  * @param params 

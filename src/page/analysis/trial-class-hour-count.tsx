@@ -14,13 +14,10 @@ const Analysis: React.FC = props => {
   })
 
 
-
-
-
   return (
     <div>
       <div className="main-title clearfix">
-        <h2>教师课时统计分析页</h2>
+        <h2>试课分析页</h2>
       </div>
 
       <div className="analysis-body">
@@ -28,7 +25,7 @@ const Analysis: React.FC = props => {
           {teacherOptions.map(i => {
             return (
               <Col md={24} sm={24} xs={24} key={i.value}>
-                <HourBar  teacher={i}/>
+                <HourBar  teacher={i} isTrial={true}/>
               </Col>
             )
           })}

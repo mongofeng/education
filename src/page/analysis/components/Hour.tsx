@@ -23,7 +23,8 @@ interface IProps {
   teacher?: {
     label: string,
     value: string
-  }
+  },
+  isTrial?: boolean
 }
 
 const BarCharts: React.FC<IProps> = props => {
@@ -58,9 +59,10 @@ const BarCharts: React.FC<IProps> = props => {
         setParams(initCondition);
       }
       setLoading(true);
+      const func = props.isTrial ? apiStatics.trialClassHourCount : apiStatics.hourCountByTime
       const {
         data: { data: apiData }
-      } = await apiStatics.hourCountByTime(params);
+      } = await func(params);
       setData(apiData);
       setLoading(false);
     } catch (error) {
