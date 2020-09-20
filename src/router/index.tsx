@@ -1,11 +1,12 @@
-import * as React from 'react';
 import { Spin } from 'antd';
-import { Redirect } from 'react-router-dom';
+import * as React from 'react';
 import { renderRoutes } from 'react-router-config';
+import { Redirect } from 'react-router-dom';
 const { Suspense } = React
 const BaseLayout = React.lazy(() => import(/* webpackChunkName: 'BaseLayout'*/ '../layout/BaseLayout'));
 
 const Analysis = React.lazy(() => import(/* webpackChunkName: 'analysis'*/ '../page/analysis'));
+const AnalysisTeacher = React.lazy(() => import(/* webpackChunkName: 'analysis'*/ '../page/analysis/teacher'));
 
 
 const CourseLists = React.lazy(() => import(/* webpackChunkName: 'course'*/ '../page/course/List'));
@@ -47,8 +48,8 @@ import Register from "../page/user/Register";
 
 const SuspenseComponent = (Component: React.FC | any) => props => {
   return (
-    <Suspense fallback={<Spin></Spin>}>
-      <Component {...props} > </Component>
+    <Suspense fallback={<Spin/>}>
+      <Component {...props} />
     </Suspense>
   )
 }
@@ -69,6 +70,15 @@ function handlePrefix <T extends IPath> ({routes, prefix}: {routes: T[], prefix:
       
     }
   })
+}
+
+
+function RedirectRoute ({path, redirect}: {path: string, redirect: string}) {
+  return {
+    path,
+    exact: true,
+    render: () => < Redirect to={`${path}${redirect}`} />,
+  };
 }
 
 
@@ -172,6 +182,10 @@ const hourRoutes = [
 ]
 
 
+
+
+
+
 export default [
   {
     path: '/',
@@ -203,15 +217,19 @@ export default [
       },
       
       {
-        path: "/base/analysis",
+        path: "/base/analysis/total",
         component: SuspenseComponent(Analysis)
       },
       {
-        path: '/base/student-hour',
+        path: '/base/analysis/v-teacher',
+        component: SuspenseComponent(AnalysisTeacher)
+      },
+      {
+        path: '/base/v-student-hour',
         component:SuspenseComponent(StudentHour),
       },
       {
-        path: "/base/course-list",
+        path: "/base/v-course-list",
         component:SuspenseComponent( CourseList)
       },
 
@@ -219,10 +237,15 @@ export default [
   
 
       ...handlePrefix({routes: studentRoutes, prefix: '/base/student/'}),
+      RedirectRoute({path: '/base/student', redirect: '/list'}),
       ...handlePrefix({routes: teacherRoutes, prefix: '/base/teacher/'}),
+      RedirectRoute({path: '/base/teacher', redirect: '/list'}),
       ...handlePrefix({routes: courseRoutes, prefix: '/base/course/'}),
+      RedirectRoute({path: '/base/course', redirect: '/list'}),
       ...handlePrefix({routes: packageRoutes, prefix: '/base/package/'}),
+      RedirectRoute({path: '/base/package', redirect: '/list'}),
       ...handlePrefix({routes: hourRoutes, prefix: '/base/hour/'}),
+      RedirectRoute({path: '/base/hour', redirect: '/list'}),
 
       
       

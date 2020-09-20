@@ -6,8 +6,8 @@ import { NavLink, RouteComponentProps } from 'react-router-dom';
 import { renderRoutes } from "react-router-config";
 import { Dispatch } from "redux";
 import SiderMenu from '../components/Sider-Menu'
-import { Navs} from '../config/nav'
-import {IUser} from '../const/type/user'
+import { Navs } from '../config/nav'
+import { IUser } from '../const/type/user'
 import * as packageAction from '../store/actions/package'
 import * as studentAction from '../store/actions/student'
 import * as action from "../store/actions/user";
@@ -19,7 +19,7 @@ const { Header, Content, Sider } = Layout;
 
 interface IProps extends RouteComponentProps {
   dispatch: Dispatch
-  route : any
+  route: any
   user: IUser
 }
 
@@ -46,20 +46,20 @@ const menu = (
     </Menu.Item>
     <Menu.Divider />
     <Menu.Item key="3">
-    <NavLink to='/'>
-      <Icon type="logout" />
-      <span>退出登录</span>
-    </NavLink>
+      <NavLink to='/'>
+        <Icon type="logout" />
+        <span>退出登录</span>
+      </NavLink>
 
     </Menu.Item>
   </Menu>
 );
 
 
-function BaseLayout (props: IProps): JSX.Element {
+function BaseLayout(props: IProps): JSX.Element {
   const [collapsed, setCollapsed] = useState(false)
 
-  const fetchAllStudent  = () => {
+  const fetchAllStudent = () => {
     props.dispatch(studentAction.FetchList({
       limit: 10000,
       size: 10000,
@@ -87,14 +87,14 @@ function BaseLayout (props: IProps): JSX.Element {
   }, [])
 
 
-  const  {route} = props  
+  const { route } = props
   console.log(route)
 
 
   return (
     <Layout className="base-layout">
       <Sider
-        style={{height: '100vh'}}
+        style={{ height: '100vh' }}
         trigger={null}
         collapsible={true}
         collapsed={collapsed}>
@@ -135,7 +135,7 @@ function BaseLayout (props: IProps): JSX.Element {
           }}>
 
 
-        {/* <TransitionGroup className={'router-wrapper'}>
+          {/* <TransitionGroup className={'router-wrapper'}>
           <CSSTransition
             timeout={500}
             classNames={'fade'}
@@ -147,8 +147,8 @@ function BaseLayout (props: IProps): JSX.Element {
 
 
 
-{renderRoutes(route.routes)}
-          
+          {renderRoutes(route.routes)}
+
 
 
 
@@ -162,5 +162,5 @@ function BaseLayout (props: IProps): JSX.Element {
   );
 }
 
-export default connect(({user}: {user: IUser}) => ({user}))(BaseLayout);
+export default connect(({ user }: { user: IUser }) => ({ user }))(BaseLayout);
 

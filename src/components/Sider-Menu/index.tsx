@@ -1,7 +1,7 @@
 import { Icon, Menu } from "antd";
 import * as React from "react";
 import { NavLink } from "react-router-dom";
-import {hasChildren} from '../../config/nav';
+import { hasChildren } from '../../config/nav';
 import { INavs } from '../../types/common';
 import style from './index.module.scss'
 const SubMenu = Menu.SubMenu;
@@ -12,15 +12,18 @@ interface IProps {
     path: string
     history: any
 }
+
+
+
 const SiderMenu: React.FC<IProps> = (props) => {
 
     const { nav, matchUrl, path: pathname } = props
 
-     /**
-      * 
-      * @param path 当前的完整地址
-      * @param baseUrl 当前匹配的基本地址
-      */
+    /**
+     * 
+     * @param path 当前的完整地址
+     * @param baseUrl 当前匹配的基本地址
+     */
     const heightLightMenu = (path: string, baseUrl: string) => {
         // !!!!!!两个\\当做一个\
         const regx = new RegExp(`\\${baseUrl}\\/(\\w+)\\/?([\\w-]*)\\/?`)
@@ -37,7 +40,7 @@ const SiderMenu: React.FC<IProps> = (props) => {
 
     }
 
-    const { initSelectedKeys, initOpenKeys } = heightLightMenu(pathname, matchUrl )
+    const { initSelectedKeys, initOpenKeys } = heightLightMenu(pathname, matchUrl)
 
     return (
         <Menu
@@ -47,12 +50,19 @@ const SiderMenu: React.FC<IProps> = (props) => {
             defaultSelectedKeys={initSelectedKeys}
             defaultOpenKeys={initOpenKeys}
             onClick={(e: any) => {
-                const url = `${matchUrl}/${e.key}/list`
-                console.log(url, pathname, props)
+                console.error('点击事件');
+                const urls = [...e.keyPath]
+                urls.reverse()
+                urls.unshift(matchUrl)
+                console.log(urls)
+ 
+
+                const url = urls.join('/')
+                // console.log(url, pathname, props)
                 if (!pathname.includes(url)) {
                     props.history.push(url);
                 } else {
-                    console.log('同一url下面')
+                    console.log('同一url下面, 不跳转')
                 }
             }}>
 
@@ -66,7 +76,7 @@ const SiderMenu: React.FC<IProps> = (props) => {
                                 <span>{item.label}</span></span>}>
                             {item.children.map((child) => {
                                 return <Menu.Item key={child.value}>
-                                    <NavLink to={`${matchUrl}/${item.value}/${child.value}`}>{child.label}</NavLink>
+                                    {child.label}
                                 </Menu.Item>
                             })}
                         </SubMenu>
@@ -78,11 +88,9 @@ const SiderMenu: React.FC<IProps> = (props) => {
                         <Icon type={item.icon || "pie-chart"} />
                         <span >
                             {item.label}
-                            {/* <NavLink to={`${matchUrl}/${item.value}`} activeClassName="selected">
-                                {item.label}
-                            </NavLink> */}
+
                         </span>
-                        
+
                     </Menu.Item>
                 )
             })}

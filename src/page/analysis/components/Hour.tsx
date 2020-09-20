@@ -1,9 +1,9 @@
 import { DatePicker } from "antd";
 import * as React from "react";
 import * as apiStatics from "../../../api/statistics"
+import Chart from '../../../components/Chart'
 import * as type from "../../../const/type/student";
 import { find } from "../../../utils/util";
-import Chart from '../../../components/Chart'
 const { useState, useEffect } = React;
 
 const { MonthPicker } = DatePicker;
@@ -19,10 +19,23 @@ for (let i = 0; i < 12; i += 1) {
 
 const initList: type.IStuCountByTime[] = [];
 
-const BarCharts: React.FC = props => {
+interface IProps {
+  teacher?: {
+    label: string,
+    value: string
+  }
+}
+
+const BarCharts: React.FC<IProps> = props => {
+  console.log(">>>>>", props.teacher)
   const initCondition: any = {
     createDate: new Date().getFullYear()
   };
+  let prefix = ''
+  if (props.teacher && props.teacher.value) {
+    initCondition.teacherId = props.teacher.value
+    prefix = props.teacher.label + ":"
+  }
 
   const [data, setData] = useState(initList);
   const [loading, setLoading] = useState(false);
@@ -60,12 +73,12 @@ const BarCharts: React.FC = props => {
   }, [params]);
 
 
-  const title = `${params.createDate}年学时统计`;
+  const title = `${prefix}${params.createDate}年学时统计`;
 
   // console.log(YearData)
 
   // 指定图表的配置项和数据
-  var option = {
+  const option = {
     title: {
       show: true,
       text: title,

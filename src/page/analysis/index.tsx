@@ -20,8 +20,8 @@ interface IList extends RouteComponentProps {
 
 const Analysis: React.FC<IList> = props => {
 
-  const { 
-    pagination, 
+  const {
+    pagination,
   } = fetchApiHook([], api.getteacherList, {
     limit: 1,
     size: 1,
