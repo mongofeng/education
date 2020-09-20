@@ -101,7 +101,7 @@ function List(props: RouteComponentProps): JSX.Element {
 
           <Search
             className="ml10"
-            placeholder="请输入课程包名字"
+            placeholder="请输入学生名字"
             onSearch={onSearch}
             style={{ width: 200 }} />
         </div>

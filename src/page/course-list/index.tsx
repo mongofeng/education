@@ -1,10 +1,10 @@
 import { DatePicker, Table, Tag } from 'antd';
 import * as React from "react";
+import { Link } from "react-router-dom";
 import * as api from "../../api/course";
 import * as enums from '../../const/enum'
 import { ICourse } from "../../const/type/course";
 import { getWeek } from '../../utils/time'
-import { Link } from "react-router-dom";
 const { WeekPicker } = DatePicker;
 const { useState, useEffect } = React;
 
@@ -174,7 +174,7 @@ export default function () {
     return (
       <div>
       <div className="main-title clearfix">
-        <h2>课程包列表</h2>
+        <h2>本周课程列表</h2>
       </div>
 
       <div className="content-wrap">
