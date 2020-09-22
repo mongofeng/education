@@ -22,7 +22,7 @@ const cols = Reflect.ownKeys(enums.WEEK_LABEL).map(key => {
                         const color = tag.name.length > 5 ? 'geekblue' : 'green';
                         return (
                         <div key={tag.id} className="mb10">
-                          <Link to={`../course/detail/${tag.id}`}  >
+                          <Link to={`/base/course/detail/${tag.id}`}  >
                             <Tag color={color} >{tag.name}</Tag>
                           </Link>
                         </div>
