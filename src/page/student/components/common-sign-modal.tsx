@@ -12,6 +12,7 @@ type IProps = FormComponentProps & {
   teacherId: string
   visible: boolean;
   confirmLoading: boolean;
+  isHideNum?: boolean
   onCancel: () => void;
   onCreate: (val: any) => void;
 }
@@ -92,14 +93,15 @@ const FormList: React.FC<IProps> = (props) => {
       onOk={handleSubmit}>
 
       <Form layout="vertical">
-        <Form.Item label="课时数量">
+        {props.isHideNum ? '' : <Form.Item label="课时数量">
           {getFieldDecorator('num', {
             rules: [{ required: true, message: '请输入课时的数量', type: 'number' }],
           })(
             <InputNumber min={1} max={100000} />
           )}
 
-        </Form.Item>
+        </Form.Item> }
+        
 
 
         <Form.Item label="所属老师">

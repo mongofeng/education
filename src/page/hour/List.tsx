@@ -1,8 +1,10 @@
 
 import fetchTeacherHook from '@/common/hooks/teacher'
+import ActionModal from '@/page/student/components/common-sign-modal'
 import { Button, DatePicker, Icon, Input, message, Modal, Table, Tag } from 'antd'
 import { ColumnProps } from 'antd/lib/table'
 import * as React from 'react'
+import { useState } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import * as api from '../../api/hour'
@@ -26,6 +28,14 @@ const { RangePicker } = DatePicker;
 const initList: IHour[] = [];
 
 
+// 模态框的加载
+const initModalState = {
+  teacherId: '',
+  visible: false,
+  confirmLoading: false,
+}
+
+
 interface IProps {
   package: {
     [key in string]: string;
@@ -38,7 +48,7 @@ interface IProps {
 
 function List(props: IProps): JSX.Element {
 
-  const onDel= (id: string) => {
+  const onDel = (id: string) => {
     confirm({
       title: '提示',
       content: '确定删除该课程记录,请确保没有课程包,请先删除不需要的课程包,防止数据的错乱',
@@ -75,7 +85,7 @@ function List(props: IProps): JSX.Element {
 
           const studentName = props.student[row.studentId]
 
-          let viewData: {[key in string] : string | number} = {}
+          let viewData: { [key in string]: string | number } = {}
 
           if (row.type === COURSE_HOUR_ACTION_TYPE.buy) {
             const packageName = props.package[row.packageId]
@@ -102,9 +112,9 @@ function List(props: IProps): JSX.Element {
             const time = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}号`;
             const count = `${row.num}课时` // 扣除的课时
             const courseName = row.course.map(item => item.name).join(',') // 课程名称
-            const remark:string =  '祝您生活愉快！'
+            const remark: string = '祝您生活愉快！'
             if (row.type === COURSE_HOUR_ACTION_TYPE.sign) {
-              viewData =  {
+              viewData = {
                 first: `您好,${studentName}同学,签到成功！`,
                 keyword1: time,
                 keyword2: courseName,
@@ -113,7 +123,7 @@ function List(props: IProps): JSX.Element {
                 remark,
               };
             } else {
-              viewData= {
+              viewData = {
                 first: '亲爱的家长您好，我们已为您孩子的学习课程进行补签',
                 keyword1: courseName,
                 keyword2: time,
@@ -134,7 +144,7 @@ function List(props: IProps): JSX.Element {
             return sendTemplate(params)
           })
           const res = await Promise.all(PromiseRequests);
-          const successCount = res.reduce((initVal: number, item: {data: {errcode: number; msgid: number}}) => {
+          const successCount = res.reduce((initVal: number, item: { data: { errcode: number; msgid: number } }) => {
             return (item.data.errcode === 0 && item.data.msgid) ? initVal + 1 : initVal;
           }, 0)
           message.success(`推送${successCount}个微信消息成功`)
@@ -157,11 +167,31 @@ function List(props: IProps): JSX.Element {
     {
       title: "所属老师",
       dataIndex: "teacherId",
-      render: (teacherId: string) => {
+      render: (teacherId: string, row) => {
         if (teacherId && teacherObj[teacherId]) {
-          return teacherObj[teacherId]
+          return [
+            <span key="1">{teacherObj[teacherId]}</span>,
+            (<Button
+              key="2"
+              className="ml5"
+              icon="edit"
+              size="small"
+              onClick={() => {
+                showSupplementModal(row)
+              }} />),
+          ]
         }
-        return '-'
+        return [
+          (<span key="1">-</span>),
+          (<Button
+            key="2"
+            className="ml5"
+            icon="edit"
+            size="small"
+            onClick={() => {
+              showSupplementModal(row)
+            }} />),
+        ]
       }
     },
 
@@ -173,7 +203,7 @@ function List(props: IProps): JSX.Element {
       title: "操作类型",
       dataIndex: "type",
       filterMultiple: false,
-      filters: Object.keys(enums.COURSE_HOUR_ACTION_TYPE_LABEL).map(key => ({text: enums.COURSE_HOUR_ACTION_TYPE_LABEL[key], value: key})),
+      filters: Object.keys(enums.COURSE_HOUR_ACTION_TYPE_LABEL).map(key => ({ text: enums.COURSE_HOUR_ACTION_TYPE_LABEL[key], value: key })),
       render: (str: enums.COURSE_HOUR_ACTION_TYPE) => {
         return (
           <Tag color={enums.COURSE_HOUR_ACTION_TYPE_COLOR[str]}>
@@ -187,7 +217,7 @@ function List(props: IProps): JSX.Element {
       dataIndex: "course",
       render: (val: ICourse[]) => {
         if (!val || !val.length) {
-          return  '-'
+          return '-'
         }
         return val.map((item) => {
           return [
@@ -207,7 +237,7 @@ function List(props: IProps): JSX.Element {
       render: (date: string) => formatDate(new Date(date))
     },
 
-    
+
     {
       title: "操作",
       render: (val: string, row: any) => {
@@ -259,7 +289,65 @@ function List(props: IProps): JSX.Element {
 
 
 
-  
+
+
+
+
+
+  /**
+   * 补签
+   */
+  const [supplementState, setSupplementState] = useState(initModalState)
+  const [hourId, setHourId] = useState<string>('')
+
+  const showSupplementModal = (row: IHour) => {
+    setHourId(row._id)
+    setSupplementState({
+      ...supplementState,
+      visible: true,
+      teacherId: row.teacherId
+    })
+  }
+
+  const handleSupplementCancel = () => {
+    setSupplementState({
+      ...initModalState,
+    })
+  }
+
+  const handleSupplementSumbit = async (values) => {
+    const {
+      desc,
+      teacherId
+    } = values
+
+
+
+    setSupplementState({
+      ...supplementState,
+      confirmLoading: true,
+    })
+    try {
+      await api.updateHour(
+        hourId,
+        {
+          desc,
+          teacherId
+        }
+      )
+
+      message.success(`发送成功`);
+      fetchData();
+
+    } finally {
+      handleSupplementCancel();
+    }
+
+  }
+
+
+
+
 
 
 
@@ -272,7 +360,18 @@ function List(props: IProps): JSX.Element {
 
       <div className="content-wrap">
 
-        
+
+
+
+        {/*补签模块*/}
+        <ActionModal
+          title="修改"
+          isHideNum={true}
+          onCreate={handleSupplementSumbit}
+          onCancel={handleSupplementCancel}
+          {...supplementState} />
+
+
         <div className="mb10">
           <RangePicker onChange={onDateChange} />
 
@@ -291,7 +390,7 @@ function List(props: IProps): JSX.Element {
           dataSource={data}
           pagination={pagination}
           loading={loading}
-          onChange={handleTableChange}/>
+          onChange={handleTableChange} />
       </div>
     </div>
   );

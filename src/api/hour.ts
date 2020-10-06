@@ -42,3 +42,8 @@ export function getHour(id: string): ApiResponse<IHour> {
 export function delHour(id: string): ApiResponse<IHour> {
     return http.delete(`course-hour-flow/${id}`)
 }
+
+
+export function updateHour(id: string, params: Partial<IHour>): ApiResponse<IResult> {
+    return http.put(`course-hour-flow/${id}`, params)
+}
