@@ -60,6 +60,9 @@ const FormList: React.FC<IProps> = (props) => {
         return;
       }
 
+
+      console.log(values);
+
       onCreate(values)
 
     });
@@ -79,6 +82,8 @@ const FormList: React.FC<IProps> = (props) => {
     title,
     confirmLoading,
   }
+
+  console.log(props, 'model 的值改变重新渲染')
 
   return (
     <Modal
@@ -127,4 +132,6 @@ const FormList: React.FC<IProps> = (props) => {
 }
 
 
-export default Form.create<IProps>({ name: "SiginIn-form" })(FormList);
+
+
+export default Form.create<IProps>({ name: "SiginIn-form" })(React.memo(FormList));

@@ -135,12 +135,15 @@ const List: React.FC<IProps> = (props) => {
         console.log('Received values of form: ', values);
         const {
             num,
-            desc
+            desc,
+            teacherId
         } = values
+
+        
         const {
             _id,
             name,
-            teacherId
+            
         } = courseRow
 
         const params: ISign = {

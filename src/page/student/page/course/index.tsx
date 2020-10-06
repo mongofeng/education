@@ -218,12 +218,13 @@ const List: React.FC<IProps> = (props) => {
   const handleSupplementSumbit = async (values) => {
     const {
       num,
-      desc
+      desc,
+      teacherId,
     } = values
     const {
       _id,
       name,
-      teacherId,
+      
     } = courseRow
 
 
