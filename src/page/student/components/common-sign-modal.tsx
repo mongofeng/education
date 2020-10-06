@@ -10,6 +10,7 @@ const { Option } = Select;
 type IProps = FormComponentProps & {
   title: string
   teacherId: string
+  desc?: string
   visible: boolean;
   confirmLoading: boolean;
   isHideNum?: boolean
@@ -122,8 +123,10 @@ const FormList: React.FC<IProps> = (props) => {
 
 
         <Form.Item label="备注">
-          {getFieldDecorator('desc')(
-
+          {getFieldDecorator('desc', {
+            initialValue: props.desc  ||  '',
+          })(
+            
             <TextArea
               style={{ width: 300 }}
               autosize={{ minRows: 5, maxRows: 16 }} />)}

@@ -30,6 +30,7 @@ const initList: IHour[] = [];
 
 // 模态框的加载
 const initModalState = {
+  desc: '',
   teacherId: '',
   visible: false,
   confirmLoading: false,
@@ -304,6 +305,7 @@ function List(props: IProps): JSX.Element {
     setHourId(row._id)
     setSupplementState({
       ...supplementState,
+      desc: row.desc || '',
       visible: true,
       teacherId: row.teacherId
     })
