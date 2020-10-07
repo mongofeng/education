@@ -1,6 +1,6 @@
 import fetchTeacherHook from '@/common/hooks/teacher'
 import { Button, DatePicker, Icon, Input, message, Modal, Table, Tabs, Tag } from 'antd'
-import { ColumnProps } from "antd/lib/table";
+import { ColumnProps, TableRowSelection } from "antd/lib/table";
 import * as React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -10,7 +10,8 @@ import { ICourse } from "../../const/type/course";
 import formatDate from "../../utils/format-date";
 
 import fetchApiHook from '../../common/hooks/featchApiList'
-import {isDev} from '../../config/index'
+import { isDev } from '../../config/index'
+import { useState } from 'react';
 const { TabPane } = Tabs;
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
@@ -22,6 +23,12 @@ const initList: ICourse[] = [];
 
 
 function List(props: RouteComponentProps): JSX.Element {
+
+  /**
+ *
+ * @param props 选择项
+ */
+  const initSelectedRows: ICourse[] = []
 
   const columns: Array<ColumnProps<ICourse>> = [
     {
@@ -72,7 +79,7 @@ function List(props: RouteComponentProps): JSX.Element {
         format: 'yyyy-MM-dd',
       })}</span>
     },
-  
+
     {
       title: "创建时间",
       dataIndex: "createDate",
@@ -121,14 +128,37 @@ function List(props: RouteComponentProps): JSX.Element {
     props.history.push("add");
   };
 
+
+
+  const handleStatusOnClick = async (key: string) => {
+    console.log(tableSelectedRows)
+    const ids = tableSelectedRows.map(i => i._id)
+    if (!ids.length) { return message.error('请选择课程') }
+
+    await api.batchStatusByCourse({
+      status: Number(key),
+      ids
+    })
+
+    const coureseName = tableSelectedRows.map(i => i.name).join(',')
+
+
+    message.success(`${coureseName}更改${enums.COURSE_STATUS_LABEL[key]}成功`)
+
+    fetchData()
+
+  };
+
   const onTabChange = (status: string) => {
     setQuery({
       status: Number(status)
     })
+
+    setTableSelectedRows([]);
   }
 
 
-  const onDel= (id: string) => {
+  const onDel = (id: string) => {
     confirm({
       title: '提示',
       content: '确定删除该课程,请确保没有对应课时操作记录,如果有请先去清空对应课时操作记录?',
@@ -167,11 +197,33 @@ function List(props: RouteComponentProps): JSX.Element {
           ]
         }
         return (<Link to={`edit/${row._id}`} key='1'>
-                  <Icon type="edit" />
-                </Link>)
+          <Icon type="edit" />
+        </Link>)
       }
     }
   ]
+
+
+
+
+  // 选择项
+  const [tableSelectedRows, setTableSelectedRows] = useState(initSelectedRows);
+
+
+  // rowSelection objects indicates the need for row selection
+  const rowSelection: TableRowSelection<ICourse> = {
+    onSelect: (record, selected, selectedRows) => {
+      // 当前项，当前是否选择， 当前所有选择
+      console.log(selected, selectedRows);
+      setTableSelectedRows(selectedRows as ICourse[])
+    },
+
+    onSelectAll: (selected, selectedRows) => {
+      // 当前是否选择， 当前所有选择，当前项，
+      console.log(selected, selectedRows);
+      setTableSelectedRows(selectedRows)
+    },
+  };
 
 
   return (
@@ -186,16 +238,19 @@ function List(props: RouteComponentProps): JSX.Element {
         >
           添加课程
         </Button>
+
+
+
       </div>
 
       <div className="content-wrap">
         <Tabs defaultActiveKey="1" onChange={onTabChange}>
           {Object.keys(enums.COURSE_STATUS_LABEL).map(key => (
-              <TabPane tab={enums.COURSE_STATUS_LABEL[key]} key={key}/>
-            )
+            <TabPane tab={enums.COURSE_STATUS_LABEL[key]} key={key} />
+          )
           )}
         </Tabs>
-        <div className="mb10">
+        <div className="mb10 clearfix">
           <RangePicker onChange={onDateChange} />
 
           <Search
@@ -204,6 +259,18 @@ function List(props: RouteComponentProps): JSX.Element {
             onSearch={onSearch}
             style={{ width: 200 }}
           />
+
+
+          {Object.keys(enums.COURSE_STATUS_LABEL).map(key => (
+            <Button
+              className="fr ml10"
+              key={key}
+              onClick={() => handleStatusOnClick(key)}
+            >
+              {enums.COURSE_STATUS_LABEL[key]}
+            </Button>
+          )
+          )}
         </div>
 
         <Table<ICourse>
@@ -213,7 +280,8 @@ function List(props: RouteComponentProps): JSX.Element {
           dataSource={data}
           pagination={pagination}
           loading={loading}
-          onChange={handleTableChange}/>
+          rowSelection={rowSelection}
+          onChange={handleTableChange} />
       </div>
     </div>
   );

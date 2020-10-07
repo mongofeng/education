@@ -95,4 +95,18 @@ export function delAllCourseStudent (id, params: {
 }
 
 
+/**
+ * 批量更改状态
+ * @param params ids: 学生的id集合
+ */
+export function batchStatusByCourse (params: {
+    status: number
+    ids: string[]
+}) {
+    return http.post(`/course/batchStatusByCourse`, params)
+}
+
+
+
+
 
