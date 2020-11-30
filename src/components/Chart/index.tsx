@@ -8,15 +8,14 @@ interface IProps {
   height: string
 }
 
-
-export default function Chart(props) {
+const Chart =  function (props) {
 
   const containerRef = useRef(null);
 
   const [echartsInstance, setechartsInstance] = useState(null)
 
   useEffect(() => {
-    console.log(echartsInstance)
+    console.log('chart重新渲染')
     if (echartsInstance && props.option) {
       echartsInstance.setOption(props.option); 
     }
@@ -55,3 +54,5 @@ export default function Chart(props) {
     <div ref={containerRef} style={{width: '100%', height: props.height || '100%'}}></div>
   )
 }
+
+export default React.memo(Chart)
