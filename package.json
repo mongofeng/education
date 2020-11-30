@@ -18,13 +18,13 @@
     "customize-cra": "^0.2.12",
     "echarts": "^4.8.0",
     "history": "^4.9.0",
+    "jest-diff": "^24.3.0",
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
     "moment": "^2.24.0",
     "node-sass": "^4.12.0",
     "react": "^16.8.4",
     "react-app-rewired": "^2.1.1",
-    "react-csv-downloader": "^1.1.0",
     "react-dom": "^16.8.4",
     "react-hot-loader": "^4.12.1",
     "react-redux": "^7.0.2",
@@ -36,7 +36,8 @@
     "redux-saga": "^1.0.2",
     "sass": "^1.20.1",
     "sass-loader": "^7.1.0",
-    "typescript": "^3.3.3333"
+    "typescript": "^3.3.3333",
+    "xlsx": "^0.16.9"
   },
   "scripts": {
     "start": "react-app-rewired start",

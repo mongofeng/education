@@ -1,12 +1,11 @@
 import { Button, DatePicker, Input, Table } from 'antd'
 import { ColumnProps } from 'antd/lib/table'
 import * as React from 'react'
-import CsvDownloader from 'react-csv-downloader';
 import * as apiStatic from '../../api/statistics'
 import * as api from '../../api/student'
-
 import fetchApiHook from '../../common/hooks/featchApiList'
 import { IStudent } from '../../const/type/student'
+import { downLoad } from '@/utils/excel';
 
 
 const Search = Input.Search;
@@ -68,13 +67,10 @@ function List(): JSX.Element {
   const {
     loading,
     data,
-    fetchData,
     pagination,
     handleTableChange,
     onDateChange,
-    onSearch,
-    setQuery
-  } = fetchApiHook(initList, api.getStudentList, {
+    onSearch  } = fetchApiHook(initList, api.getStudentList, {
     limit: 10,
     size: 10,
     page: 1,
@@ -123,24 +119,64 @@ function List(): JSX.Element {
 
 
 
-  const csvColumns = columns.map(item => {
-    return {
-      id: item.dataIndex,
-      displayName: item.title,
+  const downLoadXlsx = async () => {
+    const header = [];
+    const headerDisplay: object = { };
+    columns.forEach(item => {
+      header.push(item.dataIndex)
+      headerDisplay[item.dataIndex] = item.title
+    })
+    // 获取学生列表
+    const {data: {data}} = await api.getStudentList({
+      limit: 10000,
+      size: 10000,
+      page: 1,
+      query: {
+        status: 1
+      },
+      sort: { createDate: -1 }
+    })
+
+
+    const params = {
+      studentIds: {
+        $in: data.list.map(i => i._id)
+      },
     }
-  })
+    // 获取数据
+    const { data: { data: packages } } = await apiStatic.caculatePackage(params as any)
+
+    const hasMap = new Map<string, any>(packages.map((item) => {
+      return [
+        item._id,
+        item
+      ]
+    }))
 
 
-  // const fetchAllCsvData = async () => {
-  //   const {data: {data}} = await api.getStudentList({
-  //     limit: 10,
-  //     page: 1,
-  //     query: {
-  //       status: 1
-  //     },
-  //     sort: { createDate: -1 }
-  //   })
-  // }
+
+
+    let sheetData = data.list.map(item => {
+      const {n, _id, ...reset} = hasMap.get(item._id) || {}
+      return {
+        name: item.name,
+        ...reset
+      }
+    })
+
+    const newData = [headerDisplay, ...sheetData];
+
+    const fileName = new Date().toLocaleDateString()
+    return downLoad(
+      {
+        data: newData,
+        opts: {header:header, skipHeader:true},
+        sheetName: '统计',
+        fileName: '学生课时统计'+fileName+'.xlsx'
+      }
+    )
+  }
+
 
 
 
@@ -162,23 +198,19 @@ function List(): JSX.Element {
             style={{ width: 200 }}
           />
 
-
-
         </div>
 
 
-        <CsvDownloader
+
+
+
+        <Button
+          onClick={downLoadXlsx}
           className="mb10"
-          filename="学生列表"
-          columns={csvColumns}
-          suffix={true}
-          datas={tableData}>
-          <Button
-            type="primary"
-            icon="download">
-            导出
-            </Button>
-        </CsvDownloader>
+          type="primary"
+          icon="download">
+          导出
+          </Button>
 
         <Table<IStudent>
           bordered={true}

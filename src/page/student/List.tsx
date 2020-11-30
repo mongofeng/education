@@ -1,7 +1,7 @@
+import { downLoad } from '@/utils/excel';
 import { Button, DatePicker, Icon, Input, message, Modal, Table, Tabs } from 'antd'
 import { ColumnProps } from 'antd/lib/table';
 import * as React from "react";
-import CsvDownloader from 'react-csv-downloader';
 import { connect } from 'react-redux'
 import { Link } from "react-router-dom";
 import { RouteComponentProps } from 'react-router-dom';
@@ -126,15 +126,42 @@ function List(props: RouteComponentProps & IProps): JSX.Element {
     })
   }
 
-  const csvData = props.allStudent.map(item => {
-    return {
-      ...item,
-      sex: enums.SEX_LABEL[item.sex],
-      address: `${item.province}${item.city}${item.region}${item.address}`,
-      createDate: formatDate(new Date(item.createDate)),
-      status: enums.STUDENT_STATUS_LABEL[item.status],
-    }
-  })
+  const downLoadXlsx =  () => {
+    const header = [];
+    const headerDisplay: object = { };
+    LastCsvColumns.forEach(item => {
+      header.push(item.id)
+      headerDisplay[item.id] = item.displayName
+    })
+    // 获取学生列表
+    const sheetData = props.allStudent.map(item => {
+      const obj = {
+        ...item,
+        sex: enums.SEX_LABEL[item.sex],
+        address: `${item.province}${item.city}${item.region}${item.address}`,
+        createDate: formatDate(new Date(item.createDate)),
+        status: enums.STUDENT_STATUS_LABEL[item.status],
+      }
+      return header.reduce((initVal, key) => {
+        initVal[key] = obj[key]
+        return initVal
+      }, {})
+    })
+
+    const newData = [headerDisplay, ...sheetData];
+
+    const fileName = new Date().toLocaleDateString()
+    return downLoad(
+      {
+        data: newData,
+        opts: {header:header, skipHeader:true},
+        sheetName: '统计',
+        fileName: '学生统计'+fileName+'.xlsx'
+      }
+    )
+  }
+
+  
 
   // const resetOpenId = async () => {
   //   const PromiseApi = data.map(item => {
@@ -195,17 +222,12 @@ function List(props: RouteComponentProps & IProps): JSX.Element {
   ]
 
   const footer = () => {
-    return (<CsvDownloader
-      filename="学生列表"
-      columns={LastCsvColumns}
-      suffix={true}
-      datas={csvData}>
-      <Button
-        type="primary"
-        icon="download">
-        导出
-      </Button>
-    </CsvDownloader>)
+    return (<Button
+      onClick={downLoadXlsx}
+      type="primary"
+      icon="download">
+      导出
+    </Button>)
   }
 
 
