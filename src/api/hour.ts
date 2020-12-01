@@ -1,7 +1,7 @@
+import { ICourse } from '../const/type/course'
 import {IHour} from '../const/type/hour'
 import { ApiListData, ApiResponse } from '../types/api'
 import http from '../utils/http'
-import { ICourse } from '../const/type/course'
 
 interface IResult {
     templateMsg: {

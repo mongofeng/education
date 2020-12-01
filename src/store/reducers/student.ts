@@ -1,6 +1,6 @@
 
-import * as studentAction from '../actions/student'
 import { IStudent } from '../../const/type/student'
+import * as studentAction from '../actions/student'
 
 const studentStatus = {
   loading: false,

@@ -6,9 +6,9 @@ import { all, fork } from 'redux-saga/effects'
 import authSaga from './auth'
 import courseSaga from './course'
 import lbsSaga from './lbs'
+import  packageSaga from './package'
 import studentSaga from './student'
 import userSaga from './user'
-import  packageSaga from './package'
 export default function* root() {
   yield all([
     fork(authSaga),

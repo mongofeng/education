@@ -1,5 +1,5 @@
-import * as type from '../const/type/wechat';
 import { AxiosPromise } from 'axios';
+import * as type from '../const/type/wechat';
 import {wechat as http} from '../utils/http'
 
 /**
