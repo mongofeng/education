@@ -1,26 +1,23 @@
-import { Button, DatePicker, Input, Table } from 'antd'
+import { Button, Input, Table } from 'antd'
 import { ColumnProps } from 'antd/lib/table'
 import * as React from 'react'
-import * as apiStatic from '../../api/statistics'
-import * as api from '../../api/student'
-import fetchApiHook from '../../common/hooks/featchApiList'
+import fetchApiHook from '@/common/hooks/commomStatics'
 import { IStudent } from '../../const/type/student'
 import { downLoad } from '@/utils/excel';
+import { PaginationProps } from 'antd/lib/pagination'
+import { commonQuery } from '../../api/statistics'
+import { connect } from 'react-redux'
 
 
 const Search = Input.Search;
-const { RangePicker } = DatePicker;
 
-
-const { useState, useEffect } = React;
-
-const initList: IStudent[] = [];
-
+interface IProps {
+  total: number
+}
 
 
 
-function List(): JSX.Element {
-  const [tableData, setTableData] = useState(initList);
+function List(props: IProps): JSX.Element {
 
   const columns: Array<ColumnProps<IStudent>> = [
     {
@@ -64,58 +61,80 @@ function List(): JSX.Element {
     },
   ];
 
-  const {
-    loading,
-    data,
-    pagination,
-    handleTableChange,
-    onDateChange,
-    onSearch  } = fetchApiHook(initList, api.getStudentList, {
-    limit: 10,
-    size: 10,
-    page: 1,
-    query: {
-      status: 1
-    },
-    sort: { createDate: -1 }
+
+
+  const initPagination: PaginationProps = React.useMemo(() => {
+    console.log('use memo, page')
+    return {
+      total: props.total,
+      current: 1,
+      pageSize: 10,
+      showSizeChanger: true,
+      pageSizeOptions: ["5", "10", "20", "100", "200", "500", "2000"]
+    }
+  }, [props.total])
+
+  
+   // 1为正序， -1为倒序
+   const params = (params: {pager?: PaginationProps, keyword?: string}) => {
+     // 起始页
+    const {pager, keyword} = params
+    
+    const sql: string[] = [
+      "{$unwind:'$studentIds'}",
+      "{$group:{_id:'$studentIds', n: {$sum: 1 },amount:{$sum:'$amount'},count:{$sum:'$count'},used:{$sum:'$used'},surplus:{$sum:'$surplus'},overdueCount:{$sum:{$cond:['$beOverdue','$surplus',0]}},activiteCount:{$sum:{$cond:['$isActive','$count',0]}},unActiviteCount:{$sum:{$cond:['$isActive',0,'$count']}}}}",
+      "{$lookup:{from:'student',let:{stuId:{$toObjectId:'$_id'}},pipeline:[{$match:{$expr:{$eq:['$_id','$$stuId']}}}],as:'student'}}",
+      "{$project:{id:{$toString: '$_id'},student:{$arrayElemAt:['$student',0]},amount:1,count:1,used:1,surplus:1,overdueCount:1,activiteCount:1,unActiviteCount:1, n:1}}",
+      "{ $sort : { surplus : 1, count: -1 } }",
+      
+    ]
+
+    if (pager) {
+      const skip = (pager.current - 1) * pager.pageSize
+      const limit = pager.pageSize
+      sql.push(JSON.stringify({$skip : skip }))
+      sql.push(JSON.stringify({$limit : limit }))
+    }
+
+    if (keyword) {
+      const match = { $match : { 'student.name' : keyword } }
+      sql.push(JSON.stringify(match))
+    }
+
+    return {
+      collectionName: "student-package",
+      sql
+    }
+  }
+
+  
+
+  const {loading, data, pagination, setParams, setPagination} = fetchApiHook({
+    params: params({pager: initPagination}),
+    page: initPagination
   })
 
 
-
-  useEffect(() => {
-    if (data.length) {
-      fetchTotalHours(data.map(item => item._id));
-    }
-
-  }, [data]);
+ 
 
 
+  const handleTableChange = (
+    page: PaginationProps,
+  ) => {
+    const pager = { ...pagination, ...page };
+    setPagination(pager);
+    setParams(params({pager: pager}))
+  };
+
+
+  const onSearch = (key: string) => {
+    setParams(params({pager: pagination, keyword: key}))
+  }; 
 
 
 
 
-  const fetchTotalHours = async (ids: string[]) => {
-    const params = {
-      studentIds: {
-        $in: ids
-      },
-    }
-    const { data: { data: packages } } = await apiStatic.caculatePackage(params as any)
 
-    const hasMap = new Map<string, any>(packages.map((item) => {
-      return [
-        item._id,
-        item
-      ]
-    }))
-    setTableData(data.map((item) => {
-      const total = hasMap.get(item._id) || {}
-      return {
-        ...item,
-        ...total
-      }
-    }))
-  }
 
 
 
@@ -126,40 +145,19 @@ function List(): JSX.Element {
       header.push(item.dataIndex)
       headerDisplay[item.dataIndex] = item.title
     })
-    // 获取学生列表
-    const {data: {data}} = await api.getStudentList({
-      limit: 10000,
-      size: 10000,
-      page: 1,
-      query: {
-        status: 1
-      },
-      sort: { createDate: -1 }
-    })
 
+    const {
+      data: {
+        data
+      }
+    } = await commonQuery(params({}));
 
-    const params = {
-      studentIds: {
-        $in: data.list.map(i => i._id)
-      },
-    }
-    // 获取数据
-    const { data: { data: packages } } = await apiStatic.caculatePackage(params as any)
+ 
 
-    const hasMap = new Map<string, any>(packages.map((item) => {
-      return [
-        item._id,
-        item
-      ]
-    }))
-
-
-
-
-    let sheetData = data.list.map(item => {
-      const {n, _id, ...reset} = hasMap.get(item._id) || {}
+    let sheetData = data.map(item => {
+      const {n, _id, id, student,  ...reset} = item
       return {
-        name: item.name,
+        name: student.name,
         ...reset
       }
     })
@@ -189,7 +187,7 @@ function List(): JSX.Element {
 
       <div className="content-wrap">
         <div className="mb10">
-          <RangePicker onChange={onDateChange} />
+          {/* <RangePicker onChange={onDateChange} /> */}
 
           <Search
             className="ml10"
@@ -212,11 +210,11 @@ function List(): JSX.Element {
           导出
           </Button>
 
-        <Table<IStudent>
+        <Table<any>
           bordered={true}
           columns={columns}
           rowKey="_id"
-          dataSource={tableData}
+          dataSource={data}
           pagination={pagination}
           loading={loading}
           onChange={handleTableChange} />
@@ -225,4 +223,8 @@ function List(): JSX.Element {
   );
 }
 
-export default List;
+export default connect((state: any) => {
+  return {
+    total: state.student.total,
+  }
+})(List);

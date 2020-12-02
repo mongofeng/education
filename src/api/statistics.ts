@@ -1,3 +1,4 @@
+import { ICommonQueryParams } from '@/const/type/statistics';
 import { IStuCountByStatus, IStuCountByTime} from '../const/type/student'
 
 import { ICaculatePackage, IStudentPackage } from '../const/type/student-package';
@@ -46,4 +47,13 @@ export function stuCountByStatus (params?: QueryCondition<IStuCountByTime>): Api
  */
 export function caculatePackage (params?: QueryCondition<IStudentPackage>): ApiResponse<ICaculatePackage[]> {
   return http.post(`statistics/caculatePackage`, params)
+}
+
+
+/**
+ * 通用的统计接口
+ * @param params 
+ */
+export function commonQuery (params: ICommonQueryParams): ApiResponse<any[]> {
+  return http.post(`statistics/common-query`, params)
 }

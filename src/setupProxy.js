@@ -3,11 +3,11 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 module.exports = function (app) {
     console.log(process.env)
     app.use(createProxyMiddleware('/v2', {
-        // target: 'http://localhost:8110/',
-        target: 'http://yangjin-art.top',
-        // pathRewrite: {
-        //     "^/v2": "/"
-        // }
+        target: 'http://localhost:8110/',
+        // target: 'http://yangjin-art.top',
+        pathRewrite: {
+            "^/v2": "/"
+        }
     }));
 
 
