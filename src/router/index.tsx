@@ -27,6 +27,8 @@ const StudentComment = React.lazy(() => import(/* webpackChunkName: 'student'*/ 
 
 const StudentHour = React.lazy(() => import(/* webpackChunkName: 'student-hour'*/ '../page/student-hour/List'));
 
+const adminWechat = React.lazy(() => import(/* webpackChunkName: 'admin-wechat'*/ '../page/admin-wechat/List'));
+
 
 
 
@@ -261,6 +263,16 @@ export default [
         path: "/base/v-course-list",
         component:SuspenseComponent( CourseList)
       },
+      {
+        path: "/base/v-course-list",
+        component:SuspenseComponent( CourseList)
+      },
+      {
+        path: "/base/admin-wechat",
+        component:SuspenseComponent( adminWechat)
+      },
+
+      
 
 
   
