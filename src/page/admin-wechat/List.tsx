@@ -85,8 +85,15 @@ function List(): JSX.Element {
   return (
     <div>
       <div className="main-title clearfix">
-        <h2>管理员微信列表</h2>
+        <h2 className="fl">管理员微信列表</h2>
+        <Button  className="fr" loading={loading} onClick={() => fetchData(true)}>
+          {loading ? '刷新中' : '刷新'}
+        </Button>
+
       </div>
+
+      
+
 
       <div className="content-wrap">
 
