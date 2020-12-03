@@ -99,7 +99,8 @@ function List(props: RouteComponentProps & IProps): JSX.Element {
     handleTableChange,
     onDateChange,
     onSearch,
-    setQuery
+    setQuery,
+    setPagination
   } = fetchApiHook(initList, api.getStudentList, {
     limit: 10,
     size: 10,
@@ -123,6 +124,10 @@ function List(props: RouteComponentProps & IProps): JSX.Element {
   const onTabChange = (status: string) => {
     setQuery({
       status: Number(status)
+    })
+    setPagination({
+      ...pagination,
+      current: 1
     })
   }
 

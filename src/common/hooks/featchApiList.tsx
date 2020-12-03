@@ -49,7 +49,7 @@ export default function <T extends object>(initList: T[], fetchApi: IApiList<T>,
   }: Partial<IParmas<T>>):QueryCondition<T> => {
 
     const query: any = {
-      ...(conditionProps.query ? conditionProps.query : {})
+      ...(params.query ? params.query : {})
     };
 
     // 时间
@@ -83,7 +83,7 @@ export default function <T extends object>(initList: T[], fetchApi: IApiList<T>,
 
     // 排序
     const sort: any = { 
-      ...(conditionProps.sort ? conditionProps.sort : {})
+      ...(query.sort ? query.sort : {})
      };
     if (sorter && sorter.columnKey) {
       sort[sorter.columnKey] = sorter.order === "ascend" ? 1 : -1;
@@ -186,5 +186,5 @@ export default function <T extends object>(initList: T[], fetchApi: IApiList<T>,
     }
   }, [params]);
 
-  return {loading, data, pagination, handleTableChange, onDateChange, onSearch, fetchData, setQuery}
+  return {loading, data, pagination, handleTableChange, onDateChange, onSearch, fetchData, setQuery, setPagination}
 }
