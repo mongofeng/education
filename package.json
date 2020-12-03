@@ -57,6 +57,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "compression-webpack-plugin": "^3.0.0",
     "http-proxy-middleware": "^1.0.1",
     "redux-devtools-extension": "^2.13.8",
     "tslint": "^5.16.0",
