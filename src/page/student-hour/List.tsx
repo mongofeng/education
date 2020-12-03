@@ -1,4 +1,4 @@
-import { Button, Input, Table } from 'antd'
+import { Alert, Button, Input, Table } from 'antd'
 import { ColumnProps } from 'antd/lib/table'
 import * as React from 'react'
 import fetchApiHook from '@/common/hooks/commomStatics'
@@ -6,18 +6,14 @@ import { IStudent } from '../../const/type/student'
 import { downLoad } from '@/utils/excel';
 import { PaginationProps } from 'antd/lib/pagination'
 import { commonQuery } from '../../api/statistics'
-import { connect } from 'react-redux'
 import * as enums from '../../const/enum'
 
 const Search = Input.Search;
 
-interface IProps {
-  total: number
-}
 
 
 
-function List(props: IProps): JSX.Element {
+function List(): JSX.Element {
 
   const columns: Array<ColumnProps<any>> = [
     {
@@ -28,6 +24,15 @@ function List(props: IProps): JSX.Element {
     {
       title: "剩余课时",
       dataIndex: "surplus",
+      width: 180,
+      render: (str: number) => {
+        const type = str === 0 ? 'error' : (
+          str > 6 ? 'success' : 'warning'
+        )
+
+        // return str > 6 ? str : <span className="error">{str}</span>
+        return <Alert message={str} type={type} showIcon />
+      }
     },
 
 
@@ -40,7 +45,7 @@ function List(props: IProps): JSX.Element {
       title: '总课时',
       dataIndex: 'count',
     },
- 
+
     {
       title: "激活课时",
       dataIndex: "activiteCount",
@@ -50,7 +55,7 @@ function List(props: IProps): JSX.Element {
       dataIndex: "unActiviteCount"
     },
 
-    
+
 
     {
       title: "已过期",
@@ -64,55 +69,74 @@ function List(props: IProps): JSX.Element {
     {
       title: "状态",
       dataIndex: "status",
-      render: (str: enums.STUDENT_STATUS, data: {student: IStudent}) => <span>{enums.STUDENT_STATUS_LABEL[data.student.status]}</span>
+      render: (str: enums.STUDENT_STATUS, data: { student: IStudent }) => <span>{enums.STUDENT_STATUS_LABEL[data.student.status]}</span>
     },
   ];
 
 
 
-  const initPagination: PaginationProps = React.useMemo(() => {
-    console.log('use memo, page')
-    return {
-      total: props.total,
-      current: 1,
-      pageSize: 10,
-      showSizeChanger: true,
-      pageSizeOptions: ["5", "10", "20", "100", "200", "500", "2000"]
-    }
-  }, [props.total])
+  const initPagination: PaginationProps = {
+    total: 0,
+    current: 1,
+    pageSize: 10,
+    showSizeChanger: true,
+    pageSizeOptions: ["5", "10", "20", "100", "200", "500", "2000"]
+  }
 
-  
-   // 1为正序， -1为倒序
-   const params = (params: {pager?: PaginationProps, keyword?: string}) => {
-     // 起始页
-    const {pager, keyword} = params
-    
+
+  // 1为正序， -1为倒序
+  const params = (params: { pager?: PaginationProps, keyword?: string, getTotal?: boolean }) => {
+    // 起始页
+    const { pager, keyword, getTotal } = params
+
     const sql: string[] = [
       "{$unwind:'$studentIds'}",
       "{$group:{_id:'$studentIds', n: {$sum: 1 },amount:{$sum:'$amount'},count:{$sum:'$count'},used:{$sum:'$used'},surplus:{$sum:'$surplus'},overdueCount:{$sum:{$cond:['$beOverdue','$surplus',0]}},activiteCount:{$sum:{$cond:['$isActive','$count',0]}},unActiviteCount:{$sum:{$cond:['$isActive',0,'$count']}}}}",
       "{$lookup:{from:'student',let:{stuId:{$toObjectId:'$_id'}},pipeline:[{$match:{$expr:{$eq:['$_id','$$stuId']}}}],as:'student'}}",
       "{$project:{id:{$toString: '$_id'},student:{$arrayElemAt:['$student',0]},amount:1,count:1,used:1,surplus:1,overdueCount:1,activiteCount:1,unActiviteCount:1, n:1}}",
       JSON.stringify({
-        $match : { 'student.status' : 1 }
+        $match: { 'student.status': 1 }
       }),
-      "{ $sort : { surplus : 1, count: -1 } }",
-      
+
     ]
 
     if (keyword) {
-      const match = { $match : { 'student.name' : keyword } }
+      const match = { $match: { 'student.name': keyword } }
       sql.push(JSON.stringify(match))
     }
 
-    // 分页
-    if (pager) {
-      const skip = (pager.current - 1) * pager.pageSize
-      const limit = pager.pageSize
-      sql.push(JSON.stringify({$skip : skip }))
-      sql.push(JSON.stringify({$limit : limit }))
+
+    if (getTotal) {
+      sql.push(JSON.stringify(
+        {
+          $group: {
+            _id: null,
+            count: {
+              $sum: 1
+            }
+          }
+        }
+      ))
+    } else {
+      // 下面是返回详情的排序
+      sql.push("{ $sort : { surplus : 1, count: -1 } }")
+
+      // 分页
+      if (pager) {
+        const skip = (pager.current - 1) * pager.pageSize
+        const limit = pager.pageSize
+        sql.push(JSON.stringify({ $skip: skip }))
+        sql.push(JSON.stringify({ $limit: limit }))
+      }
     }
 
-    
+
+
+
+
+
+
+
 
     return {
       collectionName: "student-package",
@@ -120,15 +144,15 @@ function List(props: IProps): JSX.Element {
     }
   }
 
-  
 
-  const {loading, data, pagination, setParams, setPagination} = fetchApiHook({
-    params: params({pager: initPagination}),
+
+  const { loading, data, pagination, setParams, setPagination } = fetchApiHook({
+    params: params({ pager: initPagination }),
     page: initPagination
   })
 
 
- 
+
 
 
   const handleTableChange = (
@@ -136,13 +160,37 @@ function List(props: IProps): JSX.Element {
   ) => {
     const pager = { ...pagination, ...page };
     setPagination(pager);
-    setParams(params({pager: pager}))
+    setParams(params({ pager: pager }))
   };
 
 
   const onSearch = (key: string) => {
-    setParams(params({pager: initPagination, keyword: key}))
-  }; 
+    setParams(params({ pager: { ...initPagination }, keyword: key }))
+    fetchTotal(key)
+  };
+
+
+  React.useEffect(() => {
+    fetchTotal()
+  }, [])
+
+
+
+  // 获取页数
+  const fetchTotal = async (keyword?: string) => {
+    const {
+      data: {
+        data
+      }
+    } = await commonQuery(params({ getTotal: true, keyword }));
+
+    
+
+    setPagination({
+      ...pagination,
+      total: data.length === 0 ? 0 : data[0].count
+    })
+  }
 
 
 
@@ -153,7 +201,7 @@ function List(props: IProps): JSX.Element {
 
   const downLoadXlsx = async () => {
     const header = [];
-    const headerDisplay: object = { };
+    const headerDisplay: object = {};
     columns.forEach(item => {
       header.push(item.dataIndex)
       headerDisplay[item.dataIndex] = item.title
@@ -165,10 +213,10 @@ function List(props: IProps): JSX.Element {
       }
     } = await commonQuery(params({}));
 
- 
+
 
     let sheetData = data.map(item => {
-      const {n, _id, id, student,  ...reset} = item
+      const { n, _id, id, student, ...reset } = item
       return {
         name: student.name,
         ...reset
@@ -181,9 +229,9 @@ function List(props: IProps): JSX.Element {
     return downLoad(
       {
         data: newData,
-        opts: {header:header, skipHeader:true},
+        opts: { header: header, skipHeader: true },
         sheetName: '统计',
-        fileName: '学生课时统计'+fileName+'.xlsx'
+        fileName: '学生课时统计' + fileName + '.xlsx'
       }
     )
   }
@@ -196,6 +244,14 @@ function List(props: IProps): JSX.Element {
     <div>
       <div className="main-title clearfix">
         <h2>课时统计</h2>
+
+        <Button
+          onClick={downLoadXlsx}
+          className="fr"
+          type="primary"
+          icon="download">
+          导出
+          </Button>
       </div>
 
       <div className="content-wrap">
@@ -215,13 +271,7 @@ function List(props: IProps): JSX.Element {
 
 
 
-        <Button
-          onClick={downLoadXlsx}
-          className="mb10"
-          type="primary"
-          icon="download">
-          导出
-          </Button>
+        
 
         <Table<any>
           bordered={true}
@@ -236,8 +286,4 @@ function List(props: IProps): JSX.Element {
   );
 }
 
-export default connect((state: any) => {
-  return {
-    total: state.student.total,
-  }
-})(List);
+export default List
