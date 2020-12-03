@@ -5,6 +5,7 @@ import { IAdminWechat } from "@/const/type/admin-wechat";
 import formatDate from "@/utils/format-date";
 import { Button, message, Modal, Table } from 'antd'
 import { ColumnProps } from "antd/lib/table";
+import QrcodeCom from '@/components/Qrcode'
 import * as React from "react";
 
 const confirm = Modal.confirm;
@@ -21,6 +22,12 @@ function List(): JSX.Element {
     fetchData,
     handleTableChange,
   } = fetchApiHook(initList, api.getAdminWechatList)
+
+  const url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx9bb9b35bb6d4f980&redirect_uri=http%3A%2F%2Fyangjin-art.top%2Fwechat%2Fadmin.html&response_type=code&scope=snsapi_userinfo&state=yangjinart#wechat_redirect'
+
+
+
+  const [visible, setVisible] = React.useState<boolean>(false)
 
 
 
@@ -90,6 +97,11 @@ function List(): JSX.Element {
           {loading ? '刷新中' : '刷新'}
         </Button>
 
+
+        <Button type="primary" className="fr mr10" onClick={() => setVisible(true)}>
+          绑定微信
+        </Button>
+
       </div>
 
       
@@ -106,6 +118,16 @@ function List(): JSX.Element {
           loading={loading}
           onChange={handleTableChange} />
       </div>
+
+      
+        <Modal
+          title="微信扫描"
+          visible={visible}
+          onOk={() => setVisible(false)}
+          onCancel={() => setVisible(false)}>
+          
+          <QrcodeCom url={url} width={200} height={200}/>
+        </Modal>
     </div>
   );
 }

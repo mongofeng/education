@@ -122,13 +122,14 @@ function List(props: RouteComponentProps & IProps): JSX.Element {
 
 
   const onTabChange = (status: string) => {
-    setQuery({
-      status: Number(status)
-    })
     setPagination({
       ...pagination,
       current: 1
     })
+    setQuery({
+      status: Number(status)
+    })
+    
   }
 
   const downLoadXlsx =  () => {
