@@ -83,7 +83,8 @@ export default function <T extends object>(initList: T[], fetchApi: IApiList<T>,
 
     // 排序
     const sort: any = { 
-      ...(query.sort ? query.sort : {})
+      ...(initCondition.sort ? initCondition.sort : {}),
+      ...(query.sort ? query.sort : {}),
      };
     if (sorter && sorter.columnKey) {
       sort[sorter.columnKey] = sorter.order === "ascend" ? 1 : -1;
