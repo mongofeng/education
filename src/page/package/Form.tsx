@@ -1,3 +1,4 @@
+import { PackageStatusLabel } from "@/const/enum";
 import {
   BackTop,
   Breadcrumb,
@@ -8,6 +9,7 @@ import {
   message,
   InputNumber,
   Tooltip,
+  Select,
 } from "antd";
 import { FormComponentProps } from "antd/lib/form";
 import * as React from "react";
@@ -19,6 +21,8 @@ import fetchFormHook from '../../common/hooks/fetchForm'
 import {IPackage} from '../../const/type/package'
 
 const { TextArea } = Input;
+
+const { Option } = Select;
 interface IRouteParams {
   id?: string;
 }
@@ -165,6 +169,22 @@ const FormCompent: React.FC<IFormProps> = (props)=> {
              )}
              
            </Form.Item>
+
+           <Form.Item label="状态">
+              {getFieldDecorator("status", {
+                initialValue: form ? form.status : '',
+                rules: [{ type: "number", required: true, message: "请选择状态" }]
+              })(
+                <Select>
+                  {Object.keys(PackageStatusLabel).map(
+                    (key) => {
+                    return <Option value={Number(key)}>{PackageStatusLabel[key]}</Option>
+                    }
+                  )}
+     
+                </Select>
+              )}
+            </Form.Item>
 
     
 

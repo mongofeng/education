@@ -8,6 +8,7 @@ import { IPackage } from "../../const/type/package";
 import formatDate from "../../utils/format-date";
 import fetchApiHook from '../../common/hooks/featchApiList'
 import {isDev} from '../../config/index'
+import { PackageStatusLabel } from '@/const/enum';
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
 const confirm = Modal.confirm;
@@ -33,6 +34,11 @@ const columns: Array<ColumnProps<IPackage>> = [
     title: "有效期",
     dataIndex: "period",
     render: (period: number) => <span>{period}年</span>
+  },
+  {
+    title: '状态',
+    dataIndex: 'status',
+    render: (s: number) => PackageStatusLabel[s]
   },
   {
     title: "创建时间",
