@@ -128,3 +128,27 @@ export const COURSE_HOUR_ACTION_TYPE_COLOR: LabelMapping<COURSE_HOUR_ACTION_TYPE
     [COURSE_HOUR_ACTION_TYPE.supplement]: 'red',
     [COURSE_HOUR_ACTION_TYPE.sign]: 'yellow'
 }
+
+
+
+// 1:隐藏， 2，上架试用， 3，上架正式， 4， 上架活动
+// Hidden(1, "隐藏"),
+//     UpTrial(2, "上架试用学员"),
+//     UpFnormal(3, "上架正式学员"),
+//     Activite(4, "上架活动");
+/**
+ * 一周状态
+ */
+export enum PackageStatus {
+    Hidden = 1,
+    UpTrial,
+    UpFnormal,
+    Activite,
+}
+
+export const PackageStatusLabel: LabelMapping<PackageStatus> = {
+    [PackageStatus.Hidden]: '隐藏',
+    [PackageStatus.UpTrial]: '上架试用学员',
+    [PackageStatus.UpFnormal]: '上架正式',
+    [PackageStatus.Activite]: '上架活动',
+}
