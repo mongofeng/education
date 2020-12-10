@@ -3,54 +3,20 @@ import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { Link } from "react-router-dom";
-import * as api from "../../api/teacher";
-import fetchApiHook from '../../common/hooks/featchApiList'
-import * as enums from "../../const/enum";
-import { ITeacher } from "../../const/type/teacher";
-import {isDev} from '../../config/index'
+import * as api from "@/api/teacher";
+import fetchApiHook from '@/common/hooks/featchApiList'
+import * as enums from "@/const/enum";
+import { ITeacher } from "@/const/type/teacher";
+import {isDev} from '@/config/index'
 import QrcodeCom from '@/components/Qrcode'
 import { RedirectUrl } from '@/utils/redirct';
+import { IUserInfo } from '@/const/type/wechat';
+import * as apiWechat from '@/api/wechat'
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
 
-const columns: Array<ColumnProps<ITeacher>> = [
-  {
-    title: "姓名",
-    dataIndex: "name",
-    key: "name",
-    render: (text: string, row: ITeacher) => (
-      <Link to={`detail/${row._id}`}>{text}</Link>
-    )
-  },
-  {
-    title: "性别",
-    dataIndex: "sex",
-    filterMultiple: false,
-    filters: [{ text: "男", value: "1" }, { text: "女", value: "2" }],
-    render: (str: enums.ESEX) => <span>{enums.SEX_LABEL[str]}</span>
-  },
-  {
-    title: "手机号码",
-    dataIndex: "phone"
-  },
 
-  {
-    title: "openId",
-    dataIndex: "openId"
-    
-  },
-
-  {
-    title: "状态",
-    dataIndex: "status",
-    filterMultiple: false,
-    filters: [{ text: "在职", value: "1" }, { text: "离职", value: "2" }],
-    render: (str: enums.TEACHER_STATUS) => (
-      <span>{enums.TEACHER_STATUS_LABEL[str]}</span>
-    )
-  },
-];
 
 const initList: ITeacher[] = [];
 const confirm = Modal.confirm;
@@ -76,12 +42,58 @@ function List(props: RouteComponentProps): JSX.Element {
     sort: { createDate: -1 }
   })
 
+
+  const columns: Array<ColumnProps<ITeacher>> = [
+    {
+      title: "姓名",
+      dataIndex: "name",
+      key: "name",
+      render: (text: string, row: ITeacher) => (
+        <Link to={`detail/${row._id}`}>{text}</Link>
+      )
+    },
+    {
+      title: "性别",
+      dataIndex: "sex",
+      filterMultiple: false,
+      filters: [{ text: "男", value: "1" }, { text: "女", value: "2" }],
+      render: (str: enums.ESEX) => <span>{enums.SEX_LABEL[str]}</span>
+    },
+    {
+      title: "手机号码",
+      dataIndex: "phone"
+    },
+  
+    {
+      title: "微信",
+      dataIndex: "openId",
+      render: (str: string) => wechat[str] || str
+    },
+  
+    {
+      title: "状态",
+      dataIndex: "status",
+      filterMultiple: false,
+      filters: [{ text: "在职", value: "1" }, { text: "离职", value: "2" }],
+      render: (str: enums.TEACHER_STATUS) => (
+        <span>{enums.TEACHER_STATUS_LABEL[str]}</span>
+      )
+    },
+  ];
+
   
 
 
 
   const [visible, setVisible] = React.useState<boolean>(false)
   const [url, setUrl] = React.useState<string>("")
+  const [wechat, setWechat] = React.useState({} as {[key in string]: string});
+
+
+
+  React.useEffect(() => {
+    fetchUserInfo(data.filter(i => !!i.openId).map(i => i.openId))
+  }, [data])
 
 
 
@@ -125,6 +137,35 @@ function List(props: RouteComponentProps): JSX.Element {
 
     const url = RedirectUrl(host, id)
     setUrl(url)
+  }
+
+
+
+  const fetchUserInfo = async (ids: string[]) => {
+    if (!ids.length) {
+      return
+    }
+    const PromiseApi = ids.map(openid => {
+      return apiWechat.fetchUserInfo({
+        openid,
+      });
+    })
+    const res = await Promise.all(PromiseApi)
+
+    const result = res.reduce((initVal: {[key in string]: string}, item, index) => {
+      if (item.data && item.data.nickname) {
+        initVal[item.data.openid] = item.data.nickname
+      } else if (item.data) { // 兼容java的接口
+         const data: IUserInfo =  (item.data as any).data 
+         console.error(data)
+         if (data.nickname && data.openid) {
+           initVal[data.openid] = data.nickname
+         }
+      }
+      return initVal
+    }, {})
+
+    setWechat(result)
   }
 
 
