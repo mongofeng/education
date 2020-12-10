@@ -11,6 +11,7 @@ export interface ITeacher {
   region: string
   address: string
   status: enums.TEACHER_STATUS
+  openId: string
   desc: string
   createDate?: string
   updateDate?: string

@@ -7,6 +7,7 @@ import { Button, message, Modal, Table } from 'antd'
 import { ColumnProps } from "antd/lib/table";
 import QrcodeCom from '@/components/Qrcode'
 import * as React from "react";
+import { RedirectUrl } from "@/utils/redirct";
 
 const confirm = Modal.confirm;
 
@@ -23,7 +24,9 @@ function List(): JSX.Element {
     handleTableChange,
   } = fetchApiHook(initList, api.getAdminWechatList)
 
-  const url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx9bb9b35bb6d4f980&redirect_uri=http%3A%2F%2Fyangjin-art.top%2Fwechat%2Fadmin.html&response_type=code&scope=snsapi_userinfo&state=yangjinart#wechat_redirect'
+  const host = encodeURIComponent(`${location.origin}/wechat/admin.html`)
+
+  const url = RedirectUrl(host)
 
 
 

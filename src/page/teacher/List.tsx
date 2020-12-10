@@ -8,7 +8,8 @@ import fetchApiHook from '../../common/hooks/featchApiList'
 import * as enums from "../../const/enum";
 import { ITeacher } from "../../const/type/teacher";
 import {isDev} from '../../config/index'
-
+import QrcodeCom from '@/components/Qrcode'
+import { RedirectUrl } from '@/utils/redirct';
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
@@ -32,6 +33,12 @@ const columns: Array<ColumnProps<ITeacher>> = [
   {
     title: "手机号码",
     dataIndex: "phone"
+  },
+
+  {
+    title: "openId",
+    dataIndex: "openId"
+    
   },
 
   {
@@ -69,6 +76,14 @@ function List(props: RouteComponentProps): JSX.Element {
     sort: { createDate: -1 }
   })
 
+  
+
+
+
+  const [visible, setVisible] = React.useState<boolean>(false)
+  const [url, setUrl] = React.useState<string>("")
+
+
 
 
   /**
@@ -104,6 +119,15 @@ function List(props: RouteComponentProps): JSX.Element {
   }
 
 
+
+  const bindWechat = (id: string) => {
+    const host = encodeURIComponent(`${location.origin}/wechat/admin.html`)
+
+    const url = RedirectUrl(host, id)
+    setUrl(url)
+  }
+
+
   const operate = [
     {
       title: "操作",
@@ -129,6 +153,17 @@ function List(props: RouteComponentProps): JSX.Element {
           (<Link to={`edit/${row._id}`} key='1'>
             <Icon type="edit" />
           </Link>),
+          (<Button
+            key="2"
+            className="ml5"
+            type="link"
+            size="small"
+            onClick={() => {
+              bindWechat(row._id)
+              setVisible(true)
+            }} >
+            绑定
+          </Button>)
   
         ]
       }
@@ -140,8 +175,12 @@ function List(props: RouteComponentProps): JSX.Element {
     <div>
       <div className="main-title clearfix">
         <h2>老师列表</h2>
+        <Button  className="fr" loading={loading} onClick={() => fetchData(true)}>
+          {loading ? '刷新中' : '刷新'}
+        </Button>
+
         <Button
-          className="fr"
+          className="fr mr10"
           type="primary"
           icon="plus"
           onClick={handleOnClick}
@@ -167,6 +206,15 @@ function List(props: RouteComponentProps): JSX.Element {
             style={{ width: 200 }}
           />
         </div>
+
+        <Modal
+          title="微信扫描"
+          visible={visible}
+          onOk={() => setVisible(false)}
+          onCancel={() => setVisible(false)}>
+          
+          <QrcodeCom url={url} width={200} height={200}/>
+        </Modal>
 
         <Table<ITeacher>
           bordered={true}
