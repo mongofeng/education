@@ -10,8 +10,8 @@ import { ITeacher } from "@/const/type/teacher";
 import {isDev} from '@/config/index'
 import QrcodeCom from '@/components/Qrcode'
 import { RedirectUrl } from '@/utils/redirct';
-import { IUserInfo } from '@/const/type/wechat';
-import * as apiWechat from '@/api/wechat'
+import wechatHook from '@/common/hooks/wechatInfo'
+
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
@@ -41,6 +41,9 @@ function List(props: RouteComponentProps): JSX.Element {
     },
     sort: { createDate: -1 }
   })
+
+
+  const {wechat, fetchUserInfo} = wechatHook()
 
 
   const columns: Array<ColumnProps<ITeacher>> = [
@@ -87,7 +90,7 @@ function List(props: RouteComponentProps): JSX.Element {
 
   const [visible, setVisible] = React.useState<boolean>(false)
   const [url, setUrl] = React.useState<string>("")
-  const [wechat, setWechat] = React.useState({} as {[key in string]: string});
+  
 
 
 
@@ -141,32 +144,7 @@ function List(props: RouteComponentProps): JSX.Element {
 
 
 
-  const fetchUserInfo = async (ids: string[]) => {
-    if (!ids.length) {
-      return
-    }
-    const PromiseApi = ids.map(openid => {
-      return apiWechat.fetchUserInfo({
-        openid,
-      });
-    })
-    const res = await Promise.all(PromiseApi)
-
-    const result = res.reduce((initVal: {[key in string]: string}, item, index) => {
-      if (item.data && item.data.nickname) {
-        initVal[item.data.openid] = item.data.nickname
-      } else if (item.data) { // 兼容java的接口
-         const data: IUserInfo =  (item.data as any).data 
-         console.error(data)
-         if (data.nickname && data.openid) {
-           initVal[data.openid] = data.nickname
-         }
-      }
-      return initVal
-    }, {})
-
-    setWechat(result)
-  }
+  
 
 
   const operate = [

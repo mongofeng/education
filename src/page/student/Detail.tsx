@@ -4,15 +4,13 @@ import * as React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import * as apiStatic from '../../api/statistics'
 import * as api from "../../api/student";
-import * as apiWechat from '../../api/wechat'
+import wechatHook from '@/common/hooks/wechatInfo'
 import { default as FieldInfo, IField } from '../../components/Fields-info'
 import * as enums from '../../const/enum'
 import { IStudent } from '../../const/type/student'
 import formatDate from "../../utils/format-date";
 import Course from './page/course'
 import Hours from './page/hour'
-
-import { IUserInfo } from "../../const/type/wechat";
 import getAge from '../../utils/getAge'
 import Schedule from './page/shchedule'
 import SignIn from './page/sign'
@@ -103,7 +101,6 @@ function Detail(props: RouteComponentProps<IParams>): JSX.Element {
 
 
   const [info, setInfo] = React.useState({} as IStudent);
-  const [wechat, setWechat] = React.useState({} as {[key in string]: string});
   const [staticTotal, setStaticTotal] = React.useState({
     count: 0,
     surplus: 0,
@@ -113,6 +110,8 @@ function Detail(props: RouteComponentProps<IParams>): JSX.Element {
     activiteCount: 0,
     overdueCount: 0,
   })
+
+  const {wechat, fetchUserInfo} = wechatHook()
 
 
   const {
@@ -126,29 +125,7 @@ function Detail(props: RouteComponentProps<IParams>): JSX.Element {
   };
 
 
-  const fetchUserInfo = async (ids: string[]) => {
-    const PromiseApi = ids.map(openid => {
-      return apiWechat.fetchUserInfo({
-        openid,
-      });
-    })
-    const res = await Promise.all(PromiseApi)
 
-    const result = res.reduce((initVal: {[key in string]: string}, item, index) => {
-      if (item.data && item.data.nickname) {
-        initVal[item.data.openid] = item.data.nickname
-      } else if (item.data) { // 兼容java的接口
-         const data: IUserInfo =  (item.data as any).data 
-         console.error(data)
-         if (data.nickname && data.openid) {
-           initVal[data.openid] = data.nickname
-         }
-      }
-      return initVal
-    }, {})
-
-    setWechat(result)
-  }
 
 
   /**
