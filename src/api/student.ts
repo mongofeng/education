@@ -51,3 +51,13 @@ export function delStudent(id: string): ApiResponse<IStudent> {
 export function bindingWechat(id: string, params: {openId: string}): ApiResponse<IStudent> {
     return http.put(`student/bindingWechat/${id}`, params);
 }
+
+
+
+/**
+ *
+ * @param params 查询参数
+ */
+export function removeWechat(params: {openId: string; id: string}): ApiListData<IStudent> {
+    return http.post('student/removeWechat', params)
+}
