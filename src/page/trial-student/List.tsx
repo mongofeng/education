@@ -28,7 +28,7 @@ function List(props: RouteComponentProps): JSX.Element {
     onDateChange,
     onSearch,
     fetchData
-  } = fetchApiHook(initList, api.gettrialCclassRecordList)
+  } = fetchApiHook(initList, api.gettrialStudentList)
 
 
   const {wechat, fetchUserInfo} = wechatHook()

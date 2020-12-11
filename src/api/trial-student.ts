@@ -13,7 +13,7 @@ export function addTrialStudent(params: TrialStudent) {
 *
 * @param params 查询参数
 */
-export function gettrialCclassRecordList(params: TrialStudent): ApiListData<TrialStudent> {
+export function gettrialStudentList(params:QueryCondition< TrialStudent>): ApiListData<TrialStudent> {
   return http.post('trial-student/list', params)
 }
 
