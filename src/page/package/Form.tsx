@@ -6,10 +6,10 @@ import {
   Form,
   Icon,
   Input,
-  message,
   InputNumber,
-  Tooltip,
+  message,
   Select,
+  Tooltip,
 } from "antd";
 import { FormComponentProps } from "antd/lib/form";
 import * as React from "react";
@@ -149,15 +149,27 @@ const FormCompent: React.FC<IFormProps> = (props)=> {
            </Form.Item>
 
 
-           <Form.Item label="价格">
-             {getFieldDecorator('amount' , {
-               initialValue: form ? form.amount : '',
-               rules: [{ required: true, message: '请输入课程包的价格', type: 'number' }],
+           <Form.Item label="销售价格">
+             {getFieldDecorator('priceAmount' , {
+               initialValue: form ? form.priceAmount : '',
+               rules: [{ required: true, message: '请输入课程包的销售价格', type: 'number' }],
              })(
                <InputNumber min={0} max={100000}  />
              )}
              
            </Form.Item>
+
+           <Form.Item label="原价格">
+             {getFieldDecorator('amount' , {
+               initialValue: form ? form.amount : '',
+               rules: [{ required: true, message: '请输入课程包的原价格', type: 'number' }],
+             })(
+               <InputNumber min={0} max={100000}  />
+             )}
+             
+           </Form.Item>
+
+           
 
 
            <Form.Item label="有效期">

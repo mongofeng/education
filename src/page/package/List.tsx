@@ -1,14 +1,14 @@
+import { PackageStatusLabel } from '@/const/enum';
 import { Button, DatePicker, Input, message, Modal, Table } from 'antd'
 import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { Link } from "react-router-dom";
 import * as api from "../../api/package";
-import { IPackage } from "../../const/type/package";
-import formatDate from "../../utils/format-date";
 import fetchApiHook from '../../common/hooks/featchApiList'
 import {isDev} from '../../config/index'
-import { PackageStatusLabel } from '@/const/enum';
+import { IPackage } from "../../const/type/package";
+import formatDate from "../../utils/format-date";
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
 const confirm = Modal.confirm;
@@ -25,8 +25,14 @@ const columns: Array<ColumnProps<IPackage>> = [
     title: "课时",
     dataIndex: "count",
   },
+  
   {
-    title: "价格",
+    title: "销售价格",
+    dataIndex: "priceAmount",
+    render: (amount: number) => <span>{amount}元</span>
+  },
+  {
+    title: "原价格",
     dataIndex: "amount",
     render: (amount: number) => <span>{amount}元</span>
   },
@@ -102,8 +108,7 @@ function List(props: RouteComponentProps): JSX.Element {
           size="small"
           onClick={() => {
             onDel(row._id)
-          }} >
-        </Button>)
+          }} />)
       }
     }
   ]
