@@ -1,13 +1,14 @@
 import * as api from "@/api/trial-student";
 import fetchApiHook from '@/common/hooks/featchApiList'
 import fetchTeacherHook from '@/common/hooks/teacher'
+import fetchTrialStudentPackageHook from "@/common/hooks/trial-student-package";
+import wechatHook from '@/common/hooks/wechatInfo'
 import { TrialStudent } from "@/const/type/trial-student";
 import formatDate from "@/utils/format-date";
 import { Button, DatePicker, Input, message, Modal, Table } from 'antd'
 import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
 import { RouteComponentProps } from "react-router-dom";
-import wechatHook from '@/common/hooks/wechatInfo'
 import { Link } from "react-router-dom";
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
@@ -33,8 +34,14 @@ function List(props: RouteComponentProps): JSX.Element {
 
   const {wechat, fetchUserInfo} = wechatHook()
 
+  const {
+    TrialStudentPakageObj,
+    fetchTrialStudentPakage
+  } = fetchTrialStudentPackageHook()
+
   React.useEffect(() => {
     fetchUserInfo(data.filter(i => !!i.openId).map(i => i.openId))
+    fetchTrialStudentPakage(data.filter(i => !!i._id).map(i => i.id))
   }, [data])
 
 
@@ -67,6 +74,21 @@ function List(props: RouteComponentProps): JSX.Element {
       dataIndex: "openId",
       render: (str: string) => wechat[str] || str
     },
+
+    {
+      title: "总课时",
+      dataIndex: "count",
+      render: (str: string, data: TrialStudent) => TrialStudentPakageObj[data.id] && TrialStudentPakageObj[data.id].count 
+    },
+
+    {
+      title: "使用课时",
+      dataIndex: "used",
+      render: (str: string, data: TrialStudent) => TrialStudentPakageObj[data.id] && TrialStudentPakageObj[data.id].used 
+    },
+
+
+
    
     {
       title: "创建时间",
