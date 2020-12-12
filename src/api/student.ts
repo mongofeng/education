@@ -58,6 +58,6 @@ export function bindingWechat(id: string, params: {openId: string}): ApiResponse
  *
  * @param params 查询参数
  */
-export function removeWechat(params: {openId: string; id: string}): ApiListData<IStudent> {
+export function removeWechat(params: {openid: string; id: string}): ApiListData<IStudent> {
     return http.post('student/removeWechat', params)
 }

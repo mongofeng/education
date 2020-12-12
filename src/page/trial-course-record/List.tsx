@@ -1,15 +1,15 @@
 import * as api from "@/api/trial-course-record";
 import fetchApiHook from '@/common/hooks/featchApiList'
 import fetchTeacherHook from '@/common/hooks/teacher'
+import fetchTrialStudentHook from '@/common/hooks/trial-student'
 import { TrialCourseRecord } from "@/const/type/trial-course-record";
 import formatDate from "@/utils/format-date";
 import { Button, DatePicker, Input, message, Modal, Table, Tag } from 'antd'
 import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
-import * as enums from '../../const/enum'
 import { RouteComponentProps } from "react-router-dom";
 import { Link } from "react-router-dom";
-import fetchTrialStudentHook from '@/common/hooks/trial-student'
+import * as enums from '../../const/enum'
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
 const confirm = Modal.confirm;
@@ -47,7 +47,7 @@ function List(props: RouteComponentProps): JSX.Element {
       title: "学生",
       dataIndex: "studentId",
       render: (studentId: string) => {
-        if (studentId && teacherObj[studentId]) {
+        if (studentId && TrialStudentObj[studentId]) {
           return TrialStudentObj[studentId] || '-'
         }
         return '-'

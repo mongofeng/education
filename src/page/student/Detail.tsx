@@ -138,7 +138,7 @@ function Detail(props: RouteComponentProps<IParams>): JSX.Element {
       title: "确定操作?",
       content: `重置后需要重新绑定微信`,
       onOk: async () => {
-        await api.removeWechat({id, openId});
+        await api.removeWechat({id, openid: openId});
         message.success("重置微信号成功");
         fetchDetail();
       }
