@@ -76,12 +76,27 @@ export const Navs: INavs[] = [
   },
   {
     label: '试课课时',
-    value: 'trial-class-record',
+    value: 'trial-course-record',
     icon: "interaction" 
   },
+  
+  {
+    label: '试课学员',
+    value: 'trial-student',
+    icon: "interaction" 
+  },
+
+  {
+    label: '微信订单',
+    value: 'order',
+    icon: "interaction" 
+  },
+
   {
     label: '管理员微信',
     value: 'admin-wechat',
     icon: 'wechat'
-  }
+  },
+
+
 ]

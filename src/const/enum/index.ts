@@ -152,3 +152,37 @@ export const PackageStatusLabel: LabelMapping<PackageStatus> = {
     [PackageStatus.UpFnormal]: '上架正式',
     [PackageStatus.Activite]: '上架活动',
 }
+
+
+// PendingPay(1, "待支付"),
+//     Payed(2, "支付"),
+//     Refund(3, "退款"),
+//     Cancel(4, "取消");
+
+export enum OrderStatus {
+    PendingPay = 1,
+    Payed,
+    Refund,
+    Cancel,
+}
+
+export const OrderStatusLabel: LabelMapping<OrderStatus> = {
+    [OrderStatus.PendingPay]: '待支付',
+    [OrderStatus.Payed]: '支付',
+    [OrderStatus.Refund]: '退款',
+    [OrderStatus.Cancel]: '取消',
+}
+
+// Trial(1, "试用学生"),
+//     Formal(2, "正式学生");
+export enum StudnetOrderStatus {
+    Trial = 1,
+    Formal,
+
+}
+
+export const StudnetOrderStatusLabel: LabelMapping<StudnetOrderStatus> = {
+    [StudnetOrderStatus.Trial]: '试用学生',
+    [StudnetOrderStatus.Formal]: '正式学生',
+
+}

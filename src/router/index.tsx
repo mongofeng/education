@@ -45,8 +45,16 @@ const TrialClassRecord = React.lazy(() => import(/* webpackChunkName: 'trial-cla
 const TrialClassRecordForm = React.lazy(() => import(/* webpackChunkName: 'trial-class-record'*/ '../page/trial-class-record/Form'));
 
 
+const TrialStudent = React.lazy(() => import(/* webpackChunkName: 'trial-student'*/ '../page/trial-student/List'));
+
+
+
+const TrialCourseRecord = React.lazy(() => import(/* webpackChunkName: 'trial-course-record'*/ '../page/trial-course-record/List'));
+const OrderList = React.lazy(() => import(/* webpackChunkName: 'order'*/ '../page/order/List'));
+
 
 const User = React.lazy(() => import(/* webpackChunkName: 'User'*/ '../layout/UserLayout'));
+
 import LoginPage from "../page/user/Login";
 import Register from "../page/user/Register";
 
@@ -271,6 +279,20 @@ export default [
         path: "/base/admin-wechat",
         component:SuspenseComponent( adminWechat)
       },
+      {
+        path: "/base/trial-student",
+        component:SuspenseComponent( TrialStudent)
+      },
+      {
+        path: "/base/trial-course-record",
+        component:SuspenseComponent( TrialCourseRecord)
+      },
+      {
+        path: "/base/order",
+        component:SuspenseComponent( OrderList)
+      },
+
+      
 
       
 

@@ -200,7 +200,7 @@ const FormCompent: React.FC<IFormProps> = (props)=> {
 
     
 
-            <Form.Item label="课程包备注">
+            <Form.Item label="商品的介绍">
               {getFieldDecorator("desc", {
                 initialValue: form ? form.desc : '',
               })(
