@@ -136,9 +136,13 @@ const List: React.FC<IProps> =  (props) => {
         const {data: {data: result}} = await supplement(params)
 
         const {isMotify, record, wechatInfo} = result
-        const str = isMotify ? '补签成功,成功扣除课时' : '补签失败, 扣除课时失败'
-        const total: number = wechatInfo.errcode === 0 ? 1 :0
-        message.success(`${str}, 成功推送微信消息${total}条, 课时记录：${record._id}`)
+        if (isMotify) {
+          const total: number = wechatInfo.errcode === 0 ? 1 :0
+          message.success(`补签成功,成功扣除课时, 成功推送微信消息${total}条, 课时记录：${record._id}`)
+        } else {
+          message.error('补签失败, 扣除课时失败')
+        }
+        
       } else if (type === 'sign') {
         const params: TrialCourseSignVo = {
           courseId:   _id,
@@ -150,9 +154,12 @@ const List: React.FC<IProps> =  (props) => {
         }
         const {data: {data: result}} = await sign(params)
         const {isMotify, record, wechatInfo} = result
-        const str = isMotify ? '签到成功,成功扣除课时' : '签到失败, 扣除课时失败'
-        const total: number = wechatInfo.errcode === 0 ? 1 :0
-        message.success(`${str}, 成功推送微信消息${total}条, 课时记录：${record._id}`) 
+        if (isMotify) {
+          const total: number = wechatInfo.errcode === 0 ? 1 :0
+          message.success(`签到成功,成功扣除课时, 成功推送微信消息${total}条, 课时记录：${record._id}`)
+        } else {
+          message.error('签到失败, 扣除课时失败')
+        }
       } else {
         message.error('找不到当前的类型')
       }
