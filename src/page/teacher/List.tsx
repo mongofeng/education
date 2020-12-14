@@ -90,6 +90,7 @@ function List(props: RouteComponentProps): JSX.Element {
 
   const [visible, setVisible] = React.useState<boolean>(false)
   const [url, setUrl] = React.useState<string>("")
+  const [name, setName] = React.useState<string>("")
   
 
 
@@ -135,11 +136,17 @@ function List(props: RouteComponentProps): JSX.Element {
 
 
 
-  const bindWechat = (id: string) => {
+  const bindWechat = (id: string, name: string) => {
     const host = encodeURIComponent(`${location.origin}/wechat/admin.html`)
 
     const url = RedirectUrl(host, id)
     setUrl(url)
+    setName(name)
+  }
+
+  const onOk = () => {
+    setVisible(false)
+    setName('')
   }
 
 
@@ -178,7 +185,7 @@ function List(props: RouteComponentProps): JSX.Element {
             type="link"
             size="small"
             onClick={() => {
-              bindWechat(row._id)
+              bindWechat(row._id, row.name)
               setVisible(true)
             }} >
             绑定
@@ -229,10 +236,10 @@ function List(props: RouteComponentProps): JSX.Element {
         <Modal
           title="微信扫描"
           visible={visible}
-          onOk={() => setVisible(false)}
-          onCancel={() => setVisible(false)}>
+          onOk={onOk}
+          onCancel={onOk}>
           
-          <QrcodeCom url={url} width={200} height={200}/>
+          <QrcodeCom url={url} width={200} height={200} name={name}/>
         </Modal>
 
         <Table<ITeacher>
