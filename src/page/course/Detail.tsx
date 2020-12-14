@@ -13,6 +13,7 @@ import StudentList from './views/StudentList'
 
 import TrialStudent from './views/trial-student'
 import TrialStudentList from './views/trial-student-list'
+import TrialStudentCourse from './views/trial-student-course'
 const { useState, useEffect } = React;
 const TabPane = Tabs.TabPane;
 
@@ -176,7 +177,7 @@ const Detail: React.FC<RouteComponentProps<IParams>> = (props) => {
 
 
 
-        <Tabs defaultActiveKey='1' className="mt10">
+        <Tabs defaultActiveKey={info ? '1' : '5'} className="mt10">
           {info && info.studentIds &&
 
             [(<TabPane tab="课程的学员列表" key="1">
@@ -205,15 +206,20 @@ const Detail: React.FC<RouteComponentProps<IParams>> = (props) => {
             </TabPane>),
 
 
-            (<TabPane tab="所有试课学生" key="4">
+            (<TabPane tab="添加试课学生" key="4">
               <TrialStudentList courseId={id} studentIds={info.trialStudentIds} update={fetchDetail} />
             </TabPane>)
 
             ]
           }
 
-          <TabPane tab="签到流水" key="5">
+          <TabPane tab="签到记录" key="5">
             <Hour id={id} />
+          </TabPane>
+
+
+          <TabPane tab="试课记录" key="6">
+            <TrialStudentCourse id={id} />
           </TabPane>
 
         </Tabs>

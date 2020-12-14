@@ -4,20 +4,25 @@ import fetchTeacherHook from '@/common/hooks/teacher'
 import fetchTrialStudentHook from '@/common/hooks/trial-student'
 import { TrialCourseRecord } from "@/const/type/trial-course-record";
 import formatDate from "@/utils/format-date";
-import { DatePicker, Input, Modal, Table, Tag } from 'antd'
+import { DatePicker, Input, Table, Tag } from 'antd'
 import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
-import { RouteComponentProps } from "react-router-dom";
-import * as enums from '../../const/enum'
+
+import * as enums from '@/const/enum'
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
 
 
-
+interface IProps {
+  id: string,
+  // student: {
+  //   [key in string]: string
+  // }
+}
 const initList: TrialCourseRecord[] = [];
 
 
-function List(props: RouteComponentProps): JSX.Element {
+function List(props: IProps): JSX.Element {
 
   const {
     loading,
@@ -25,7 +30,17 @@ function List(props: RouteComponentProps): JSX.Element {
     pagination,
     handleTableChange,
     onDateChange,
-    onSearch  } = fetchApiHook(initList, api.gettrialCclassRecordList)
+    onSearch  } = fetchApiHook(initList, api.gettrialCclassRecordList,  {
+      page: 1,
+      limit: 10,
+      size: 10,
+      query: {
+        courseId: props.id,
+      },
+      sort: {
+        createDate: -1
+      }
+    } as any)
 
 
 
@@ -61,11 +76,6 @@ function List(props: RouteComponentProps): JSX.Element {
       }
     },
 
-
-    {
-      title: "课程",
-      dataIndex: "courseId",
-    },
     {
       title: "课时",
       dataIndex: "num",
