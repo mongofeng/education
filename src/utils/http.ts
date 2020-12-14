@@ -48,13 +48,16 @@ function interceptors (http: AxiosInstance) {
         if (typeof response.data === 'string') {
           description = response.data
         } else if (typeof response.data === 'object') {
+          // {"msg":"课程包为空","code":null}
+          // {"timestamp":"2020-12-14T06:10:09.240+0000","status":500,"error":"Internal Server Error","message":"No message available","path":"/trial-course-record/supplement"}
           const {
             message,
             err: errMsg,
-            error: err
+            error: err,
+            msg,
           } = response.data
 
-          description = message || (errMsg && errMsg.desc) || err || '请求错误'
+          description = message || (errMsg && errMsg.desc) || err ||  msg || '未知请求错误'
         }
 
         notification.error({

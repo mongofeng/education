@@ -27,7 +27,7 @@ const columns: Array<ColumnProps<TrialStudent>> = [
     },
 
     {
-      title: "状态",
+      title: "年龄",
       dataIndex: "age",
     },
   ];
