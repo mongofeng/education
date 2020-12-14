@@ -118,12 +118,7 @@ function List(props: IProps): JSX.Element {
 
 
   return (
-    <div>
-      <div className="main-title clearfix">
-        <h2>试课记录列表</h2>
-      </div>
-
-      <div className="content-wrap">
+      <div >
         <div className="mb10">
           <RangePicker onChange={onDateChange} />
 
@@ -143,7 +138,7 @@ function List(props: IProps): JSX.Element {
           loading={loading}
           onChange={handleTableChange} />
       </div>
-    </div>
+
   );
 }
 

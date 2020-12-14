@@ -1,9 +1,9 @@
 import { Button, Input, message, Modal, Table } from 'antd'
-import { ColumnProps, TableRowSelection } from 'antd/lib/table';
+import { ColumnProps } from 'antd/lib/table';
 import * as React from "react";
 import * as api from '@/api/trial-student'
 import fetchApiHook from '@/common/hooks/featchApiList'
-import { batchTrialStudentToCourse, delAllCourseStudent, delTrailStudentFromCourse } from '@/api/course'
+import { batchTrialStudentToCourse, delTrailStudentFromCourse } from '@/api/course'
 import { TrialStudent } from '@/const/type/trial-student'
 import formatDate from "@/utils/format-date";
 const Search = Input.Search;
@@ -13,7 +13,6 @@ interface IProps {
   courseId: string
   studentIds: string[]
 }
-const { useState } = React;
 
 
 const columns: Array<ColumnProps<TrialStudent>> = [
@@ -45,11 +44,6 @@ const columns: Array<ColumnProps<TrialStudent>> = [
 const initList: TrialStudent[] = [];
 
 
-/**
- *
- * @param props 选择项
- */
-const initSelectedRows: TrialStudent[] = []
 
 
 function List(props: IProps): JSX.Element {
@@ -59,12 +53,12 @@ function List(props: IProps): JSX.Element {
     data,
     pagination,
     handleTableChange,
-    onSearch  } = fetchApiHook(initList, api.gettrialStudentList, {
-    limit: 10,
-    size: 10,
-    page: 1,
-    sort: { createDate: -1 }
-  } as any)
+    onSearch } = fetchApiHook(initList, api.gettrialStudentList, {
+      limit: 10,
+      size: 10,
+      page: 1,
+      sort: { createDate: -1 }
+    } as any)
 
 
 
@@ -79,7 +73,6 @@ function List(props: IProps): JSX.Element {
           await delTrailStudentFromCourse(props.courseId, { ids: [id] })
           props.update()
           message.success('删除成功')
-          setTableSelectedRows([])
         } catch (error) {
           message.error('删除失败')
         }
@@ -89,27 +82,7 @@ function List(props: IProps): JSX.Element {
   }
 
 
-  // 选择项
-  const [tableSelectedRows, setTableSelectedRows] = useState(initSelectedRows);
 
-
-  // rowSelection objects indicates the need for row selection
-  const rowSelection: TableRowSelection<TrialStudent> = {
-    onSelect: (record, selected, selectedRows) => {
-      // 当前项，当前是否选择， 当前所有选择
-      console.log(selected, selectedRows);
-      setTableSelectedRows(selectedRows as TrialStudent[])
-    },
-    getCheckboxProps: record => ({
-      disabled: props.studentIds.indexOf(record._id) > -1, // Column configuration not to be checked
-      ...record
-    }),
-    onSelectAll: (selected, selectedRows) => {
-      // 当前是否选择， 当前所有选择，当前项，
-      console.log(selected, selectedRows);
-      setTableSelectedRows(selectedRows)
-    },
-  };
 
 
   const operate = [
@@ -117,7 +90,16 @@ function List(props: IProps): JSX.Element {
       title: "操作",
       render: (val: string, row: TrialStudent) => {
         if (props.studentIds.indexOf(row._id) === -1) {
-          return []
+          return [
+            <Button
+              key="1"
+              className="ml5"
+              icon="plus"
+              size="small"
+              onClick={() => {
+                onAdd([row._id])
+              }} >绑定</Button>
+          ]
         }
         return [
           <Button
@@ -128,7 +110,7 @@ function List(props: IProps): JSX.Element {
             size="small"
             onClick={() => {
               onDel(row._id)
-            }} >解除绑定</Button>
+            }} >解绑</Button>
         ]
       }
     }
@@ -136,13 +118,10 @@ function List(props: IProps): JSX.Element {
 
 
 
-  const onAdd = async () => {
-    console.log(tableSelectedRows)
-    const ids = tableSelectedRows.map(i => i._id)
+  const onAdd = async (ids: string[]) => {
     if (!ids.length) { return message.error('请选择学生') }
     await batchTrialStudentToCourse(props.courseId, { ids })
     props.update()
-    setTableSelectedRows([])
     message.success('添加成功')
   }
 
@@ -161,20 +140,7 @@ function List(props: IProps): JSX.Element {
           onSearch={onSearch}
           style={{ width: 200 }} />
 
-        <Button
-          className="ml10"
-          type="primary"
-          onClick={onAdd}>
-          添加
-        </Button>
 
-
-        {/* <Button
-          type="primary"
-          className="ml10"
-          onClick={onDelAll}>
-          删除
-        </Button> */}
       </div>
 
       <Table<TrialStudent>
@@ -184,7 +150,6 @@ function List(props: IProps): JSX.Element {
         dataSource={data}
         pagination={pagination}
         loading={loading}
-        rowSelection={rowSelection}
         onChange={handleTableChange} />
 
     </React.Fragment>

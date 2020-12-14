@@ -172,6 +172,13 @@ const Detail: React.FC<RouteComponentProps<IParams>> = (props) => {
               valueStyle={
                 { fontSize: '42px', color: 'red', textAlign: 'center' }
               } />
+            <Statistic
+              title={<div style={{ textAlign: 'center' }}>当前试课学生数量</div>}
+              value={(info && info.trialStudentIds) ? info.trialStudentIds.length : 0}
+              suffix="人"
+              valueStyle={
+                { fontSize: '42px', color: 'green', textAlign: 'center' }
+              } />
           </Col>
         </Row>
 
