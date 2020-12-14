@@ -25,7 +25,7 @@ export interface TrialCourseSignVo {
 }
 
 export interface TrialCoureseSignDto {
-  isMotify: boolean
+  motify: boolean
   record: TrialCourseRecord
   wechatInfo: WechatTemplateDto
 }

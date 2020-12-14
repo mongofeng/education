@@ -135,8 +135,8 @@ const List: React.FC<IProps> =  (props) => {
         }
         const {data: {data: result}} = await supplement(params)
 
-        const {isMotify, record, wechatInfo} = result
-        if (isMotify) {
+        const {motify, record, wechatInfo} = result
+        if (motify) {
           const total: number = wechatInfo.errcode === 0 ? 1 :0
           message.success(`补签成功,成功扣除课时, 成功推送微信消息${total}条, 课时记录：${record._id}`)
         } else {
@@ -153,8 +153,8 @@ const List: React.FC<IProps> =  (props) => {
           teacherId: teacherId
         }
         const {data: {data: result}} = await sign(params)
-        const {isMotify, record, wechatInfo} = result
-        if (isMotify) {
+        const {motify, record, wechatInfo} = result
+        if (motify) {
           const total: number = wechatInfo.errcode === 0 ? 1 :0
           message.success(`签到成功,成功扣除课时, 成功推送微信消息${total}条, 课时记录：${record._id}`)
         } else {
