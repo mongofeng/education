@@ -4,7 +4,7 @@ import fetchTeacherHook from '@/common/hooks/teacher'
 import fetchTrialStudentHook from '@/common/hooks/trial-student'
 import { TrialCourseRecord } from "@/const/type/trial-course-record";
 import formatDate from "@/utils/format-date";
-import { DatePicker, Input, Modal, Table, Tag } from 'antd'
+import { DatePicker, Input, Table, Tag } from 'antd'
 import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
 import { RouteComponentProps } from "react-router-dom";
@@ -17,7 +17,7 @@ const { RangePicker } = DatePicker;
 const initList: TrialCourseRecord[] = [];
 
 
-function List(props: RouteComponentProps): JSX.Element {
+function List(): JSX.Element {
 
   const {
     loading,

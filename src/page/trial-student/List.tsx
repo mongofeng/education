@@ -1,25 +1,22 @@
 import * as api from "@/api/trial-student";
 import fetchApiHook from '@/common/hooks/featchApiList'
-import fetchTeacherHook from '@/common/hooks/teacher'
 import fetchTrialStudentPackageHook from "@/common/hooks/trial-student-package";
 import wechatHook from '@/common/hooks/wechatInfo'
 import { TrialStudent } from "@/const/type/trial-student";
 import formatDate from "@/utils/format-date";
-import { Button, DatePicker, Input, message, Modal, Table } from 'antd'
+import { DatePicker, Input, Table } from 'antd'
 import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { Link } from "react-router-dom";
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
-const confirm = Modal.confirm;
 
 
 
 const initList: TrialStudent[] = [];
 
 
-function List(props: RouteComponentProps): JSX.Element {
+function List(): JSX.Element {
 
   const {
     loading,
@@ -27,9 +24,7 @@ function List(props: RouteComponentProps): JSX.Element {
     pagination,
     handleTableChange,
     onDateChange,
-    onSearch,
-    fetchData
-  } = fetchApiHook(initList, api.gettrialStudentList)
+    onSearch  } = fetchApiHook(initList, api.gettrialStudentList)
 
 
   const {wechat, fetchUserInfo} = wechatHook()
@@ -45,10 +40,6 @@ function List(props: RouteComponentProps): JSX.Element {
   }, [data])
 
 
-
-  const {
-    teacherObj,
-  } = fetchTeacherHook()
 
 
   const columns: Array<ColumnProps<TrialStudent>> = [
@@ -100,12 +91,6 @@ function List(props: RouteComponentProps): JSX.Element {
 
 
 
-  /**
-   * 跳转路由
-   */
-  const handleOnClick = () => {
-    props.history.push("add");
-  };
 
 
 
@@ -114,14 +99,7 @@ function List(props: RouteComponentProps): JSX.Element {
     <div>
       <div className="main-title clearfix">
         <h2>新学生列表</h2>
-        <Button
-          className="fr"
-          type="primary"
-          icon="plus"
-          onClick={handleOnClick}
-        >
-          添加试课记录
-        </Button>
+   
       </div>
 
       <div className="content-wrap">

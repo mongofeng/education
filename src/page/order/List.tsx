@@ -1,24 +1,20 @@
 import * as api from "@/api/order";
 import fetchApiHook from '@/common/hooks/featchApiList'
-import fetchTeacherHook from '@/common/hooks/teacher'
 import { Order } from "@/const/type/order";
 import formatDate from "@/utils/format-date";
-import { Button, DatePicker, Input, message, Modal, Table, Tag } from 'antd'
+import { DatePicker, Input, Table } from 'antd'
 import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
-import { RouteComponentProps } from "react-router-dom";
-import { Link } from "react-router-dom";
 import * as enums from '../../const/enum'
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
-const confirm = Modal.confirm;
 
 
 
 const initList: Order[] = [];
 
 
-function List(props: RouteComponentProps): JSX.Element {
+function List(): JSX.Element {
 
   const {
     loading,
@@ -26,9 +22,7 @@ function List(props: RouteComponentProps): JSX.Element {
     pagination,
     handleTableChange,
     onDateChange,
-    onSearch,
-    fetchData
-  } = fetchApiHook(initList, api.getOrderList)
+    onSearch  } = fetchApiHook(initList, api.getOrderList)
 
 
 
