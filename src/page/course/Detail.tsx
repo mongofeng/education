@@ -198,7 +198,7 @@ const Detail: React.FC<RouteComponentProps<IParams>> = (props) => {
           {info && info.trialStudentIds &&
 
             [(<TabPane tab="试课学员列表" key="3">
-              <Student
+              <TrialStudent
                 teacherId={info.teacherId}
                 ids={info.trialStudentIds}
                 course={info} />
@@ -206,7 +206,7 @@ const Detail: React.FC<RouteComponentProps<IParams>> = (props) => {
 
 
             (<TabPane tab="所有试课学生" key="4">
-              <StudentList courseId={id} studentIds={info.trialStudentIds} update={fetchDetail} />
+              <TrialStudentList courseId={id} studentIds={info.trialStudentIds} update={fetchDetail} />
             </TabPane>)
 
             ]

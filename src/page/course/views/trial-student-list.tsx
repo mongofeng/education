@@ -63,9 +63,6 @@ function List(props: IProps): JSX.Element {
     limit: 10,
     size: 10,
     page: 1,
-    query: {
-      status: 1,
-    },
     sort: { createDate: -1 }
   } as any)
 
