@@ -47,3 +47,12 @@ export interface IUserInfo {
   qr_scene: string; // 	二维码扫码场景（开发者自定义）
   qr_scene_str: string; // 	二维码扫码场景描述（开发者自定义）
 }
+
+
+export interface WechatTemplateDto {
+  errcode: number
+
+    errmsg: string
+
+    msgid: string
+}

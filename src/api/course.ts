@@ -83,6 +83,16 @@ export function batchCourseByStudent (id, params: {
 
 
 
+/**
+ * 批量添加试课学生到课程
+ * @param params ids: 学生的id集合， id： 课程的id
+ */
+export function batchTrialStudentToCourse (id, params: {
+    ids: string[]
+}) {
+    return http.post(`/course/batch-trail-student-to-course/${id}`, params)
+}
+
 
 /**
  * 批量删除课程下的学生
@@ -92,6 +102,18 @@ export function delAllCourseStudent (id, params: {
     ids: string[]
 }) {
     return http.post(`/course/delAllCourseStudent/${id}`, params)
+}
+
+
+
+/**
+ * 批量删除课程下的学生
+ * @param params ids: 学生的id集合， id： 课程的id
+ */
+export function delTrailStudentFromCourse (id, params: {
+    ids: string[]
+}) {
+    return http.post(`/course/del-trail-student/${id}`, params)
 }
 
 

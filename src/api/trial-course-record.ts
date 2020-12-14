@@ -1,4 +1,4 @@
-import {TrialCourseRecord} from '@/const/type/trial-course-record'
+import {TrialCoureseSignDto, TrialCourseRecord, TrialCourseSignVo} from '@/const/type/trial-course-record'
 import { ApiListData, ApiResponse } from '@/types/api'
 import http from '@/utils/http'
 /**
@@ -24,3 +24,13 @@ export function gettrialCclassRecordList(params: TrialCourseRecord): ApiListData
 export function getTrialCourseRecord(id: string): ApiResponse<TrialCourseRecord> {
   return http.get(`trial-course-record/${id}`)
 }
+
+
+export function sign (params: TrialCourseSignVo): ApiResponse<TrialCoureseSignDto>  {
+  return http.post(`trial-course-record/sign`, params)
+}
+
+export function supplement (params: TrialCourseSignVo): ApiResponse<TrialCoureseSignDto>  {
+  return http.post(`trial-course-record/supplement`, params)
+}
+

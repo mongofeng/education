@@ -4,6 +4,7 @@ export interface ICourse {
   name: string
   teacherId: string
   studentIds: string[]
+  trialStudentIds: string[]
   status: enums.COURSE_STATUS
   desc: string
   day: enums.WEEK[] // 一周
