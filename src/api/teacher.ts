@@ -23,6 +23,16 @@ export function getteacherList(params: QueryCondition<ITeacher>): ApiListData<Re
 
 /**
  * 
+ * @param params 查询参数
+ */
+export function bindWechat (params: ITeacher) {
+    return http.post('teacher/bind-wechat', params)
+}
+
+
+
+/**
+ * 
  * @param id 学生的id
  */
 export function getteacher(id: string): ApiResponse<ITeacher> {
