@@ -137,7 +137,7 @@ function List(props: RouteComponentProps): JSX.Element {
 
 
   const bindWechat = (id: string, name: string) => {
-    const host = encodeURIComponent(`${location.origin}/wechat/admin.html`)
+    const host = encodeURIComponent(`${location.origin}/bind-wechat-teacher/`)
 
     const url = RedirectUrl(host, id)
     setUrl(url)
