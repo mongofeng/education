@@ -42,11 +42,9 @@ const QrcodeFunc = function (props: IProps) {
       <canvas ref={containerRef} className="fl"></canvas>
       <Button
           className="fl ml10"
-          type="primary"
           icon="vertical-align-bottom"
           onClick={handleOnClick}
         >
-          下载
         </Button>
     </div>
   )

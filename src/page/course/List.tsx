@@ -103,6 +103,7 @@ function List(props: RouteComponentProps): JSX.Element {
     onDateChange,
     onSearch,
     setQuery,
+    setPagination,
     fetchData
   } = fetchApiHook(initList, api.getCourserList, {
     limit: 10,
@@ -150,9 +151,17 @@ function List(props: RouteComponentProps): JSX.Element {
   };
 
   const onTabChange = (status: string) => {
+    const page = {
+      ...pagination,
+      current: 1
+    }
+    setPagination(page)
+
+    console.log('set 页数')
+    console.log(pagination)
     setQuery({
       status: Number(status)
-    })
+    }, page)
 
     setTableSelectedRows([]);
   }

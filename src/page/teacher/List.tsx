@@ -31,6 +31,7 @@ function List(props: RouteComponentProps): JSX.Element {
     handleTableChange,
     onDateChange,
     onSearch,
+    setPagination,
     setQuery
   } = fetchApiHook(initList, api.getteacherList, {
     limit: 10,
@@ -111,9 +112,17 @@ function List(props: RouteComponentProps): JSX.Element {
 
 
   const onTabChange = (status: string) => {
+    const page = {
+      ...pagination,
+      current: 1
+    }
+    setPagination(page)
+
+    console.log('set 页数')
+    console.log(pagination)
     setQuery({
       status: Number(status)
-    })
+    }, page)
   }
 
 

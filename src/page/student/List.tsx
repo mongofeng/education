@@ -1,4 +1,5 @@
 import { downLoad } from '@/utils/excel';
+import { RedirectUrl } from '@/utils/redirct';
 import { Button, DatePicker, Icon, Input, message, Modal, Table, Tabs } from 'antd'
 import { ColumnProps } from 'antd/lib/table';
 import * as React from "react";
@@ -11,6 +12,7 @@ import {isDev} from '../../config/index'
 import * as enums from '../../const/enum'
 import {IStudent} from '../../const/type/student'
 import formatDate from "../../utils/format-date";
+import QrcodeCom from '@/components/Qrcode'
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
@@ -20,69 +22,7 @@ interface IProps {
 }
 
 
-const columns: Array<ColumnProps<IStudent>> = [
-  {
-    title: "姓名",
-    dataIndex: "name",
-    key: "name",
-    render: (text: string, row: IStudent) => (
-      <Link to={`detail/${row._id}`}>{text}</Link>
-    )
-  },
-  {
-    title: "性别",
-    dataIndex: "sex",
-    filterMultiple: false,
-    filters: [
-      { text: '男', value: '1' },
-      { text: '女', value: '2' },
-    ],
-    render: (str: enums.ESEX) => <span>{enums.SEX_LABEL[str]}</span>
-  },
-  {
-    title: "手机号码",
-    dataIndex: "phone"
-  },
-  {
-    title: "状态",
-    dataIndex: "status",
-    render: (str: enums.STUDENT_STATUS) => <span>{enums.STUDENT_STATUS_LABEL[str]}</span>
-  },
-  {
-    title: "创建时间",
-    dataIndex: "createDate",
-    sorter: true,
-    render: (date: string) => <span>{formatDate(new Date(date))}</span>
-  },
-];
 
-const initCsvCols = [
-  {
-    id: 'birthday',
-    displayName: '生日'
-  },
-  {
-    id: 'contacts',
-    displayName: '联系人'
-  },
-  // {
-  //   id: 'hasopenId',
-  //   displayName: '绑定微信'
-  // },
-  // {
-  //   id: 'teacherName',
-  //   displayName: '所属老师'
-  // }
-]
-
-const csvColumns = columns.reduce((initVal: Array<{id: string; displayName: string}>, item: any) => {
-  return item.dataIndex ? initVal.concat({
-    id: item.dataIndex,
-    displayName: item.title,
-  }) : initVal;
-}, [])
-
-const LastCsvColumns = csvColumns.slice(0,3).concat(initCsvCols, csvColumns.slice(3))
 
 
 
@@ -90,6 +30,11 @@ const initList: IStudent[] = [];
 
 
 function List(props: RouteComponentProps & IProps): JSX.Element {
+
+  const host = encodeURIComponent(`${location.origin}/student`)
+
+  const url = RedirectUrl(host)
+  const [visible, setVisible] = React.useState<boolean>(false)
 
   const {
     loading,
@@ -111,6 +56,85 @@ function List(props: RouteComponentProps & IProps): JSX.Element {
     sort: { createDate: -1 }
   })
 
+  const columns: Array<ColumnProps<IStudent>> = [
+    {
+      title: "姓名",
+      dataIndex: "name",
+      key: "name",
+      render: (text: string, row: IStudent) => (
+        <Link to={`detail/${row._id}`}>{text}</Link>
+      )
+    },
+    {
+      title: "性别",
+      dataIndex: "sex",
+      filterMultiple: false,
+      filters: [
+        { text: '男', value: '1' },
+        { text: '女', value: '2' },
+      ],
+      render: (str: enums.ESEX) => <span>{enums.SEX_LABEL[str]}</span>
+    },
+    {
+      title: "手机号码",
+      dataIndex: "phone"
+    },
+    {
+      title: "状态",
+      dataIndex: "status",
+      render: (str: enums.STUDENT_STATUS, row: IStudent) => {
+        if (str === enums.STUDENT_STATUS.Review) {
+          return [
+            (<Button
+              className="mr5"
+              key="2"
+              size="small"
+              onClick={() => {
+                onSuccess(row._id)
+              }} >通过</Button>)
+          ]
+        }
+        return [
+          (<span key='1'>{enums.STUDENT_STATUS_LABEL[str]}</span>)
+        ]
+      }
+    },
+    {
+      title: "创建时间",
+      dataIndex: "createDate",
+      sorter: true,
+      render: (date: string) => <span>{formatDate(new Date(date))}</span>
+    },
+  ];
+  
+  const initCsvCols = [
+    {
+      id: 'birthday',
+      displayName: '生日'
+    },
+    {
+      id: 'contacts',
+      displayName: '联系人'
+    },
+    // {
+    //   id: 'hasopenId',
+    //   displayName: '绑定微信'
+    // },
+    // {
+    //   id: 'teacherName',
+    //   displayName: '所属老师'
+    // }
+  ]
+  
+  const csvColumns = columns.reduce((initVal: Array<{id: string; displayName: string}>, item: any) => {
+    return item.dataIndex ? initVal.concat({
+      id: item.dataIndex,
+      displayName: item.title,
+    }) : initVal;
+  }, [])
+  
+  const LastCsvColumns = csvColumns.slice(0,3).concat(initCsvCols, csvColumns.slice(3))
+
 
 
   /**
@@ -122,13 +146,17 @@ function List(props: RouteComponentProps & IProps): JSX.Element {
 
 
   const onTabChange = (status: string) => {
-    setPagination({
+    const page = {
       ...pagination,
       current: 1
-    })
+    }
+    setPagination(page)
+
+    console.log('set 页数')
+    console.log(pagination)
     setQuery({
       status: Number(status)
-    })
+    }, page)
     
   }
 
@@ -198,6 +226,18 @@ function List(props: RouteComponentProps & IProps): JSX.Element {
   }
 
 
+  const onSuccess = async (id: string) => {
+    try {
+      await api.updateStudent(id, {status: enums.STUDENT_STATUS.reading})
+      message.success('更改状态成功')
+      fetchData()
+    } catch (error) {
+      message.error('更改状态失败')
+    }
+
+  }
+
+
   const operate = [
     {
       title: "操作",
@@ -248,12 +288,22 @@ function List(props: RouteComponentProps & IProps): JSX.Element {
           onClick={handleOnClick}>
           添加学员
         </Button>
+
+
+        <Button  className="fr mr10" loading={loading} onClick={() => fetchData(true)}>
+          {loading ? '刷新中' : '刷新'}
+        </Button>
+
+        <Button  className="fr mr10" onClick={() => setVisible(true)}>
+          扫码
+        </Button>
       </div>
 
       <div className="content-wrap">
         <Tabs defaultActiveKey="1" onChange={onTabChange}>
-          <TabPane tab="在读" key="1"/>
-          <TabPane tab="毕业" key="2"/>
+          {Object.keys(enums.STUDENT_STATUS_LABEL).map(i => {
+            return <TabPane tab={enums.STUDENT_STATUS_LABEL[i]} key={i}/>
+          })}
         </Tabs>
         <div className="mb10">
           <RangePicker onChange={onDateChange} />
@@ -271,6 +321,15 @@ function List(props: RouteComponentProps & IProps): JSX.Element {
             重置学员微信
           </Button> */}
         </div>
+
+        <Modal
+          title="微信扫码登记信息"
+          visible={visible}
+          onOk={() => setVisible(false)}
+          onCancel={() => setVisible(false)}>
+          
+          <QrcodeCom url={url} width={200} height={200}/>
+        </Modal>
 
         <Table<IStudent>
           bordered={true}

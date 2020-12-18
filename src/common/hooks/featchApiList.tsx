@@ -145,8 +145,9 @@ export default function <T extends object>(initList: T[], fetchApi: IApiList<T>,
    * 
    * @param query setQuery
    */
-  const setQuery = (query: any) => {
-    const condition = getcondition({})
+  const setQuery = (query: any, pager: any) => {
+    console.error(pagination)
+    const condition = getcondition({pager})
     condition.query = {
       ...condition.query,
       ...query
