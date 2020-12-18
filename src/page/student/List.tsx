@@ -13,12 +13,23 @@ import * as enums from '../../const/enum'
 import {IStudent} from '../../const/type/student'
 import formatDate from "../../utils/format-date";
 import QrcodeCom from '@/components/Qrcode'
+import ActionModal from '@/page/student/components/common-sign-modal'
+import { useState } from 'react';
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
 const confirm = Modal.confirm;
 interface IProps {
   allStudent: IStudent[]
+}
+
+
+// 模态框的加载
+const initModalState = {
+  desc: '',
+  teacherId: '',
+  visible: false,
+  confirmLoading: false,
 }
 
 
@@ -30,6 +41,12 @@ const initList: IStudent[] = [];
 
 
 function List(props: RouteComponentProps & IProps): JSX.Element {
+
+  /**
+   * 通过选择老师
+   */
+  const [TeacherState, setTeacherState] = useState(initModalState)
+  const [studentId, setStudent] = useState<string>('')
 
   const host = encodeURIComponent(`${location.origin}/student`)
 
@@ -90,7 +107,7 @@ function List(props: RouteComponentProps & IProps): JSX.Element {
               key="2"
               size="small"
               onClick={() => {
-                onSuccess(row._id)
+                showTeacherModal(row)
               }} >通过</Button>)
           ]
         }
@@ -151,9 +168,6 @@ function List(props: RouteComponentProps & IProps): JSX.Element {
       current: 1
     }
     setPagination(page)
-
-    console.log('set 页数')
-    console.log(pagination)
     setQuery({
       status: Number(status)
     }, page)
@@ -226,16 +240,49 @@ function List(props: RouteComponentProps & IProps): JSX.Element {
   }
 
 
-  const onSuccess = async (id: string) => {
+  
+  
+
+  const showTeacherModal = (row: IStudent) => {
+    setStudent(row._id)
+    setTeacherState({
+      ...TeacherState,
+      desc: row.desc || '',
+      visible: true,
+      teacherId: row.teacherId
+    })
+  }
+
+  const handleTeacherCancel = () => {
+    setTeacherState({
+      ...initModalState,
+    })
+  }
+
+  const handleTeacherSumbit = async (values) => {
+    const {
+      desc,
+      teacherId
+    } = values
+
+
+
+    setTeacherState({
+      ...TeacherState,
+      confirmLoading: true,
+    })
     try {
-      await api.updateStudent(id, {status: enums.STUDENT_STATUS.reading})
-      message.success('更改状态成功')
+      await api.updateStudent(studentId, {status: enums.STUDENT_STATUS.reading, teacherId, desc})
+      message.success('审核通过')
       fetchData()
-    } catch (error) {
-      message.error('更改状态失败')
+
+    } finally {
+      handleTeacherCancel();
     }
 
   }
+
+
 
 
   const operate = [
@@ -330,6 +377,15 @@ function List(props: RouteComponentProps & IProps): JSX.Element {
           
           <QrcodeCom url={url} width={200} height={200}/>
         </Modal>
+
+        {/*补签模块*/}
+        <ActionModal
+          title="修改"
+          isHideNum={true}
+          onCreate={handleTeacherSumbit}
+          onCancel={handleTeacherCancel}
+          {...TeacherState} />
+
 
         <Table<IStudent>
           bordered={true}

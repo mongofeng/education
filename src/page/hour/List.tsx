@@ -178,7 +178,7 @@ function List(props: IProps): JSX.Element {
               icon="edit"
               size="small"
               onClick={() => {
-                showSupplementModal(row)
+                showTeacherModal(row)
               }} />),
           ]
         }
@@ -190,7 +190,7 @@ function List(props: IProps): JSX.Element {
             icon="edit"
             size="small"
             onClick={() => {
-              showSupplementModal(row)
+              showTeacherModal(row)
             }} />),
         ]
       }
@@ -298,26 +298,26 @@ function List(props: IProps): JSX.Element {
   /**
    * 补签
    */
-  const [supplementState, setSupplementState] = useState(initModalState)
+  const [TeacherState, setTeacherState] = useState(initModalState)
   const [hourId, setHourId] = useState<string>('')
 
-  const showSupplementModal = (row: IHour) => {
+  const showTeacherModal = (row: IHour) => {
     setHourId(row._id)
-    setSupplementState({
-      ...supplementState,
+    setTeacherState({
+      ...TeacherState,
       desc: row.desc || '',
       visible: true,
       teacherId: row.teacherId
     })
   }
 
-  const handleSupplementCancel = () => {
-    setSupplementState({
+  const handleTeacherCancel = () => {
+    setTeacherState({
       ...initModalState,
     })
   }
 
-  const handleSupplementSumbit = async (values) => {
+  const handleTeacherSumbit = async (values) => {
     const {
       desc,
       teacherId
@@ -325,8 +325,8 @@ function List(props: IProps): JSX.Element {
 
 
 
-    setSupplementState({
-      ...supplementState,
+    setTeacherState({
+      ...TeacherState,
       confirmLoading: true,
     })
     try {
@@ -342,7 +342,7 @@ function List(props: IProps): JSX.Element {
       fetchData();
 
     } finally {
-      handleSupplementCancel();
+      handleTeacherCancel();
     }
 
   }
@@ -369,9 +369,9 @@ function List(props: IProps): JSX.Element {
         <ActionModal
           title="修改"
           isHideNum={true}
-          onCreate={handleSupplementSumbit}
-          onCancel={handleSupplementCancel}
-          {...supplementState} />
+          onCreate={handleTeacherSumbit}
+          onCancel={handleTeacherCancel}
+          {...TeacherState} />
 
 
         <div className="mb10">
