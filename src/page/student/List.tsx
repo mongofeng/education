@@ -15,6 +15,7 @@ import formatDate from "../../utils/format-date";
 import QrcodeCom from '@/components/Qrcode'
 import ActionModal from '@/page/student/components/common-sign-modal'
 import { useState } from 'react';
+import fetchTeacherHook from '@/common/hooks/teacher';
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
@@ -52,6 +53,11 @@ function List(props: RouteComponentProps & IProps): JSX.Element {
 
   const url = RedirectUrl(host)
   const [visible, setVisible] = React.useState<boolean>(false)
+
+
+  const {
+    teacherObj,
+  } = fetchTeacherHook()
 
   const {
     loading,
@@ -114,6 +120,16 @@ function List(props: RouteComponentProps & IProps): JSX.Element {
         return [
           (<span key='1'>{enums.STUDENT_STATUS_LABEL[str]}</span>)
         ]
+      }
+    },
+    {
+      title: "老师",
+      dataIndex: "teacherId",
+      render: (teacherId: string) => {
+        if (teacherId && teacherObj[teacherId]) {
+          return teacherObj[teacherId] || '-'
+        }
+        return '-'
       }
     },
     {
