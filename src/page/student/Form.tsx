@@ -16,6 +16,7 @@ import * as React from "react";
 import { Link, RouteComponentProps } from 'react-router-dom';
 import * as api from "../../api/student";
 import fetchFormHook from '../../common/hooks/fetchForm'
+import * as enums from '../../const/enum'
 import {IStudent} from '../../const/type/student'
 import * as validator from '../../utils/validator'
 import Location from '.././../components/Location'
@@ -245,8 +246,11 @@ const FormCompent: React.FC<IFormProps> = (props)=> {
               rules: [{ type: "number", required: true, message: "请选择状态" }]
             })(
               <Select>
-                <Option value={1}>在读</Option>
-                <Option value={2}>毕业</Option>
+                {Object.keys(enums.STUDENT_STATUS_LABEL).map(i => {
+                  return  <Option value={Number(i)} key={i}>{enums.STUDENT_STATUS_LABEL[i]}</Option>
+                })}
+                
+          
               </Select>
             )}
           </Form.Item>
