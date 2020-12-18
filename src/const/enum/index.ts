@@ -28,14 +28,18 @@ export const USER_STATUS_LABEL: LabelMapping<USER_STATUS> = {
 /**
  * 学生状态
  */
+
+
 export enum STUDENT_STATUS {
     reading = 1,
-    graduation
+    graduation,
+    Review
 }
 
 export const STUDENT_STATUS_LABEL: LabelMapping<STUDENT_STATUS> = {
-    [STUDENT_STATUS.reading]: '在读',
-    [STUDENT_STATUS.graduation]: '毕业'
+  [STUDENT_STATUS.reading]: '在读',
+  [STUDENT_STATUS.Review]: '审核中',
+  [STUDENT_STATUS.graduation]: '毕业'
 }
 
 
@@ -178,6 +182,7 @@ export const OrderStatusLabel: LabelMapping<OrderStatus> = {
 export enum StudnetOrderStatus {
     Trial = 1,
     Formal,
+    
 
 }
 
