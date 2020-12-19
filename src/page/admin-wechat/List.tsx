@@ -24,7 +24,7 @@ function List(): JSX.Element {
     handleTableChange,
   } = fetchApiHook(initList, api.getAdminWechatList)
 
-  const host = encodeURIComponent(`${location.origin}/wechat/admin.html`)
+  const host = encodeURIComponent(`${location.origin}/bind-wechat/admin.html`)
 
   const url = RedirectUrl(host)
 
