@@ -166,6 +166,7 @@ function List(props: RouteComponentProps): JSX.Element {
           id,
           openId: ''
         });
+        fetchData()
         message.success("重置微信号成功");
       }
     });
