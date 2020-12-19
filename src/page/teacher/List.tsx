@@ -7,7 +7,7 @@ import * as api from "@/api/teacher";
 import fetchApiHook from '@/common/hooks/featchApiList'
 import * as enums from "@/const/enum";
 import { ITeacher } from "@/const/type/teacher";
-import {isDev} from '@/config/index'
+import { isDev } from '@/config/index'
 import QrcodeCom from '@/components/Qrcode'
 import { RedirectUrl } from '@/utils/redirct';
 import wechatHook from '@/common/hooks/wechatInfo'
@@ -44,7 +44,7 @@ function List(props: RouteComponentProps): JSX.Element {
   })
 
 
-  const {wechat, fetchUserInfo} = wechatHook()
+  const { wechat, fetchUserInfo } = wechatHook()
 
 
   const columns: Array<ColumnProps<ITeacher>> = [
@@ -67,13 +67,41 @@ function List(props: RouteComponentProps): JSX.Element {
       title: "手机号码",
       dataIndex: "phone"
     },
-  
+
     {
       title: "微信",
       dataIndex: "openId",
-      render: (str: string) => wechat[str] || str
+      render: (str: string, data: ITeacher) => {
+
+        const ret = [
+          (<span key="1">{wechat[str] || str}</span>)
+        ]
+
+        if (str) {
+          ret.push(
+            <Button
+              onClick={() => {
+                resetOpenId({
+                  id: data._id,
+
+                })
+              }}
+              key="2"
+              className="ml10"
+              type="link"
+              icon="delete"
+              size="small" />
+          )
+        }
+
+        return ret;
+
+
+
+
+      }
     },
-  
+
     {
       title: "状态",
       dataIndex: "status",
@@ -85,14 +113,14 @@ function List(props: RouteComponentProps): JSX.Element {
     },
   ];
 
-  
+
 
 
 
   const [visible, setVisible] = React.useState<boolean>(false)
   const [url, setUrl] = React.useState<string>("")
   const [name, setName] = React.useState<string>("")
-  
+
 
 
 
@@ -117,16 +145,34 @@ function List(props: RouteComponentProps): JSX.Element {
       current: 1
     }
     setPagination(page)
-
-    console.log('set 页数')
-    console.log(pagination)
     setQuery({
       status: Number(status)
     }, page)
   }
 
 
-  const onDel= (id: string) => {
+  /**
+   *
+   * @param id 用户id
+   * 重置微信
+   */
+  const resetOpenId = async ({ id }: { id: string; }) => {
+    confirm({
+      title: "确定操作?",
+      content: `重置后需要重新绑定微信`,
+      onOk: async () => {
+        await api.bindWechat({
+          _id: id,
+          id,
+          openId: ''
+        });
+        message.success("重置微信号成功");
+      }
+    });
+  }
+
+
+  const onDel = (id: string) => {
     confirm({
       title: '提示',
       content: '确定删除该老师,请确保没有学生,或者课程绑定该老师,如果有请先去解绑学生和课程?',
@@ -160,7 +206,7 @@ function List(props: RouteComponentProps): JSX.Element {
 
 
 
-  
+
 
 
   const operate = [
@@ -199,7 +245,7 @@ function List(props: RouteComponentProps): JSX.Element {
             }} >
             绑定
           </Button>)
-  
+
         ]
       }
     }
@@ -210,7 +256,7 @@ function List(props: RouteComponentProps): JSX.Element {
     <div>
       <div className="main-title clearfix">
         <h2>老师列表</h2>
-        <Button  className="fr" loading={loading} onClick={() => fetchData(true)}>
+        <Button className="fr" loading={loading} onClick={() => fetchData(true)}>
           {loading ? '刷新中' : '刷新'}
         </Button>
 
@@ -228,8 +274,8 @@ function List(props: RouteComponentProps): JSX.Element {
         <div className="mb10">
 
           <Tabs defaultActiveKey="1" onChange={onTabChange}>
-            <TabPane tab="在职" key="1"/>
-            <TabPane tab="离职" key="2"/>
+            <TabPane tab="在职" key="1" />
+            <TabPane tab="离职" key="2" />
           </Tabs>
 
           <RangePicker onChange={onDateChange} />
@@ -247,8 +293,8 @@ function List(props: RouteComponentProps): JSX.Element {
           visible={visible}
           onOk={onOk}
           onCancel={onOk}>
-          
-          <QrcodeCom url={url} width={200} height={200} name={name}/>
+
+          <QrcodeCom url={url} width={200} height={200} name={name} />
         </Modal>
 
         <Table<ITeacher>
@@ -258,7 +304,7 @@ function List(props: RouteComponentProps): JSX.Element {
           dataSource={data}
           pagination={pagination}
           loading={loading}
-          onChange={handleTableChange}/>
+          onChange={handleTableChange} />
       </div>
     </div>
   );

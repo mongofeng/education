@@ -25,7 +25,7 @@ export function getteacherList(params: QueryCondition<ITeacher>): ApiListData<Re
  * 
  * @param params 查询参数
  */
-export function bindWechat (params: ITeacher) {
+export function bindWechat (params: Partial<ITeacher>) {
     return http.post('teacher/bind-wechat', params)
 }
 
