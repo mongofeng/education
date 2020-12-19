@@ -1,5 +1,6 @@
 import * as api from "@/api/order";
 import fetchApiHook from '@/common/hooks/featchApiList'
+import fetchTrialStudentHook from "@/common/hooks/trial-student";
 import { Order } from "@/const/type/order";
 import formatDate from "@/utils/format-date";
 import { DatePicker, Input, Table } from 'antd'
@@ -25,6 +26,11 @@ function List(): JSX.Element {
     onSearch  } = fetchApiHook(initList, api.getOrderList)
 
 
+    const {TrialStudentObj,
+      fetchTrialStudent} =
+    fetchTrialStudentHook()
+
+
 
 
 
@@ -33,6 +39,13 @@ function List(): JSX.Element {
     {
       title: "学生",
       dataIndex: "studentId",
+      render: (studentId: string) => {
+        if (studentId && TrialStudentObj[studentId]) {
+          return TrialStudentObj[studentId] || '-'
+        }
+        return '-'
+      }
+      
     },
     
 
@@ -79,6 +92,11 @@ function List(): JSX.Element {
       render: (date: string) => <span>{formatDate(new Date(date))}</span>
     },
   ];
+
+
+  React.useEffect(() => {
+    fetchTrialStudent(data.filter(i => !!i.studentId).map(i => i.studentId))
+  }, [data])
 
 
 
