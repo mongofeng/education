@@ -138,6 +138,9 @@ const Detail: React.FC<RouteComponentProps<IParams>> = (props) => {
   }, []);
 
 
+  const [activite, setActivite] = useState('1')
+
+
 
 
   return (
@@ -184,10 +187,10 @@ const Detail: React.FC<RouteComponentProps<IParams>> = (props) => {
 
 
 
-        <Tabs defaultActiveKey={info ? '1' : '5'} className="mt10">
+        <Tabs  className="mt10" activeKey={activite} onChange={setActivite}>
           {info && info.studentIds &&
 
-            [(<TabPane tab="课程的学员列表" key="1">
+            [(<TabPane tab="学员列表" key="1">
               <Student
                 teacherId={info.teacherId}
                 ids={info.studentIds}
