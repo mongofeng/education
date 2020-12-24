@@ -8,3 +8,4 @@ export interface TrialStudent {
   phone:      string;
   updateDate: string;
 }
+

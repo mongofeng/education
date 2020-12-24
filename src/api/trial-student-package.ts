@@ -1,4 +1,5 @@
-import {TrialStudentPackage} from '@/const/type/trial-student-package'
+
+import {TrialStudentPackage, PayVo} from '@/const/type/trial-student-package'
 import { ApiListData, ApiResponse } from '@/types/api'
 import http from '@/utils/http'
 /**
@@ -10,12 +11,23 @@ export function addTrialStudentPackage(params: TrialStudentPackage) {
 }
 
 /**
+ * 添加课程包
+ * @param {*} params
+ */
+export function addPackage(params: PayVo) {
+  return http.post('trial-student-package/add-package', params)
+}
+
+/**
 *
 * @param params 查询参数
 */
 export function getTrialStudentPackageList(params:QueryCondition< TrialStudentPackage>): ApiListData<TrialStudentPackage> {
   return http.post('trial-student-package/list', params)
 }
+
+
+
 
 /**
 *

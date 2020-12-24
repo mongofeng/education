@@ -4,15 +4,22 @@ import fetchTrialStudentPackageHook from "@/common/hooks/trial-student-package";
 import wechatHook from '@/common/hooks/wechatInfo'
 import { TrialStudent } from "@/const/type/trial-student";
 import formatDate from "@/utils/format-date";
-import { DatePicker, Input, Table } from 'antd'
+import { Button, DatePicker, Input, message, Table } from 'antd'
 import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
-import { RouteComponentProps } from "react-router-dom";
+import { useState } from "react";
+import BuyCourse from '@/components/Course/buy-course-modal'
+import { IStudentPackage } from "@/const/type/student-package";
+import { addPackage } from "@/api/trial-student-package";
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
 
 
-
+// 模态框的加载
+const initModalState = {
+  visible: false,
+  confirmLoading: false,
+}
 const initList: TrialStudent[] = [];
 
 
@@ -24,6 +31,7 @@ function List(): JSX.Element {
     pagination,
     handleTableChange,
     onDateChange,
+    fetchData,
     onSearch  } = fetchApiHook(initList, api.gettrialStudentList)
 
 
@@ -87,7 +95,74 @@ function List(): JSX.Element {
       sorter: true,
       render: (date: string) => <span>{formatDate(new Date(date))}</span>
     },
+    {
+      title: '操作',
+      dataIndex: "operate",
+      render: (str: string, data: TrialStudent) => {
+        return <Button
+        className="fr"
+        type="primary"
+        icon="plus"
+        onClick={() => {
+          setCurrentId(data.id)
+          showModal()
+        }}>
+        购买
+      </Button>
+      } 
+    }
   ];
+
+  // 模态框
+  const [modalState, setModalState] = useState(initModalState)
+  const [currentId, setCurrentId] = useState('')
+
+   /**
+   * 添加课程包
+   */
+  const showModal = () => {
+    setModalState({
+      ...modalState,
+      visible: true
+    })
+  }
+
+
+  /**
+   * 取消模态框
+   */
+  const handleCancel = () => {
+    setModalState({
+      ...modalState,
+      visible: false
+    })
+  }
+
+  /**
+   * 确定模态框
+   */
+  const handleOk = async (selectRows: IStudentPackage[]) => {
+    // 打开loading
+    if (!selectRows.length) { return }
+    setModalState({
+      ...modalState,
+      confirmLoading: true,
+    })
+    try {
+      const [res] = selectRows
+      const params = {
+        packageId: res._id,
+        studentId: currentId
+      }
+      await addPackage(params)
+      message.success('关联成功')
+      fetchData(true)
+    } finally {
+      setModalState({
+        ...initModalState,
+      })
+    }
+  }
 
 
 
@@ -101,6 +176,14 @@ function List(): JSX.Element {
         <h2>新学生列表</h2>
    
       </div>
+
+      <BuyCourse
+        title="添加课程包"
+        width={800}
+        destroyOnClose={true}
+        onSelect={handleOk}
+        onCancel={handleCancel}
+        {...modalState} />
 
       <div className="content-wrap">
         <div className="mb10">
