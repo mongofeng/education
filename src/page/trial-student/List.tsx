@@ -100,7 +100,6 @@ function List(): JSX.Element {
       dataIndex: "operate",
       render: (str: string, data: TrialStudent) => {
         return <Button
-        className="fr"
         type="primary"
         icon="plus"
         onClick={() => {
