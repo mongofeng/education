@@ -13,7 +13,7 @@
     "@types/react-transition-group": "^2.9.0",
     "ant-design-pro": "^2.3.1",
     "antd": "^3.15.0",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "canvas-nest.js": "^2.0.4",
     "customize-cra": "^0.2.12",
     "history": "^4.9.0",
