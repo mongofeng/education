@@ -1,14 +1,16 @@
 
 import fetchTeacherHook from '@/common/hooks/teacher'
 import ActionModal from '@/page/student/components/common-sign-modal'
-import { Button, DatePicker, Icon, Input, message, Modal, Table, Tag } from 'antd'
+import { downLoad } from '@/utils/excel'
+import { Button, DatePicker, Drawer, Icon, Input, message, Modal, Table, Tag } from 'antd'
 import { ColumnProps } from 'antd/lib/table'
+import dayjs from 'dayjs'
 import * as React from 'react'
 import { useState } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import * as api from '../../api/hour'
-import { caculatePackage } from '../../api/statistics'
+import { caculatePackage, commonQuery } from '../../api/statistics'
 import { sendTemplate } from '../../api/template'
 import fetchApiHook from '../../common/hooks/featchApiList'
 import { isDev, templateIds } from '../../config/index'
@@ -286,6 +288,7 @@ function List(props: IProps): JSX.Element {
 
   const {
     teacherObj,
+    teacherOptions
   } = fetchTeacherHook()
 
 
@@ -300,6 +303,9 @@ function List(props: IProps): JSX.Element {
    */
   const [TeacherState, setTeacherState] = useState(initModalState)
   const [hourId, setHourId] = useState<string>('')
+
+
+  const [visible, setVisible] = useState(false)
 
   const showTeacherModal = (row: IHour) => {
     setHourId(row._id)
@@ -350,6 +356,102 @@ function List(props: IProps): JSX.Element {
 
 
 
+  function getLastMonthDay() {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const d = new Date(year, month, 0);
+    return d
+  }
+
+
+  function getLastMonthFristDay() {
+    const date = new Date();
+    let year = date.getFullYear();
+    let month = date.getMonth();
+    if (month === 0) { // 1月
+      month = 11
+      year--
+    }
+    const d = new Date(year, month, 1);
+    return d
+  }
+
+
+
+
+  const downLoadXlsx = async (id: string, name: string) => {
+    const header = [
+      'name',
+      'teacher',
+      'num',
+      'type',
+      'course',
+      'createDate'
+    ];
+    const headerDisplay: object = {
+      name: '学员',
+      teacher: '老师',
+      num: '课时',
+      type: '类型',
+      course: '课程',
+      createDate: '创建时间'
+    };
+
+
+
+
+
+
+    const {
+      data: {
+        data: { list }
+      }
+    } = await api.getHourrList({
+      "size": 1000, "limit": 1000, "page": 1, "like": {}, "query": {
+        teacherId: id,
+        createDate: {
+          $gte: getLastMonthFristDay().toISOString(),
+          $lte: getLastMonthDay().toISOString(),
+        },
+        type: {
+          $in: [COURSE_HOUR_ACTION_TYPE.supplement, COURSE_HOUR_ACTION_TYPE.sign]
+        }
+      }, "sort": { "createDate": -1 }
+    });
+
+
+
+    const sheetData = list.map(item => {
+      const { num, type,course } = item
+      return {
+        name: props.student[item.studentId],
+        teacher: name,
+        num,
+        course: course.map(i => {
+          return `${i.name}:${i.count}课时`
+        }).join(','),
+        type: enums.COURSE_HOUR_ACTION_TYPE_LABEL[type],
+        createDate: dayjs(item.createDate).format('YYYY-MM-DD hh:mm:ss')
+      }
+    })
+
+    const newData = [headerDisplay, ...sheetData];
+
+    const fileName = new Date().toLocaleDateString()
+    return downLoad(
+      {
+        data: newData,
+        opts: { header, skipHeader: true },
+        sheetName: '统计',
+        fileName: name + '课时统计' + fileName + '.xlsx'
+      }
+    )
+  }
+
+
+
+
 
 
 
@@ -358,7 +460,38 @@ function List(props: IProps): JSX.Element {
     <div>
       <div className="main-title clearfix">
         <h2>课时流水</h2>
+        <Button
+          onClick={() => setVisible(true)}
+          className="fr"
+          type="primary"
+          icon="download">
+          导出
+          </Button>
       </div>
+
+
+      <Drawer
+        title="导出"
+        placement="right"
+        closable={false}
+        onClose={() => setVisible(false)}
+        visible={visible}
+      >
+        {teacherOptions.map(i => {
+          return (
+            <div key={i.value}>
+              <Button
+                className="mb20"
+                onClick={() => downLoadXlsx(i.value, i.label)}
+                type="primary"
+                icon="download">
+                {i.label}: 上个月课时统计
+              </Button>
+            </div>
+
+          )
+        })}
+      </Drawer>
 
       <div className="content-wrap">
 

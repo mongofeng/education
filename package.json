@@ -16,6 +16,7 @@
     "babel-plugin-import": "^1.11.0",
     "canvas-nest.js": "^2.0.4",
     "customize-cra": "^0.2.12",
+    "dayjs": "^1.10.3",
     "echarts": "^4.8.0",
     "history": "^4.9.0",
     "jest-diff": "^24.3.0",
