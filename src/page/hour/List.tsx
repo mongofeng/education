@@ -432,7 +432,7 @@ function List(props: IProps): JSX.Element {
           return `${i.name}:${i.count}课时`
         }).join(','),
         type: enums.COURSE_HOUR_ACTION_TYPE_LABEL[type],
-        createDate: dayjs(item.createDate).format('YYYY-MM-DD hh:mm:ss')
+        createDate: dayjs(item.createDate).format('YYYY-MM-DD HH:mm:ss')
       }
     })
 
