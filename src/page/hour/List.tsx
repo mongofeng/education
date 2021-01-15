@@ -10,7 +10,7 @@ import { useState } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import * as api from '../../api/hour'
-import { caculatePackage, commonQuery } from '../../api/statistics'
+import { caculatePackage } from '../../api/statistics'
 import { sendTemplate } from '../../api/template'
 import fetchApiHook from '../../common/hooks/featchApiList'
 import { isDev, templateIds } from '../../config/index'
@@ -288,7 +288,7 @@ function List(props: IProps): JSX.Element {
 
   const {
     teacherObj,
-    teacherOptions
+    injobTeacher
   } = fetchTeacherHook()
 
 
@@ -354,28 +354,20 @@ function List(props: IProps): JSX.Element {
   }
 
 
+  /**
+   * 更改时间
+   * @param date  monent[]
+   * @param dateKey 时间参数
+   */
+  const onRangeDateChange = (date: any[], dateKey: string[]) => {
+    console.log(date, dateKey);
+    //  ["2021-01-01", "2021-01-10"]
+    setRangDate(dateKey)
+  };
 
 
-  function getLastMonthDay() {
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = date.getMonth();
-    const d = new Date(year, month, 0);
-    return d
-  }
+  const [rangDate, setRangDate] = useState<string[]>([])
 
-
-  function getLastMonthFristDay() {
-    const date = new Date();
-    let year = date.getFullYear();
-    let month = date.getMonth();
-    if (month === 0) { // 1月
-      month = 11
-      year--
-    }
-    const d = new Date(year, month, 1);
-    return d
-  }
 
 
 
@@ -398,8 +390,22 @@ function List(props: IProps): JSX.Element {
       createDate: '创建时间'
     };
 
+    const query: any = {}
+    if (rangDate.length) {
+      const start = dayjs(rangDate[0]).toDate()
+      start.setHours(0)
+      start.setMinutes(0)
+      start.setSeconds(0)
 
-
+      const end = dayjs(rangDate[1]).toDate()
+      end.setHours(23)
+      end.setMinutes(59)
+      end.setSeconds(59)
+      query.createDate ={
+        $gte: start,
+        $lte: end,
+      }
+    }
 
 
 
@@ -410,13 +416,10 @@ function List(props: IProps): JSX.Element {
     } = await api.getHourrList({
       "size": 1000, "limit": 1000, "page": 1, "like": {}, "query": {
         teacherId: id,
-        createDate: {
-          $gte: getLastMonthFristDay().toISOString(),
-          $lte: getLastMonthDay().toISOString(),
-        },
         type: {
           $in: [COURSE_HOUR_ACTION_TYPE.supplement, COURSE_HOUR_ACTION_TYPE.sign]
-        }
+        },
+        ...query
       }, "sort": { "createDate": -1 }
     });
 
@@ -477,7 +480,8 @@ function List(props: IProps): JSX.Element {
         onClose={() => setVisible(false)}
         visible={visible}
       >
-        {teacherOptions.map(i => {
+        <RangePicker onChange={onRangeDateChange} className="mb20" />
+        {injobTeacher.map(i => {
           return (
             <div key={i.value}>
               <Button
@@ -485,7 +489,7 @@ function List(props: IProps): JSX.Element {
                 onClick={() => downLoadXlsx(i.value, i.label)}
                 type="primary"
                 icon="download">
-                {i.label}: 上个月课时统计
+                {i.label}
               </Button>
             </div>
 

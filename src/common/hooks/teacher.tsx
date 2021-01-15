@@ -1,4 +1,5 @@
 import * as apiTeacher from '@/api/teacher'
+import { TEACHER_STATUS } from '@/const/enum';
 import { ITeacher } from '@/const/type/teacher';
 import * as React from "react";
 const { useState, useEffect } = React;
@@ -12,6 +13,8 @@ export default function fetchTeacherHook (conditionProps:QueryCondition<ITeacher
   const [teacherObj, setTeacherMap] = useState<any>({})
 
   const [teacherOptions, setOptions] = useState([])
+
+  const [injobTeacher, setInjobTeacher] = useState([])
 
 
   useEffect(() => {
@@ -43,8 +46,16 @@ export default function fetchTeacherHook (conditionProps:QueryCondition<ITeacher
     })
     setTeacherMap(teacherMap)
 
+  
 
     setOptions(list.map(item => {
+      return {
+        label: item.name,
+        value: item._id
+      }
+    }))
+
+    setInjobTeacher(list.filter(i => i.status === TEACHER_STATUS.InService).map(item => {
       return {
         label: item.name,
         value: item._id
@@ -57,5 +68,6 @@ export default function fetchTeacherHook (conditionProps:QueryCondition<ITeacher
   return {
     teacherObj,
     teacherOptions,
+    injobTeacher
   }
 }
