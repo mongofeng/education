@@ -14,9 +14,6 @@ const moment = require('moment');
 moment.locale('zh-cn');
 
 
-console.log(12123)
-
-
 class App extends React.PureComponent {
   public render() {
     return (

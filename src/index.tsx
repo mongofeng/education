@@ -6,7 +6,6 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 
-console.log(2)
 function render(props) {
   const { container } = props;
   ReactDOM.render(
