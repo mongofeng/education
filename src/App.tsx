@@ -6,19 +6,22 @@ import * as React from 'react';
 import './asset/scss/main.scss';
 import { renderRoutes } from 'react-router-config';
 import routes from './router';
-
+import store from './store'
 
 import { HashRouter } from "react-router-dom";
+import { Provider } from 'react-redux';
 const moment = require('moment');
 moment.locale('zh-cn');
 
 
-
+console.log(12123)
 
 
 class App extends React.PureComponent {
   public render() {
     return (
+      // 2、然后使用react-redux的Provider将props与容器连通起来
+    <Provider store={store}>
       <ConfigProvider locale={zh_CN}>
         <HashRouter>
           <div className="primary-layout">
@@ -27,7 +30,7 @@ class App extends React.PureComponent {
 
         </HashRouter>
       </ConfigProvider>
-
+      </Provider>
     );
   }
 }
