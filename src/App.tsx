@@ -20,7 +20,7 @@ class App extends React.PureComponent {
       // 2、然后使用react-redux的Provider将props与容器连通起来
     <Provider store={store}>
       <ConfigProvider locale={zh_CN}>
-        <HashRouter>
+        <HashRouter basename="yangjin-min">
           <div className="primary-layout">
             {renderRoutes(routes)}
           </div>
