@@ -24,8 +24,6 @@ const adjustOutput = () => config => {
   config.output.jsonpFunction = `webpackJsonp_${name}`;
   config.output.globalObject = 'window';
 
-  console.log(config)
-
   return config;
 };
 
