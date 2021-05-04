@@ -1,9 +1,9 @@
 import { Avatar, Dropdown, Icon, Layout, Menu } from "antd";
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import * as React from "react";
 import { connect } from 'react-redux';
-import { NavLink, RouteComponentProps } from 'react-router-dom';
 import { renderRoutes } from "react-router-config";
+import { NavLink, RouteComponentProps } from 'react-router-dom';
 import { Dispatch } from "redux";
 import SiderMenu from '../components/Sider-Menu'
 import { Navs } from '../config/nav'
@@ -58,6 +58,31 @@ const menu = (
 
 function BaseLayout(props: IProps): JSX.Element {
   const [collapsed, setCollapsed] = useState(false)
+
+
+  const [prefix, setPrefix] = useState('')
+  const [current, setCurrent] = useState('')
+
+  useEffect(() => {
+    const { origin, pathname, hash } = location
+    let src = pathname.replace(/^(?!\/)|(\/{2,})/g, '/');
+    if (!(window as any).__POWERED_BY_QIANKUN__) {
+      src = '/yangjin-pro/'
+    }
+    console.log(src)
+    setPrefix(origin + src)
+    const key = hash.includes('app-common') ? 'app-common' : 'app-pro'
+    setCurrent(key)
+  }, [])
+
+
+  const handleClick = useCallback(
+    e => {
+      console.log('click ', e);
+      setCurrent(e.key)
+    },
+    []
+  );
 
   const fetchAllStudent = () => {
     props.dispatch(studentAction.FetchList({
@@ -116,6 +141,19 @@ function BaseLayout(props: IProps): JSX.Element {
 
           {/* 个人中心 */}
           <div className="header-index-right">
+            <Menu mode="horizontal" onClick={handleClick} className="mr20" selectedKeys={[current]} style={{display: 'inline-block', border: 'none'}}>
+              <Menu.Item key="app-common" >
+                  课程中心
+              </Menu.Item>
+
+
+              <Menu.Item key="app-pro">
+                <a href={prefix + '#/app-pro'} >
+                  资料中心
+          </a>
+              </Menu.Item>
+            </Menu>
+
             <Dropdown overlay={menu}>
               <div className="layout-dropdown-link">
                 <Avatar
