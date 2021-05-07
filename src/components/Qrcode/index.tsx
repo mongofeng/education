@@ -25,7 +25,7 @@ const QrcodeFunc = function (props: IProps) {
     return () => {
 
     }
-  }, [])
+  }, [props.url])
 
 
   const handleOnClick = () => {
