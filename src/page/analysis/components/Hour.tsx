@@ -94,18 +94,25 @@ const BarCharts: React.FC<IProps> = props => {
     },
     xAxis: {
       type: 'category',
-      data: oneYear.map(i =>i.x)
+      data: oneYear.map(i => i.x)
     },
     tooltip: {
       show: true,
       triggerOn: 'mousemove',
       formatter: '{b}: {c}个课时'
-  },
+    },
     yAxis: {
       type: 'value'
     },
     series: [{
       color: '#1890ff',
+      label: {
+        normal: {
+          show: true,
+          position: 'top',
+          formatter: '{c}',
+        },
+      },
       data: oneYear.map(item => {
         const { key } = item;
         const val = find(data, {
