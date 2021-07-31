@@ -107,11 +107,12 @@ const BarCharts: React.FC<IProps> = props => {
     series: [{
       color: '#1890ff',
       label: {
-        normal: {
-          show: true,
-          position: 'top',
-          formatter: '{c}',
-        },
+        show: true,
+        position: 'top',
+        distance: 15,
+        color: '#1890ff',
+        fontWeight: 'bolder',
+        fontSize: 20,
       },
       data: oneYear.map(item => {
         const { key } = item;

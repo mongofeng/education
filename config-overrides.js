@@ -4,7 +4,6 @@ const CompressionPlugin = require('compression-webpack-plugin');
 const {
   override,
   fixBabelImports,
-  addLessLoader,
   addWebpackAlias,
   overrideDevServer,
   addWebpackPlugin
@@ -50,7 +49,7 @@ module.exports = {
     fixBabelImports("antd", {
       libraryName: "antd",
       libraryDirectory: "es",
-      style: true
+      style: 'css',
     }),
     addWebpackPlugin(
       new CompressionPlugin({
@@ -63,10 +62,6 @@ module.exports = {
       }),
     ),
 
-    addLessLoader({
-      javascriptEnabled: true,
-      // modifyVars: { "@primary-color": "red" }
-    }),
     addWebpackAlias({
       "@": resolve("src"),
       "src": resolve("src")
