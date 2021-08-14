@@ -9,6 +9,7 @@ import * as action from "../../store/actions/student";
 import HourBar from './components/Hour'
 import StudentBar from "./components/Student";
 import StudentStatus from "./components/StudentStatus";
+import Today from "./components/Today";
 import "./index.css";
 
 const { useEffect } = React;
@@ -71,6 +72,11 @@ const Analysis: React.FC<IList> = props => {
 
           <Col md={24} sm={24} xs={24}>
             <HourBar />
+          </Col>
+
+
+          <Col md={24} sm={24} xs={24}>
+            <Today />
           </Col>
         </Row>
       </div>
