@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 部署的服务器的地址
-deloy_server=root@118.31.227.99
+deloy_server=root@120.79.208.201
 
 # 前端部署的地址
 deloy_root_path=/root/docker/nginx/html/
