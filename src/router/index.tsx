@@ -267,10 +267,7 @@ export default [
         path: '/base/v-student-hour',
         component:SuspenseComponent(StudentHour),
       },
-      {
-        path: "/base/v-course-list",
-        component:SuspenseComponent( CourseList)
-      },
+
       {
         path: "/base/v-course-list",
         component:SuspenseComponent( CourseList)

@@ -20,6 +20,7 @@ import { IHour } from '../../const/type/hour'
 import { ICourse } from '../../const/type/student-operation'
 import formatDate from '../../utils/format-date'
 import { formateTemplate } from '../../utils/template'
+import TimeCount from './TimeCount'
 
 const confirm = Modal.confirm;
 
@@ -498,6 +499,8 @@ function List(props: IProps): JSX.Element {
       </Drawer>
 
       <div className="content-wrap">
+
+        <TimeCount></TimeCount>
 
 
 
