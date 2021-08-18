@@ -3,7 +3,7 @@ import * as React from "react";
 import { IApiList } from '../../types/api';
 const { useState, useEffect } = React;
 
-const initPagination: PaginationProps = {
+export const initPagination: PaginationProps = {
   total: 0,
   current: 1,
   pageSize: 10,

@@ -2,7 +2,7 @@
 import fetchTeacherHook from '@/common/hooks/teacher'
 import ActionModal from '@/page/student/components/common-sign-modal'
 import { downLoad } from '@/utils/excel'
-import { Button, DatePicker, Drawer, Icon, Input, message, Modal, Table, Tag } from 'antd'
+import { Button, DatePicker, Drawer, Icon, Input, message, Modal, Select, Table, Tag } from 'antd'
 import { ColumnProps } from 'antd/lib/table'
 import dayjs from 'dayjs'
 import * as React from 'react'
@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom'
 import * as api from '../../api/hour'
 import { caculatePackage } from '../../api/statistics'
 import { sendTemplate } from '../../api/template'
-import fetchApiHook from '../../common/hooks/featchApiList'
+import fetchApiHook, { initPagination } from '../../common/hooks/featchApiList'
 import { isDev, templateIds } from '../../config/index'
 import * as enums from '../../const/enum'
 import { COURSE_HOUR_ACTION_TYPE } from '../../const/enum'
@@ -20,16 +20,22 @@ import { IHour } from '../../const/type/hour'
 import { ICourse } from '../../const/type/student-operation'
 import formatDate from '../../utils/format-date'
 import { formateTemplate } from '../../utils/template'
-import TimeCount from './TimeCount'
+
 
 const confirm = Modal.confirm;
-
+const { Option } = Select;
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
 
 
 const initList: IHour[] = [];
 
+const initCondition: any = {
+  limit: 10,
+  size: 10,
+  page: 1, 
+  sort: { createDate: -1 }
+}
 
 // 模态框的加载
 const initModalState = {
@@ -283,6 +289,8 @@ function List(props: IProps): JSX.Element {
     handleTableChange,
     onDateChange,
     onSearch,
+    setQuery,
+    setPagination,
     fetchData
   } = fetchApiHook(initList, api.getHourrList)
 
@@ -402,7 +410,7 @@ function List(props: IProps): JSX.Element {
       end.setHours(23)
       end.setMinutes(59)
       end.setSeconds(59)
-      query.createDate ={
+      query.createDate = {
         $gte: start,
         $lte: end,
       }
@@ -427,7 +435,7 @@ function List(props: IProps): JSX.Element {
 
 
     const sheetData = list.map(item => {
-      const { num, type,course } = item
+      const { num, type, course } = item
       return {
         name: props.student[item.studentId],
         teacher: name,
@@ -454,6 +462,14 @@ function List(props: IProps): JSX.Element {
   }
 
 
+  const onTeacherChange = React.useCallback((id) => {
+    setPagination(initPagination)
+    setQuery(id ? {
+      teacherId: id
+    } : {}, initPagination)
+  }, [])
+
+
 
 
 
@@ -470,7 +486,7 @@ function List(props: IProps): JSX.Element {
           type="primary"
           icon="download">
           导出
-          </Button>
+        </Button>
       </div>
 
 
@@ -519,6 +535,15 @@ function List(props: IProps): JSX.Element {
             onSearch={onSearch}
             style={{ width: 200 }}
           />
+
+          <Select className="ml10" style={{ width: 200 }} allowClear={true} onChange={onTeacherChange}>
+            {
+              injobTeacher.map(item => (
+                <Option value={item.value} key={item.value}>{item.label}</Option>
+              ))
+            }
+
+          </Select>
         </div>
 
         <Table<IHour>
