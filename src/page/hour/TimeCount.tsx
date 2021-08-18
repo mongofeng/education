@@ -116,7 +116,15 @@ function TimeCount(props: IProps): JSX.Element {
       {
         title: "周",
         dataIndex: "week",
-        render: (v) => WEEK_LABEL[v - 1]
+        render: (v, row: any) => {
+          const obj = {
+            children: WEEK_LABEL[v - 1],
+            props: {
+              rowSpan: row.rowSpan
+            },
+          };
+          return obj;
+        },
       },
 
       {
