@@ -1,3 +1,4 @@
+
 import { Spin } from 'antd';
 import * as React from 'react';
 import { renderRoutes } from 'react-router-config';
@@ -18,6 +19,8 @@ const CourseList = React.lazy(() => import(/* webpackChunkName: 'course-list'*/ 
 
 const HourList = React.lazy(() => import(/* webpackChunkName: 'hour'*/ '../page/hour/List'));
 const HourDetail = React.lazy(() => import(/* webpackChunkName: 'hour'*/ '../page/hour/Detail'));
+
+const TimeCount = React.lazy(() => import(/* webpackChunkName: 'hour'*/ '@/page/hour/TimeCount'));
 
 const StudentDetail = React.lazy(() => import(/* webpackChunkName: 'student'*/ '../page/student/Detail'));
 const StudentForm = React.lazy(() => import(/* webpackChunkName: 'student'*/ '../page/student/Form'));
@@ -193,6 +196,11 @@ const hourRoutes = [
   {
     path: "detail/:id",
     component:SuspenseComponent( HourDetail)
+  },
+
+  {
+    path: "count",
+    component:SuspenseComponent( TimeCount)
   },
 ]
 

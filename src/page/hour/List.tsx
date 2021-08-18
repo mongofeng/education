@@ -500,10 +500,6 @@ function List(props: IProps): JSX.Element {
 
       <div className="content-wrap">
 
-        <TimeCount></TimeCount>
-
-
-
 
         {/*补签模块*/}
         <ActionModal

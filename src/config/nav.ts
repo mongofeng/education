@@ -40,7 +40,17 @@ export const Navs: INavs[] = [
   {
     label: '课时',
     value: 'hour',
-    icon: 'dot-chart'
+    icon: 'dot-chart',
+    children: [
+      {
+        label: '统计',
+        value: 'count',
+      },
+      {
+        label: '记录',
+        value: 'list',
+      },
+    ],
     
   },
   {

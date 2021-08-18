@@ -312,7 +312,7 @@ function TimeCount(props: IProps): JSX.Element {
   return (
     <div>
       <div className="main-title clearfix">
-        <h2>课时流水</h2>
+        <h2>课时统计</h2>
       </div>
 
 
