@@ -26,9 +26,9 @@ function TimeCount(props: IProps): JSX.Element {
   const [visible, setVisible] = React.useState(false)
   const [data, setData] = React.useState([]);
   const [hd, setHD] = React.useState([]);
-  const [offset, setOffset] = React.useState(7);
+  const [offset, setOffset] = React.useState(3);
   const [loading, setLoading] = React.useState(false);
-  const offsetList = React.useMemo(() => [7, 30, 60], [])
+  const offsetList = React.useMemo(() => [3, 7, 30, 60], [])
 
 
 
@@ -39,137 +39,137 @@ function TimeCount(props: IProps): JSX.Element {
   })
 
 
-  const cols: Array<ColumnProps<IHour>> =  [
-      {
-        title: "学员",
-        dataIndex: "studentId",
-        render: (val: string) => {
-          return props.student[val]
-        }
-      },
+  const cols: Array<ColumnProps<IHour>> = [
+    {
+      title: "学员",
+      dataIndex: "studentId",
+      render: (val: string) => {
+        return props.student[val]
+      }
+    },
 
-      {
-        title: "所属老师",
-        dataIndex: "teacherId",
-        render: (teacherId: string, row) => {
+    {
+      title: "所属老师",
+      dataIndex: "teacherId",
+      render: (teacherId: string, row) => {
 
-          return teacherObj[teacherId]
-        }
-      },
+        return teacherObj[teacherId]
+      }
+    },
 
-      {
-        title: "课时数量",
-        dataIndex: "num",
-      },
-      {
-        title: "操作类型",
-        dataIndex: "type",
-        render: (str: enums.COURSE_HOUR_ACTION_TYPE) => {
-          return (
-            <Tag color={enums.COURSE_HOUR_ACTION_TYPE_COLOR[str]}>
-              {enums.COURSE_HOUR_ACTION_TYPE_LABEL[str]}
-            </Tag>
-          )
+    {
+      title: "课时数量",
+      dataIndex: "num",
+    },
+    {
+      title: "操作类型",
+      dataIndex: "type",
+      render: (str: enums.COURSE_HOUR_ACTION_TYPE) => {
+        return (
+          <Tag color={enums.COURSE_HOUR_ACTION_TYPE_COLOR[str]}>
+            {enums.COURSE_HOUR_ACTION_TYPE_LABEL[str]}
+          </Tag>
+        )
+      }
+    },
+    {
+      title: "课程",
+      dataIndex: "course",
+      render: (val: ICourse[]) => {
+        if (!val || !val.length) {
+          return '-'
         }
-      },
-      {
-        title: "课程",
-        dataIndex: "course",
-        render: (val: ICourse[]) => {
-          if (!val || !val.length) {
-            return '-'
-          }
-          return val.map((item) => {
-            return [
-              (
-                <div key={item.id}>
-                  {`${item.name}:${item.count}课时`}
-                </div>
-              )
-            ]
-          })
-        }
-      },
-      {
-        title: "创建时间",
-        dataIndex: "createDate",
-        render: (date: string) => formatDate(new Date(date))
-      },]
+        return val.map((item) => {
+          return [
+            (
+              <div key={item.id}>
+                {`${item.name}:${item.count}课时`}
+              </div>
+            )
+          ]
+        })
+      }
+    },
+    {
+      title: "创建时间",
+      dataIndex: "createDate",
+      render: (date: string) => formatDate(new Date(date))
+    },]
 
 
 
   const columns: Array<ColumnProps<IHour>> = [
-      {
-        title: "时间",
-        dataIndex: "date",
-        render: (value, row: any) => {
-          const obj = {
-            children: value,
-            props: {
-              rowSpan: row.rowSpan
-            },
-          };
-          return obj;
-        },
+    {
+      title: "时间",
+      dataIndex: "date",
+      render: (value, row: any) => {
+        const obj = {
+          children: value,
+          props: {
+            rowSpan: row.rowSpan
+          },
+        };
+        return obj;
       },
+    },
 
-      {
-        title: "周",
-        dataIndex: "week",
-        render: (v, row: any) => {
-          const obj = {
-            children: WEEK_LABEL[v - 1],
-            props: {
-              rowSpan: row.rowSpan
-            },
-          };
-          return obj;
-        },
+    {
+      title: "周",
+      dataIndex: "week",
+      render: (v, row: any) => {
+        const obj = {
+          children: WEEK_LABEL[v - 1],
+          props: {
+            rowSpan: row.rowSpan
+          },
+        };
+        return obj;
       },
+    },
 
-      {
-        title: "所属老师",
-        dataIndex: "teacherId",
-        render: (teacherId: string, row) => {
+    {
+      title: "所属老师",
+      dataIndex: "teacherId",
+      render: (teacherId: string, row) => {
 
-          return teacherObj[teacherId]
-        }
+        return teacherObj[teacherId]
+      }
+    },
+
+    {
+      title: "课时数量",
+      dataIndex: "num",
+    },
+
+
+
+
+    {
+      title: "学生",
+      dataIndex: "count",
+      render: (value, row) => {
+        return (
+          <Button type="link" onClick={() => onShowDetail(row)}>{value}</Button>
+        )
+      }
+    },
+
+    {
+      title: "合计",
+      dataIndex: "total",
+      render: (value, row: any) => {
+        const obj = {
+          children: value,
+          props: {
+            rowSpan: row.rowSpan
+          },
+        };
+        return obj;
       },
-
-      {
-        title: "课时数量",
-        dataIndex: "num",
-      },
+    },
 
 
-
-
-      {
-        title: "学生",
-        dataIndex: "count",
-        render: (value, row) => {
-          return (
-            <Button type="link" onClick={() => onShowDetail(row)}>{value}</Button>
-          )
-        }
-      },
-
-      {
-        title: "合计",
-        dataIndex: "total",
-        render: (value, row: any) => {
-          const obj = {
-            children: value,
-            props: {
-              rowSpan: row.rowSpan
-            },
-          };
-          return obj;
-        },
-      },
-
-
-    ]
+  ]
 
 
 
@@ -352,6 +352,7 @@ function TimeCount(props: IProps): JSX.Element {
 
 
         <Table
+          pagination={false}
           bordered={true}
           columns={columns}
           dataSource={data}
