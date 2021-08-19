@@ -1,4 +1,4 @@
-import { Button, Col, DatePicker, Input, message, Modal, Row, Switch, Table, Tag, Tooltip } from 'antd'
+import { Button, Col, DatePicker, Drawer, Input, message, Modal, Row, Switch, Table, Tag, Tooltip } from 'antd'
 import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
 import { useEffect, useState } from 'react'
@@ -7,11 +7,15 @@ import * as apiPack from '../../../../api/student-package'
 import fetchApiHook from '../../../../common/hooks/featchApiList'
 import { IStudentPackage } from "../../../../const/type/student-package";
 import formatDate from "../../../../utils/format-date";
-import {isDev} from '../../../../config/index'
+import * as enums from "../../../../const/enum";
 import BuyCourse from './buy-course-modal'
 import ShareStudentPackage from './share-student-package-modal'
-import  DrawForm from './form'
+import DrawForm from './form'
 import { connect } from 'react-redux'
+import { ICourse } from '@/const/type/course';
+import SignFormModal from '../../components/sign-modal'
+import { sign, supplement } from '@/api/hour';
+import { OperationVo } from '@/const/type/hour';
 const confirm = Modal.confirm;
 
 const moment = require('moment')
@@ -24,6 +28,7 @@ const { RangePicker } = DatePicker;
 
 interface IProps {
   id: string
+  teacherId: string
   package: {
     [key in string]: string
   },
@@ -214,26 +219,53 @@ function List(props: IProps): JSX.Element {
     {
       title: "操作",
       render: (val: string, row: IStudentPackage) => {
-        return [(<Button
-          key="1"
-          type="link"
-          icon="delete"
-          size="small"
-          onClick={() => {
-            onDel(row._id)
-          }} >
-        </Button>),
+        return [
+          //   (<Button
+          //   key="1"
+          //   type="link"
+          //   icon="delete"
+          //   size="small"
+          //   onClick={() => {
+          //     onDel(row._id)
+          //   }} >
+          // </Button>),
+          // (<Button
+          //   key="2"
+          //   className="ml5"
+          //   type="link"
+          //   icon="edit"
+          //   size="small"
+          //   onClick={() => {
+          //     setId(row._id)
+          //     setVisible(true)
+          //   }} >
+          // </Button>)
           (<Button
             key="2"
-            className="ml5"
-            type="link"
-            icon="edit"
+            type="primary"
+            icon="form"
+            className="mr5"
             size="small"
             onClick={() => {
-              setId(row._id)
-              setVisible(true)
+              setType(enums.COURSE_HOUR_ACTION_TYPE.supplement)
+              showSupplementModal(row)
             }} >
-          </Button>)]
+            补签
+          </Button>),
+          (
+            <Button
+              key="3"
+              type="primary"
+              icon="edit"
+              size="small"
+              onClick={() => {
+                setType(enums.COURSE_HOUR_ACTION_TYPE.sign)
+                showSupplementModal(row)
+              }}>
+              签到
+            </Button>
+          ),
+        ]
       }
     }
   ];
@@ -251,7 +283,7 @@ function List(props: IProps): JSX.Element {
     const date = activiteTime.toDate()
     const act = activiteTime.toISOString()
     console.log(date)
-    const {packageId, _id: id} = row
+    const { packageId, _id: id } = row
     date.setFullYear(date.getFullYear() + row.period)
     const end = date.toISOString()
 
@@ -281,7 +313,7 @@ function List(props: IProps): JSX.Element {
   }
 
 
-  const onChange = (val:any) => {
+  const onChange = (val: any) => {
     setActiviteTime(val);
   }
 
@@ -334,22 +366,22 @@ function List(props: IProps): JSX.Element {
 
 
 
-  // 删除课程包
-  const onDel= (id: string) => {
-    confirm({
-      title: '警告',
-      content: '确定删除该课程包,请确保没有课时操作记录,如果有请先去对应课时流水,以免引起数据的错乱?',
-      onOk: async () => {
-        try {
-          await apiPack.delStudentPackage(id)
-          message.success('删除成功')
-          fetchData(true)
-        } catch (error) {
-          message.error('删除失败')
-        }
-      },
-    });
-  }
+  // // 删除课程包
+  // const onDel= (id: string) => {
+  //   confirm({
+  //     title: '警告',
+  //     content: '确定删除该课程包,请确保没有课时操作记录,如果有请先去对应课时流水,以免引起数据的错乱?',
+  //     onOk: async () => {
+  //       try {
+  //         await apiPack.delStudentPackage(id)
+  //         message.success('删除成功')
+  //         fetchData(true)
+  //       } catch (error) {
+  //         message.error('删除失败')
+  //       }
+  //     },
+  //   });
+  // }
 
 
   const onFormCancel = (value: boolean) => {
@@ -362,8 +394,92 @@ function List(props: IProps): JSX.Element {
 
 
 
+  const [type, setType] = useState<enums.COURSE_HOUR_ACTION_TYPE>(enums.COURSE_HOUR_ACTION_TYPE.sign)
 
-  const Cols = isDev ? columns : columns.slice(0, columns.length - 1)
+  const [supplementState, setSupplementState] = useState(initModalState)
+  const [stuPackageRow, setStuPackageRow] = useState<IStudentPackage>(null)
+
+  const showSupplementModal = (row: IStudentPackage) => {
+    setStuPackageRow(row)
+    setSupplementState({
+      ...supplementState,
+      visible: true,
+
+    })
+  }
+
+  const handleSupplementCancel = () => {
+    setSupplementState({
+      ...initModalState,
+    })
+  }
+
+  const handleSupplementSumbit = async (values) => {
+    const {
+      num,
+      desc,
+      courseId,
+      courseName,
+      teacherId,
+    } = values
+
+
+    setSupplementState({
+      ...supplementState,
+      confirmLoading: true,
+    })
+
+
+    const params: OperationVo = {
+      teacherId,
+      desc,
+      num,
+      course: [
+        {
+          id: courseId,
+          name: courseName,
+          count: num
+        }
+      ],
+      studentId: props.id,
+      courseName: courseName,
+      studentPackageId: stuPackageRow._id
+    }
+    try {
+      if (type === enums.COURSE_HOUR_ACTION_TYPE.supplement) {
+        const { data: { data: result } } = await supplement(params)
+        console.log(result)
+        const { studentPackage, templateMsg } = result
+        const str = (studentPackage.ok === 1 && studentPackage.n !== 0) ? '补签成功,成功扣除课时' : '补签失败, 扣除课时失败'
+        const total: number = templateMsg.reduce((tatal: number, item: {
+          errcode: number
+        }) => {
+          return item.errcode === 0 ? tatal + 1 : tatal
+        }, 0)
+        message.success(`${str}, 成功推送微信消息${total}条`)
+      } else if (type === enums.COURSE_HOUR_ACTION_TYPE.sign) {
+
+        const { data: { data: result } } = await sign(params)
+        const { studentPackage, templateMsg } = result
+        const str = (studentPackage.ok === 1 && studentPackage.n !== 0) ? '签到成功,成功扣除课时' : '签到失败,扣除课时失败'
+        const total: number = templateMsg.reduce((tatal: number, item: {
+          errcode: number
+        }) => {
+          return item.errcode === 0 ? tatal + 1 : tatal
+        }, 0)
+        message.success(`${str}, 成功推送微信消息${total}条`)
+      } else {
+        message.error('找不到当前的类型')
+      }
+
+      props.update()
+      fetchData(true)
+    } finally {
+      handleSupplementCancel();
+    }
+
+  }
+
 
 
 
@@ -377,20 +493,34 @@ function List(props: IProps): JSX.Element {
         destroyOnClose={true}
         onSelect={handleOk}
         onCancel={handleCancel}
-        {...modalState} />
+        {...modalState} >
+      </BuyCourse>
 
-       <ShareStudentPackage
-          id={props.id}
-          onCreate={handleFormCreate}
-          onCancel={handleFormCancel}
-          { ...formState}/>
+      <ShareStudentPackage
+        id={props.id}
+        onCreate={handleFormCreate}
+        onCancel={handleFormCancel}
+        {...formState}>
+      </ShareStudentPackage>
+
+
+      {/*补签模块*/}
+      {props.id ? (<SignFormModal
+        studentId={props.id}
+        teacherId={props.teacherId}
+        title={type === enums.COURSE_HOUR_ACTION_TYPE.supplement ? '补签' : '签到'}
+        onCreate={handleSupplementSumbit}
+        onCancel={handleSupplementCancel}
+        {...supplementState}>
+      </SignFormModal>) : null}
 
 
       <DrawForm
         id={id}
         title="编辑课程包"
         visible={visible}
-        onCancel= {onFormCancel} />
+        onCancel={onFormCancel} >
+      </DrawForm>
 
       <Modal
         title="选择激活时间"
@@ -403,16 +533,16 @@ function List(props: IProps): JSX.Element {
         okText="确认"
         cancelText="取消">
         <Row gutter={16}>
-          <Col  span={6}>
+          <Col span={6}>
             激活时间
           </Col>
-          <Col  span={18}>
+          <Col span={18}>
             <DatePicker defaultValue={activiteTime} onChange={onChange} />
           </Col>
-          <Col  span={6} className="mt10">
+          <Col span={6} className="mt10">
             是否推送微信
           </Col>
-          <Col  span={18} className="mt10">
+          <Col span={18} className="mt10">
             <Switch defaultChecked={isPuseMsg} onChange={onPushMsg} />
           </Col>
         </Row>
@@ -428,28 +558,28 @@ function List(props: IProps): JSX.Element {
           placeholder="请输入课程包名字"
           onSearch={onSearch}
           style={{ width: 200 }} />
-            <Tooltip placement="top" title="购买课程包,然后主动激活之后可用于课程的使用，没激活的课程包不能用在课时签到和补签等操作">
-              <Button
-                className="fr"
-                type="primary"
-                icon="plus"
-                onClick={showModal}>
-                购买
-              </Button>
-            </Tooltip>
-            <Tooltip placement="top" title="学员不购买课程包，与其他学员一起共享课程包里面的课时，签到，补签等扣课程包里的课时">
-              <Button
-                className="fr mr5"
-                icon="reddit"
-                onClick={showShareModal}>
-                共享
-              </Button>
-            </Tooltip>
+        <Tooltip placement="top" title="购买课程包,然后主动激活之后可用于课程的使用，没激活的课程包不能用在课时签到和补签等操作">
+          <Button
+            className="fr"
+            type="primary"
+            icon="plus"
+            onClick={showModal}>
+            购买
+          </Button>
+        </Tooltip>
+        <Tooltip placement="top" title="学员不购买课程包，与其他学员一起共享课程包里面的课时，签到，补签等扣课程包里的课时">
+          <Button
+            className="fr mr5"
+            icon="reddit"
+            onClick={showShareModal}>
+            共享
+          </Button>
+        </Tooltip>
       </div>
 
       <Table<IStudentPackage>
         bordered={true}
-        columns={Cols}
+        columns={columns}
         rowKey="_id"
         dataSource={data}
         pagination={pagination}

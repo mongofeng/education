@@ -1,5 +1,5 @@
-import { ICourse } from '../const/type/course'
-import {IHour} from '../const/type/hour'
+import { ISupplement } from '@/const/type/student-operation'
+import {IHour, OperationVo} from '../const/type/hour'
 import { ApiListData, ApiResponse } from '../types/api'
 import http from '../utils/http'
 
@@ -46,4 +46,22 @@ export function delHour(id: string): ApiResponse<IHour> {
 
 export function updateHour(id: string, params: Partial<IHour>): ApiResponse<IResult> {
     return http.put(`course-hour-flow/${id}`, params)
+}
+
+
+/**
+ * 签到
+ * @param params 查询参数
+ */
+ export function sign(params: OperationVo) {
+    return http.post('course-hour-flow/sign', params)
+}
+
+
+/**
+ * 补签到
+ * @param params 查询参数
+ */
+export function supplement(params: ISupplement) {
+  return http.post('course-hour-flow/supplement', params)
 }

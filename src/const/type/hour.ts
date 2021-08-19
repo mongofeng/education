@@ -14,3 +14,26 @@ export interface IHour {
   createDate?: string
   updateDate?: string
 }
+
+
+
+export interface OperationVo {
+
+  teacherId: string
+  studentId: string
+  course: ICourse[]
+  num: number
+  desc?: string
+  courseName: string
+
+
+
+
+
+
+  studentPackageId: string // 学员课程包id
+
+
+
+
+}

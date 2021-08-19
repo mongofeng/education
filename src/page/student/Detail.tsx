@@ -341,7 +341,7 @@ function Detail(props: RouteComponentProps<IParams>): JSX.Element {
           </TabPane>
 
           <TabPane tab="课程包" key="6">
-            <StudentPakcage {...hourProps} />
+            <StudentPakcage {...hourProps} teacherId={info.teacherId} />
           </TabPane>
 
           <TabPane tab="课时" key="2">
