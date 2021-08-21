@@ -1,5 +1,7 @@
-import { DatePicker, Input, Table, Tag } from 'antd'
+import { downLoad } from '@/utils/excel';
+import { Button, DatePicker, Input, Table, Tag } from 'antd'
 import { ColumnProps } from "antd/lib/table";
+import dayjs from 'dayjs';
 import * as React from "react";
 import * as api from "../../../../api/hour";
 import fetchApiHook from '../../../../common/hooks/featchApiList'
@@ -18,7 +20,7 @@ const columns: Array<ColumnProps<IHour>> = [
     title: "操作类型",
     dataIndex: "type",
     filterMultiple: false,
-    filters: Object.keys(enums.COURSE_HOUR_ACTION_TYPE_LABEL).map(key => ({text: enums.COURSE_HOUR_ACTION_TYPE_LABEL[key], value: key})),
+    filters: Object.keys(enums.COURSE_HOUR_ACTION_TYPE_LABEL).map(key => ({ text: enums.COURSE_HOUR_ACTION_TYPE_LABEL[key], value: key })),
     render: (str: enums.COURSE_HOUR_ACTION_TYPE) => {
       return (
         <Tag color={enums.COURSE_HOUR_ACTION_TYPE_COLOR[str]}>
@@ -32,7 +34,7 @@ const columns: Array<ColumnProps<IHour>> = [
     dataIndex: "course",
     render: (val: ICourse[]) => {
       if (!val || !val.length) {
-        return  '-'
+        return '-'
       }
       return val.map((item) => {
         return [
@@ -88,6 +90,75 @@ function List(props: IProps): JSX.Element {
   })
 
 
+  const downLoadXlsx = React.useCallback(async () => {
+    const header = [
+      'name',
+      'num',
+      'type',
+      'course',
+      'desc',
+      'createDate'
+    ];
+    const headerDisplay: object = {
+      name: '学员',
+      num: '课时',
+      type: '类型',
+      course: '课程',
+      desc: '备注',
+      createDate: '创建时间'
+    };
+
+
+
+
+    const {
+      data: {
+        data: { list }
+      }
+    } = await api.getHourrList({
+      page: 1,
+      size: pagination.total,
+      query: {
+        type: {
+          $in: [enums.COURSE_HOUR_ACTION_TYPE.supplement, enums.COURSE_HOUR_ACTION_TYPE.sign]
+        },
+        studentId: props.id
+      },
+      sort: {
+        createDate: -1
+      }
+    });
+
+
+
+    const sheetData = list.map(item => {
+      const { num, type, course, desc } = item
+      return {
+        name: props.name,
+        num,
+        desc,
+        course: course.map(i => {
+          return `${i.name}:${i.count}课时`
+        }).join(','),
+        type: enums.COURSE_HOUR_ACTION_TYPE_LABEL[type],
+        createDate: dayjs(item.createDate).format('YYYY-MM-DD HH:mm:ss')
+      }
+    })
+
+    const newData = [headerDisplay, ...sheetData];
+
+    const fileName = new Date().toLocaleDateString()
+    return downLoad(
+      {
+        data: newData,
+        opts: { header, skipHeader: true },
+        sheetName: '统计',
+        fileName: props.name + '课时统计' + fileName + '.xlsx'
+      }
+    )
+  }, [pagination.total, props.id])
+
+
 
   return (
     <React.Fragment>
@@ -99,16 +170,24 @@ function List(props: IProps): JSX.Element {
           placeholder="请输入课程名字"
           onSearch={onSearch}
           style={{ width: 200 }} />
+
+        <Button
+          className="fr"
+          onClick={downLoadXlsx}
+          type="primary"
+          icon="download">
+          下载
+        </Button>
       </div>
 
       <Table<IHour>
-          bordered={true}
-          columns={columns}
-          rowKey="_id"
-          dataSource={data}
-          pagination={pagination}
-          loading={loading}
-          onChange={handleTableChange}/>
+        bordered={true}
+        columns={columns}
+        rowKey="_id"
+        dataSource={data}
+        pagination={pagination}
+        loading={loading}
+        onChange={handleTableChange} />
     </React.Fragment>
   );
 }
