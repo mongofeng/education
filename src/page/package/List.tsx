@@ -1,5 +1,4 @@
 import { PackageStatus, PackageStatusLabel } from '@/const/enum';
-import { RedirectUrl } from '@/utils/redirct';
 import { Button, DatePicker, Input, message, Modal, Table } from 'antd'
 import { ColumnProps } from "antd/lib/table";
 import * as React from "react";
@@ -7,10 +6,15 @@ import { RouteComponentProps } from "react-router-dom";
 import { Link } from "react-router-dom";
 import * as api from "@/api/package";
 import fetchApiHook from '@/common/hooks/featchApiList'
-import {isDev} from '@/config/index'
+import { isDev } from '@/config/index'
 import { IPackage } from "@/const/type/package";
 import formatDate from "@/utils/format-date";
 import QrcodeCom from '@/components/Qrcode'
+import dayjs from 'dayjs';
+import * as enums from "@/const/enum";
+import { getHourrList } from '@/api/hour';
+import { downLoad } from '@/utils/excel';
+import { connect } from 'react-redux';
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
 const confirm = Modal.confirm;
@@ -27,7 +31,7 @@ const columns: Array<ColumnProps<IPackage>> = [
     title: "课时",
     dataIndex: "count",
   },
-  
+
   {
     title: "销售价格",
     dataIndex: "priceAmount",
@@ -58,8 +62,13 @@ const columns: Array<ColumnProps<IPackage>> = [
 
 const initList: IPackage[] = [];
 
+interface IProps extends RouteComponentProps  {
+  student: {
+    [key in string]: string;
+  }
+}
 
-function List(props: RouteComponentProps): JSX.Element {
+function List(props: IProps): JSX.Element {
 
   const {
     loading,
@@ -105,7 +114,7 @@ function List(props: RouteComponentProps): JSX.Element {
   };
 
 
-  const onDel= (id: string) => {
+  const onDel = (id: string) => {
     confirm({
       title: '提示',
       content: '确定删除该课程包?',
@@ -150,13 +159,87 @@ function List(props: RouteComponentProps): JSX.Element {
               setVisible(true)
             }} >
             微信二维码
-          </Button>)]
+          </Button>),
+          <Button
+            className="fr"
+            onClick={() => downLoadXlsx(row._id, row.name)}
+            type="primary"
+            icon="download">
+            下载
+          </Button>]
       }
     }
   ]
 
 
   const Cols = isDev ? columns.concat(operate) : columns
+
+
+
+
+
+  const downLoadXlsx = React.useCallback(async (id: string, name: string) => {
+    const header = [
+      'name',
+      'num',
+      'type',
+      'desc',
+      'createDate'
+    ];
+    const headerDisplay: object = {
+      name: '学员',
+      num: '课时',
+      type: '类型',
+      desc: '备注',
+      createDate: '创建时间'
+    };
+
+
+    const params: any = {
+      page: 1,
+      size: 10000,
+      query: {
+        packageId: id,
+        type: {
+          $in: [enums.COURSE_HOUR_ACTION_TYPE.buy]
+        },
+      },
+      sort: {
+        createDate: -1
+      }
+    }
+
+    const {
+      data: {
+        data: { list }
+      }
+    } = await getHourrList( params);
+
+
+
+    const sheetData = list.map(item => {
+      const { num, type, desc, studentId } = item
+      return {
+        name: props.student[studentId],
+        num,
+        desc,
+        type: enums.COURSE_HOUR_ACTION_TYPE_LABEL[type],
+        createDate: dayjs(item.createDate).format('YYYY-MM-DD HH:mm:ss')
+      }
+    })
+
+    const newData = [headerDisplay, ...sheetData];
+
+    const fileName = new Date().toLocaleDateString()
+    return downLoad(
+      {
+        data: newData,
+        opts: { header, skipHeader: true },
+        sheetName: '统计',
+        fileName: name + '购买' + fileName + '.xlsx'
+      }
+    )
+  }, [props.student])
 
 
   return (
@@ -175,13 +258,13 @@ function List(props: RouteComponentProps): JSX.Element {
 
 
       <Modal
-          title="扫描购买"
-          visible={visible}
-          onOk={onOk}
-          onCancel={onOk}>
-          
-          <QrcodeCom url={url} width={200} height={200} name={name}/>
-        </Modal>
+        title="扫描购买"
+        visible={visible}
+        onOk={onOk}
+        onCancel={onOk}>
+
+        <QrcodeCom url={url} width={200} height={200} name={name} />
+      </Modal>
 
       <div className="content-wrap">
         <div className="mb10">
@@ -191,7 +274,7 @@ function List(props: RouteComponentProps): JSX.Element {
             className="ml10"
             placeholder="请输入课程包名字"
             onSearch={onSearch}
-            style={{ width: 200 }}/>
+            style={{ width: 200 }} />
         </div>
 
         <Table<IPackage>
@@ -201,10 +284,14 @@ function List(props: RouteComponentProps): JSX.Element {
           dataSource={data}
           pagination={pagination}
           loading={loading}
-          onChange={handleTableChange}/>
+          onChange={handleTableChange} />
       </div>
     </div>
   );
 }
 
-export default List;
+export default connect((state: any) => {
+  return {
+    student: state.student.labels,
+  }
+})(List);
