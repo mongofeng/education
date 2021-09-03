@@ -161,9 +161,9 @@ function List(props: IProps): JSX.Element {
             微信二维码
           </Button>),
           <Button
-            className="fr"
+            className="ml10"
             onClick={() => downLoadXlsx(row._id, row.name)}
-            type="primary"
+            type="link"
             icon="download">
             下载
           </Button>]
